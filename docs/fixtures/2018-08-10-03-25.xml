@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Shop Branchno="007" Exportdate="20180810T04:22:19" Exporttype="Modelbase">
+    <Model>
+        <Code>000023152</Code>
+        <Modno>000023</Modno>
+        <Brnno>152</Brnno>
+        <Moddeno><![CDATA[SMARTFIT]]></Moddeno>
+        <Branddeno><![CDATA[ARENA]]></Branddeno>
+        <Itemgroup>11594</Itemgroup>
+        <Itemgroupdeno><![CDATA[Brillen]]></Itemgroupdeno>
+        <Percentvat>19.00</Percentvat>
+        <Color>
+            <Colno>111</Colno>
+            <Colordeno><![CDATA[111 CLEAR-CLEAR-CLEAR]]></Colordeno>
+            <Size>
+                <Columnx>01</Columnx>
+                <Sizedeno><![CDATA[-]]></Sizedeno>
+                <Itemno>00002315211101</Itemno>
+                <Itemdeno><![CDATA[SMARTFIT 111 CLEAR-CLEAR-CLEAR -]]></Itemdeno>
+                <Ean>3468335803272</Ean>
+                <Branch>
+                    <Branchno>003</Branchno>
+                    <Stockqty>3</Stockqty>
+                    <Saleprice>20.00</Saleprice>
+                </Branch>
+            </Size>
+        </Color>
+        <Color>
+            <Colno>515</Colno>
+            <Colordeno><![CDATA[515 SMOKE-CLEAR-BLACK]]></Colordeno>
+            <Size>
+                <Columnx>01</Columnx>
+                <Sizedeno><![CDATA[-]]></Sizedeno>
+                <Itemno>00002315251501</Itemno>
+                <Itemdeno><![CDATA[SMARTFIT 515 SMOKE-CLEAR-BLACK -]]></Itemdeno>
+                <Ean>3468335803296</Ean>
+                <Branch>
+                    <Branchno>003</Branchno>
+                    <Stockqty>1</Stockqty>
+                    <Saleprice>20.00</Saleprice>
+                </Branch>
+            </Size>
+        </Color>
+        <Color>
+            <Colno>711</Colno>
+            <Colordeno><![CDATA[711 BLUE-CLEAR-CLEAR]]></Colordeno>
+            <Size>
+                <Columnx>01</Columnx>
+                <Sizedeno><![CDATA[-]]></Sizedeno>
+                <Itemno>00002315271101</Itemno>
+                <Itemdeno><![CDATA[SMARTFIT 711 BLUE-CLEAR-CLEAR -]]></Itemdeno>
+                <Ean>3468335803319</Ean>
+                <Branch>
+                    <Branchno>003</Branchno>
+                    <Stockqty>3</Stockqty>
+                    <Saleprice>20.00</Saleprice>
+                </Branch>
+            </Size>
+        </Color>
+    </Model>
+    <Model>
+        <Code>000047152</Code>
+        <Modno>000047</Modno>
+        <Brnno>152</Brnno>
+        <Moddeno><![CDATA[W QUARK ONE PIECE]]></Moddeno>
+        <Branddeno><![CDATA[ARENA]]></Branddeno>
+        <Itemgroup>21569</Itemgroup>
+        <Itemgroupdeno><![CDATA[Schwimmanzüge]]></Itemgroupdeno>
+        <Percentvat>19.00</Percentvat>
+        <Color>
+            <Colno>501</Colno>
+            <Colordeno><![CDATA[501 BLACK]]></Colordeno>
+            <Size>
+                <Columnx>14</Columnx>
+                <Sizedeno><![CDATA[38]]></Sizedeno>
+                <Itemno>00004715250114</Itemno>
+                <Itemdeno><![CDATA[W QUARK ONE PIECE 501 BLACK 38]]></Itemdeno>
+                <Ean>3468335807195</Ean>
+                <Branch>
+                    <Branchno>003</Branchno>
+                    <Stockqty>1</Stockqty>
+                    <Saleprice>55.00</Saleprice>
+                </Branch>
+            </Size>
+            <Size>
+                <Columnx>16</Columnx>
+                <Sizedeno><![CDATA[40]]></Sizedeno>
+                <Itemno>00004715250116</Itemno>
+                <Itemdeno><![CDATA[W QUARK ONE PIECE 501 BLACK 40]]></Itemdeno>
+                <Ean>3468335807218</Ean>
+                <Branch>
+                    <Branchno>003</Branchno>
+                    <Stockqty>0</Stockqty>
+                    <Saleprice>55.00</Saleprice>
+                </Branch>
+            </Size>
+            <Size>
+                <Columnx>18</Columnx>
+                <Sizedeno><![CDATA[42]]></Sizedeno>
+                <Itemno>00004715250118</Itemno>
+                <Itemdeno><![CDATA[W QUARK ONE PIECE 501 BLACK 42]]></Itemdeno>
+                <Ean>3468335807232</Ean>
+                <Branch>
+                    <Branchno>003</Branchno>
+                    <Stockqty>0</Stockqty>
+                    <Saleprice>55.00</Saleprice>
+                </Branch>
+            </Size>
+        </Color>
+    </Model>
+    <Model>
+        <Code>000092152</Code>
+        <Modno>000092</Modno>
+        <Brnno>152</Brnno>
+        <Moddeno><![CDATA[M HYPNOS SHORT]]></Moddeno>
+        <Branddeno><![CDATA[ARENA]]></Branddeno>
+        <Itemgroup>21568</Itemgroup>
+        <Itemgroupdeno><![CDATA[Badehosen]]></Itemgroupdeno>
+        <Percentvat>19.00</Percentvat>
+        <Color>
+            <Colno>708</Colno>
+            <Colordeno><![CDATA[708 NAVY PIX BLUE ROYAL]]></Colordeno>
+            <Size>
+                <Columnx>18</Columnx>
+                <Sizedeno><![CDATA[5]]></Sizedeno>
+                <Itemno>00009215270818</Itemno>
+                <Itemdeno><![CDATA[M HYPNOS SHORT 708 NAVY PIX BLUE ROYAL 5]]></Itemdeno>
+                <Ean>3468335825700</Ean>
+                <Branch>
+                    <Branchno>003</Branchno>
+                    <Stockqty>0</Stockqty>
+                    <Saleprice>35.00</Saleprice>
+                </Branch>
+            </Size>
+        </Color>
+    </Model>
+    <Model>
+        <Code>000149152</Code>
+        <Modno>000149</Modno>
+        <Brnno>152</Brnno>
+        <Moddeno><![CDATA[W SHIRLEY U BACK ONE PIECE C-CUP]]></Moddeno>
+        <Branddeno><![CDATA[ARENA]]></Branddeno>
+        <Itemgroup>21565</Itemgroup>
+        <Itemgroupdeno><![CDATA[Badeanzüge stützend]]></Itemgroupdeno>
+        <Percentvat>19.00</Percentvat>
+        <Color>
+            <Colno>505</Colno>
+            <Colordeno><![CDATA[505 BLACK]]></Colordeno>
+            <Size>
+                <Columnx>22</Columnx>
+                <Sizedeno><![CDATA[46]]></Sizedeno>
+                <Itemno>00014915250522</Itemno>
+                <Itemdeno><![CDATA[W SHIRLEY U BACK ONE PIECE C-C 505 BLACK 46]]></Itemdeno>
+                <Ean>3468335855547</Ean>
+                <Branch>
+                    <Branchno>003</Branchno>
+                    <Stockqty>0</Stockqty>
+                    <Saleprice>80.00</Saleprice>
+                </Branch>
+            </Size>
+        </Color>
+    </Model>
+    <Model>
+        <Code>000154152</Code>
+        <Modno>000154</Modno>
+        <Brnno>152</Brnno>
+        <Moddeno><![CDATA[W BARBARA WING BACK ONE PIECE C-CUP]]></Moddeno>
+        <Branddeno><![CDATA[ARENA]]></Branddeno>
+        <Itemgroup>21565</Itemgroup>
+        <Itemgroupdeno><![CDATA[Badeanzüge stützend]]></Itemgroupdeno>
+        <Percentvat>19.00</Percentvat>
+        <Color>
+            <Colno>508</Colno>
+            <Colordeno><![CDATA[508 BLACK-PIX BLUE]]></Colordeno>
+            <Size>
+                <Columnx>20</Columnx>
+                <Sizedeno><![CDATA[44]]></Sizedeno>
+                <Itemno>00015415250820</Itemno>
+                <Itemdeno><![CDATA[W BARBARA WING BACK ONE PIECE  508 BLACK-PIX BLUE 44]]></Itemdeno>
+                <Ean>3468335855226</Ean>
+                <Branch>
+                    <Branchno>003</Branchno>
+                    <Stockqty>0</Stockqty>
+                    <Saleprice>80.00</Saleprice>
+                </Branch>
+            </Size>
+            <Size>
+                <Columnx>22</Columnx>
+                <Sizedeno><![CDATA[46]]></Sizedeno>
+                <Itemno>00015415250822</Itemno>
+                <Itemdeno><![CDATA[W BARBARA WING BACK ONE PIECE  508 BLACK-PIX BLUE 46]]></Itemdeno>
+                <Ean>3468335819396</Ean>
+                <Branch>
+                    <Branchno>003</Branchno>
+                    <Stockqty>0</Stockqty>
+                    <Saleprice>80.00</Saleprice>
+                </Branch>
+            </Size>
+        </Color>
+    </Model>
+</Shop>

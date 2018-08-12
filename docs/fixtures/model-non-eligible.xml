@@ -1,0 +1,58 @@
+<Model>
+    <Code>000023152</Code>
+    <Modno>000023</Modno>
+    <Brnno>152</Brnno>
+    <Moddeno><![CDATA[SMARTFIT]]></Moddeno>
+    <Branddeno><![CDATA[ARENA]]></Branddeno>
+    <Itemgroup>11594</Itemgroup>
+    <Itemgroupdeno><![CDATA[Brillen]]></Itemgroupdeno>
+    <Percentvat>19.00</Percentvat>
+    <Color>
+        <Colno>111</Colno>
+        <Colordeno><![CDATA[111 CLEAR-CLEAR-CLEAR]]></Colordeno>
+        <Size>
+            <Columnx>01</Columnx>
+            <Sizedeno><![CDATA[-]]></Sizedeno>
+            <Itemno>00002315211101</Itemno>
+            <Itemdeno><![CDATA[SMARTFIT 111 CLEAR-CLEAR-CLEAR -]]></Itemdeno>
+            <Ean>3468335803272</Ean>
+            <Branch>
+                <Branchno>003</Branchno>
+                <Stockqty>3</Stockqty>
+                <Saleprice>20.00</Saleprice>
+            </Branch>
+        </Size>
+    </Color>
+    <Color>
+        <Colno>515</Colno>
+        <Colordeno><![CDATA[515 SMOKE-CLEAR-BLACK]]></Colordeno>
+        <Size>
+            <Columnx>01</Columnx>
+            <Sizedeno><![CDATA[-]]></Sizedeno>
+            <Itemno>00002315251501</Itemno>
+            <Itemdeno><![CDATA[SMARTFIT 515 SMOKE-CLEAR-BLACK -]]></Itemdeno>
+            <Ean>3468335803296</Ean>
+            <Branch>
+                <Branchno>003</Branchno>
+                <Stockqty>1</Stockqty>
+                <Saleprice>20.00</Saleprice>
+            </Branch>
+        </Size>
+    </Color>
+    <Color>
+        <Colno>711</Colno>
+        <Colordeno><![CDATA[711 BLUE-CLEAR-CLEAR]]></Colordeno>
+        <Size>
+            <Columnx>01</Columnx>
+            <Sizedeno><![CDATA[-]]></Sizedeno>
+            <Itemno>00002315271101</Itemno>
+            <Itemdeno><![CDATA[SMARTFIT 711 BLUE-CLEAR-CLEAR -]]></Itemdeno>
+            <Ean>3468335803319</Ean>
+            <Branch>
+                <Branchno>003</Branchno>
+                <Stockqty>3</Stockqty>
+                <Saleprice>20.00</Saleprice>
+            </Branch>
+        </Size>
+    </Color>
+</Model>
