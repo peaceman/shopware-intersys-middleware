@@ -52,7 +52,7 @@ class ModelXMLImporter
         $modelXML = $modelXMLData->getSimpleXMLElement();
         if (!$this->isEligibleForImport($modelXML)) {
             $this->logger->info(__METHOD__ . ' Model is not eligible for import', [
-                'sourceFilename' => $modelXMLData->getImportFile(),
+                'sourceFilename' => $modelXMLData->getImportFile()->original_filename,
                 'model.code' => (string)$modelXML->Code,
             ]);
 
@@ -60,6 +60,17 @@ class ModelXMLImporter
         }
 
         $article = $this->tryToFetchShopwareArticle($modelXML);
+
+        if ($article && !$this->isNewImportFileForArticle($modelXMLData->getImportFile(), $article)) {
+            $this->logger->info(__METHOD__ . ' Already imported the same or newer data for the article', [
+                'sourceFilename' => $modelXMLData->getImportFile()->original_filename,
+                'model.code' => (string)$modelXML->Code,
+                'article.id' => $article->id,
+            ]);
+
+            return;
+        }
+
         $article = $article
             ? $this->updateArticle($article, $modelXMLData)
             : $this->createArticle($modelXMLData);
@@ -267,6 +278,17 @@ class ModelXMLImporter
                 ];
             })
             ->values();
+    }
+
+    protected function isNewImportFileForArticle(\App\ImportFile $importFile, Article $article): bool
+    {
+        if ($article->imports()->where('import_file_id', $importFile->id)->exists()) return false;
+
+        return $article->imports()
+            ->whereHas('importFile', function ($q) use ($importFile) {
+                $q->where('original_filename', '>=', $importFile->original_filename);
+            })
+            ->doesntExist();
     }
 
 

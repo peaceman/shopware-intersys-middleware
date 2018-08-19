@@ -27,6 +27,8 @@ class Article extends Model
         'is_active' => 'boolean',
     ];
 
+    protected static $unguarded = true;
+
     public function imports(): HasMany
     {
         return $this->hasMany(ArticleImport::class, 'article_id', 'id');
