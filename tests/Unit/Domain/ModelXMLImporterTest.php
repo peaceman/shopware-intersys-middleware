@@ -154,6 +154,7 @@ class ModelXMLImporterTest extends TestCase
                         'price' => 35,
                         'pseudoPrice' => null,
                     ]],
+                    'inStock' => 2,
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3436 BLACK/WHITE XS',
                     ],
@@ -170,6 +171,7 @@ class ModelXMLImporterTest extends TestCase
                         'price' => 35,
                         'pseudoPrice' => null,
                     ]],
+                    'inStock' => 1,
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3436 BLACK/WHITE S',
                     ],
@@ -186,6 +188,7 @@ class ModelXMLImporterTest extends TestCase
                         'price' => 35,
                         'pseudoPrice' => null,
                     ]],
+                    'inStock' => 2,
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3436 BLACK/WHITE M',
                     ],
@@ -203,6 +206,7 @@ class ModelXMLImporterTest extends TestCase
                         'price' => 35,
                         'pseudoPrice' => null,
                     ]],
+                    'inStock' => 0,
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3438 GREY/WHITE L',
                     ],
@@ -219,6 +223,7 @@ class ModelXMLImporterTest extends TestCase
                         'price' => 35,
                         'pseudoPrice' => null,
                     ]],
+                    'inStock' => 0,
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3438 GREY/WHITE XL',
                     ],
@@ -310,6 +315,7 @@ class ModelXMLImporterTest extends TestCase
                         'price' => 35,
                         'pseudoPrice' => null,
                     ]],
+                    'inStock' => 2,
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3436 BLACK/WHITE XS',
                     ],
@@ -326,6 +332,7 @@ class ModelXMLImporterTest extends TestCase
                         'price' => 35,
                         'pseudoPrice' => null,
                     ]],
+                    'inStock' => 1,
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3436 BLACK/WHITE S',
                     ],
@@ -342,6 +349,7 @@ class ModelXMLImporterTest extends TestCase
                         'price' => 35,
                         'pseudoPrice' => null,
                     ]],
+                    'inStock' => 2,
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3436 BLACK/WHITE M',
                     ],
@@ -359,6 +367,7 @@ class ModelXMLImporterTest extends TestCase
                         'price' => 35,
                         'pseudoPrice' => null,
                     ]],
+                    'inStock' => 0,
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3438 GREY/WHITE L',
                     ],
@@ -375,6 +384,7 @@ class ModelXMLImporterTest extends TestCase
                         'price' => 35,
                         'pseudoPrice' => null,
                     ]],
+                    'inStock' => 0,
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3438 GREY/WHITE XL',
                     ],

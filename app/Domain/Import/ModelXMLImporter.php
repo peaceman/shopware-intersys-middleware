@@ -236,6 +236,7 @@ class ModelXMLImporter
                                         'price' => (float)$branchXML->Saleprice,
                                         'pseudoPrice' => $branchXML->Xprice ? (float)$branchXML->Xprice : null,
                                     ]],
+                                    'inStock' => (int)$branchXML->Stockqty,
                                     'attribute' => [
                                         'attr1' => (string)$sizeXML->Itemdeno,
                                     ],
