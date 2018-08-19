@@ -140,6 +140,7 @@ class ModelXMLImporter
         $this->logger->info(__METHOD__, $loggingContext);
 
         $variants = $this->generateVariantsFromModelXML($modelXML);
+        $pricesOfTheFirstVariant = data_get($variants, '0.prices');
 
         $articleData = [
             'active' => true,
@@ -149,6 +150,7 @@ class ModelXMLImporter
             'descriptionLong' => (string)$modelXML->Longdescription,
             'mainDetail' => [
                 'number' => (string)$modelXML->Modno,
+                'prices' => $pricesOfTheFirstVariant,
             ],
             'configuratorSet' => [
                 'groups' => $this->createConfiguratorSetGroupsFromVariants($variants),
@@ -175,6 +177,7 @@ class ModelXMLImporter
         $this->logger->info(__METHOD__, $loggingContext);
 
         $variants = $this->generateVariantsFromModelXML($modelXML);
+        $pricesOfTheFirstVariant = data_get($variants, '0.prices');
 
         $articleNumber = (string)$modelXML->Modno;
         $articleData = [
@@ -184,7 +187,8 @@ class ModelXMLImporter
             'supplier' => (string)$modelXML->Branddeno,
             'descriptionLong' => (string)$modelXML->Longdescription,
             'mainDetail' => [
-                'number' => $articleNumber,
+                'number' => (string)$modelXML->Modno,
+                'prices' => $pricesOfTheFirstVariant,
             ],
             'configuratorSet' => [
                 'groups' => $this->createConfiguratorSetGroupsFromVariants($variants),
