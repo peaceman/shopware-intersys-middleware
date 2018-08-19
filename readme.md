@@ -1,1 +1,5 @@
 # Shopware Intersys Middleware
+
+`php artisan is:scan-for-import-files {--skip}`
+
+`php artisan is:process-import-files`
