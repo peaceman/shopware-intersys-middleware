@@ -35,4 +35,10 @@ class ImportFile extends Model
     {
         return $this->storage_path && !$this->processed_at;
     }
+
+    public function scopeReadyForImport($query)
+    {
+        return $query->whereNotNull('storage_path')
+            ->whereNull('processed_at');
+    }
 }
