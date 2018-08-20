@@ -6,7 +6,7 @@ namespace App\Domain\Import\ArticleDeactivation;
 
 use DB;
 
-class AbandonedArticleIDProvider
+class AbandonedArticleIDProvider implements ArticleIDProvider
 {
     public function getArticleIDs(): iterable
     {
