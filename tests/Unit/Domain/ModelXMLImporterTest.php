@@ -9,6 +9,7 @@ use App\Article;
 use App\ArticleImport;
 use App\Domain\Import\ModelXMLData;
 use App\Domain\Import\ModelXMLImporter;
+use App\Domain\ShopwareAPI;
 use App\ImportFile;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -33,7 +34,7 @@ class ModelXMLImporterTest extends TestCase
         $stack->push($history);
         $client = new Client(['handler' => $stack]);
 
-        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), $client);
+        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), new ShopwareAPI(new NullLogger(), $client));
         $modelXMLImporter->setBranchesToImport(['006']);
 
         $xmlString = file_get_contents(base_path('docs/fixtures/model-non-eligible.xml'));
@@ -50,7 +51,7 @@ class ModelXMLImporterTest extends TestCase
         $stack->push($history);
         $client = new Client(['handler' => $stack]);
 
-        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), $client);
+        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), new ShopwareAPI(new NullLogger(), $client));
         $modelXMLImporter->setBranchesToImport(['006']);
 
         $article = new Article(['is_modno' => '10003436H', 'is_active' => true]);
@@ -75,7 +76,7 @@ class ModelXMLImporterTest extends TestCase
         $stack->push($history);
         $client = new Client(['handler' => $stack]);
 
-        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), $client);
+        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), new ShopwareAPI(new NullLogger(), $client));
         $modelXMLImporter->setBranchesToImport(['006']);
 
         $article = new Article(['is_modno' => '10003436H', 'is_active' => true]);
@@ -110,7 +111,7 @@ class ModelXMLImporterTest extends TestCase
             'handler' => $stack,
         ]);
 
-        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), $client);
+        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), new ShopwareAPI(new NullLogger(), $client));
         $modelXMLImporter->setBranchesToImport(['006']);
 
         $importFile = new ImportFile(['type' => 'base', 'original_filename' => 'lel.xml', 'storage_path' => str_random(40)]);
@@ -263,7 +264,7 @@ class ModelXMLImporterTest extends TestCase
             'handler' => $stack,
         ]);
 
-        $article = new Article(['is_modno' => '10003436H', 'is_active' => true]);
+        $article = new Article(['is_modno' => '10003436H', 'is_active' => true, 'sw_article_id' => 45]);
         $article->save();
 
         $alreadyImportedFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-19-23-05.xml']);
@@ -271,7 +272,7 @@ class ModelXMLImporterTest extends TestCase
 
         $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
-        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), $client);
+        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), new ShopwareAPI(new NullLogger(), $client));
         $modelXMLImporter->setBranchesToImport(['006']);
 
         $importFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => str_random(40)]);

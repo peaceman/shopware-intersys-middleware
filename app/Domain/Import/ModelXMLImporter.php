@@ -5,6 +5,7 @@
 namespace App\Domain\Import;
 
 use App\Article;
+use App\Domain\ShopwareAPI;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Collection;
@@ -19,9 +20,9 @@ class ModelXMLImporter
     protected $logger;
 
     /**
-     * @var Client
+     * @var ShopwareAPI
      */
-    protected $httpClient;
+    protected $shopwareAPI;
 
     /**
      * @var string[]
@@ -31,12 +32,12 @@ class ModelXMLImporter
     /**
      * ModelXMLImporter constructor.
      * @param LoggerInterface $logger
-     * @param Client $httpClient
+     * @param ShopwareAPI $shopwareAPI
      */
-    public function __construct(LoggerInterface $logger, Client $httpClient)
+    public function __construct(LoggerInterface $logger, ShopwareAPI $shopwareAPI)
     {
         $this->logger = $logger;
-        $this->httpClient = $httpClient;
+        $this->shopwareAPI = $shopwareAPI;
     }
 
     /**
@@ -67,13 +68,11 @@ class ModelXMLImporter
                 'model.code' => (string)$modelXML->Code,
                 'article.id' => $article->id,
             ]);
-
-            return;
+        } else {
+            $article = $article
+                ? $this->updateArticle($article, $modelXMLData)
+                : $this->createArticle($modelXMLData);
         }
-
-        $article = $article
-            ? $this->updateArticle($article, $modelXMLData)
-            : $this->createArticle($modelXMLData);
 
         $article->imports()->create(['import_file_id' => $modelXMLData->getImportFile()->id]);
     }
@@ -100,31 +99,18 @@ class ModelXMLImporter
         $article = Article::query()->where('is_modno', $articleNumber)->first();
         if ($article) return $article;
 
-        try {
-            $response = $this->httpClient->get("/api/articles/{$articleNumber}", [
-                'query' => [
-                    'useNumberAsId' => true,
-                ],
-            ]);
+        $swArticleId = $this->shopwareAPI->searchShopwareArticleIdByArticleNumber($articleNumber);
+        if (!$swArticleId) return null;
 
-            $articleData = json_decode($response->getBody());
+        $article = new Article([
+            'is_modno' => $articleNumber,
+            'sw_article_id' => $swArticleId,
+            'is_active' => true,
+        ]);
 
-            $article = new Article();
-            $article->is_modno = $articleNumber;
-            $article->sw_article_id = $articleData->data->id;
-            $article->is_active = true;
-            $article->save();
+        $article->save();
 
-            return $article;
-        } catch (ClientException $e) {
-            if ($e->getCode() === 404) {
-                $this->logger->info(__METHOD__ . ' Article does not exist in shopware', $loggingContext);
-
-                return null;
-            }
-
-            throw $e;
-        }
+        return $article;
     }
 
     protected function updateArticle(Article $article, ModelXMLData $modelXMLData)
@@ -158,9 +144,7 @@ class ModelXMLImporter
             'variants' => $variants,
         ];
 
-        $response = $this->httpClient->put("/api/articles/{$swArticleId}", [
-            'json' => $articleData
-        ]);
+        $this->shopwareAPI->updateShopwareArticle($swArticleId, $articleData);
 
         $this->logger->info(__METHOD__ . ' Updated Article', $loggingContext);
 
@@ -196,15 +180,11 @@ class ModelXMLImporter
             'variants' => $variants,
         ];
 
-        $response = $this->httpClient->post('/api/articles', [
-            'json' => $articleData
-        ]);
-
-        $articleData = json_decode($response->getBody());
+        $swArticleId = $this->shopwareAPI->createShopwareArticle($articleData);
 
         $article = new Article();
         $article->is_modno = $articleNumber;
-        $article->sw_article_id = $articleData->data->id;
+        $article->sw_article_id = $swArticleId;
         $article->is_active = true;
         $article->save();
 

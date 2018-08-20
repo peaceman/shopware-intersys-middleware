@@ -9,6 +9,7 @@
         "ext-pcntl": "*",
         "ext-simplexml": "*",
         "ext-xmlreader": "*",
+        "ext-json": "*",
         "doctrine/dbal": "^2.8",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.3",
