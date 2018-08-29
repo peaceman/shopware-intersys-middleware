@@ -141,7 +141,7 @@ class ModelXMLImporterTest extends TestCase
         $creationBody = json_decode((string)$creationRequest->getBody(), true);
 
         static::assertSame([
-            'active' => true,
+            'active' => false,
             'name' => 'MLB BASIC NY YANKEES (3436 BLACK/WHITE)',
             'tax' => '19.00',
             'supplier' => 'NEW ERA',
@@ -152,6 +152,9 @@ class ModelXMLImporterTest extends TestCase
                     'price' => 35,
                     'pseudoPrice' => null,
                 ]],
+                'lastStock' => true,
+                'weight' => Article::DEFAULTS_WEIGHT,
+                'shippingTime' => Article::DEFAULTS_SHIPPING_TIME,
             ],
             'configuratorSet' => [
                 'groups' => [
@@ -226,7 +229,7 @@ class ModelXMLImporterTest extends TestCase
         $creationBody = json_decode((string)$creationRequest->getBody(), true);
 
         static::assertSame([
-            'active' => true,
+            'active' => false,
             'name' => 'MLB BASIC NY YANKEES (3438 GREY/WHITE)',
             'tax' => '19.00',
             'supplier' => 'NEW ERA',
@@ -237,6 +240,9 @@ class ModelXMLImporterTest extends TestCase
                     'price' => 35,
                     'pseudoPrice' => null,
                 ]],
+                'lastStock' => true,
+                'weight' => Article::DEFAULTS_WEIGHT,
+                'shippingTime' => Article::DEFAULTS_SHIPPING_TIME,
             ],
             'configuratorSet' => [
                 'groups' => [

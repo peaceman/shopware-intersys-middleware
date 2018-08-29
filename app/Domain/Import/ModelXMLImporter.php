@@ -185,7 +185,7 @@ class ModelXMLImporter
         $pricesOfTheFirstVariant = data_get($variants, '0.prices');
 
         $articleData = [
-            'active' => true,
+            'active' => false,
             'name' => (string)$modelNode->Moddeno . ' (' . (string)$articleNode->Colordeno . ')',
             'tax' => (string)$modelNode->Percentvat,
             'supplier' => (string)$modelNode->Branddeno,
@@ -193,6 +193,9 @@ class ModelXMLImporter
             'mainDetail' => [
                 'number' => $articleNumber,
                 'prices' => $pricesOfTheFirstVariant,
+                'lastStock' => true,
+                'weight' => Article::DEFAULTS_WEIGHT,
+                'shippingTime' => Article::DEFAULTS_SHIPPING_TIME,
             ],
             'configuratorSet' => [
                 'groups' => $this->createConfiguratorSetGroupsFromVariants($variants),

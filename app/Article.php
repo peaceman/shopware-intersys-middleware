@@ -23,6 +23,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Article extends Model
 {
+    const DEFAULTS_WEIGHT = '1KG';
+    const DEFAULTS_SHIPPING_TIME = '1-3';
+
     protected $casts = [
         'is_active' => 'boolean',
     ];
