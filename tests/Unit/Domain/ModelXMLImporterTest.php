@@ -343,13 +343,7 @@ class ModelXMLImporterTest extends TestCase
         $updateBody = json_decode((string)$updateRequest->getBody(), true);
 
         static::assertSame([
-            'active' => true,
-            'name' => 'MLB BASIC NY YANKEES (3436 BLACK/WHITE)',
-            'tax' => '19.00',
-            'supplier' => 'NEW ERA',
-            'descriptionLong' => '',
             'mainDetail' => [
-                'number' => '10003436H000',
                 'prices' => [[
                     'price' => 35,
                     'pseudoPrice' => null,
@@ -369,9 +363,6 @@ class ModelXMLImporterTest extends TestCase
                         'pseudoPrice' => null,
                     ]],
                     'inStock' => 2,
-                    'attribute' => [
-                        'attr1' => 'MLB BASIC NY YANKEES 3436 BLACK/WHITE XS',
-                    ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'XS'],
                     ]
@@ -384,9 +375,6 @@ class ModelXMLImporterTest extends TestCase
                         'pseudoPrice' => null,
                     ]],
                     'inStock' => 1,
-                    'attribute' => [
-                        'attr1' => 'MLB BASIC NY YANKEES 3436 BLACK/WHITE S',
-                    ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'S'],
                     ]
@@ -399,9 +387,6 @@ class ModelXMLImporterTest extends TestCase
                         'pseudoPrice' => null,
                     ]],
                     'inStock' => 2,
-                    'attribute' => [
-                        'attr1' => 'MLB BASIC NY YANKEES 3436 BLACK/WHITE M',
-                    ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'M'],
                     ]
@@ -426,13 +411,7 @@ class ModelXMLImporterTest extends TestCase
         $updateBody = json_decode((string)$updateRequest->getBody(), true);
 
         static::assertSame([
-            'active' => true,
-            'name' => 'MLB BASIC NY YANKEES (3438 GREY/WHITE)',
-            'tax' => '19.00',
-            'supplier' => 'NEW ERA',
-            'descriptionLong' => '',
             'mainDetail' => [
-                'number' => '10003436H004',
                 'prices' => [[
                     'price' => 35,
                     'pseudoPrice' => null,
@@ -452,9 +431,6 @@ class ModelXMLImporterTest extends TestCase
                         'pseudoPrice' => null,
                     ]],
                     'inStock' => 0,
-                    'attribute' => [
-                        'attr1' => 'MLB BASIC NY YANKEES 3438 GREY/WHITE L',
-                    ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'L'],
                     ]
@@ -467,9 +443,6 @@ class ModelXMLImporterTest extends TestCase
                         'pseudoPrice' => null,
                     ]],
                     'inStock' => 0,
-                    'attribute' => [
-                        'attr1' => 'MLB BASIC NY YANKEES 3438 GREY/WHITE XL',
-                    ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'XL'],
                     ]

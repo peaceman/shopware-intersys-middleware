@@ -143,17 +143,17 @@ class ModelXMLImporter
 
         $this->logger->info(__METHOD__, $loggingContext);
 
-        $variants = $this->generateVariants($modelNode, $articleNode);
+        $variants = $this->generateVariants($modelNode, $articleNode)
+            ->map(function ($variant) {
+                unset($variant['attribute']);
+
+                return $variant;
+            });
+
         $pricesOfTheFirstVariant = data_get($variants, '0.prices');
 
         $articleData = [
-            'active' => true,
-            'name' => (string)$modelNode->Moddeno . ' (' . (string)$articleNode->Colordeno . ')',
-            'tax' => (string)$modelNode->Percentvat,
-            'supplier' => (string)$modelNode->Branddeno,
-            'descriptionLong' => (string)$modelNode->Longdescription,
             'mainDetail' => [
-                'number' => $articleNumber,
                 'prices' => $pricesOfTheFirstVariant,
             ],
             'configuratorSet' => [
