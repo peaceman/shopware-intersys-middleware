@@ -51,35 +51,50 @@ class ModelXMLImporter
     public function import(ModelXMLData $modelXMLData): void
     {
         $modelXML = $modelXMLData->getSimpleXMLElement();
-        if (!$this->isEligibleForImport($modelXML)) {
-            $this->logger->info(__METHOD__ . ' Model is not eligible for import', [
+
+        $articleNodes = $modelXML->xpath('/Model/Color');
+        foreach ($articleNodes as $articleNode) {
+            $this->importArticle($modelXMLData, $modelXML, $articleNode);
+        }
+    }
+
+    protected function importArticle(ModelXMLData $modelXMLData, SimpleXMLElement $modelNode, SimpleXMLElement $articleNode)
+    {
+        $modNo = (string)$modelNode->Modno;
+        $colNo = (string)$articleNode->Colno;
+
+        if (!$this->isEligibleForImport($articleNode)) {
+            $this->logger->info(__METHOD__ . ' Article is not eligible for import', [
                 'sourceFilename' => $modelXMLData->getImportFile()->original_filename,
-                'model.code' => (string)$modelXML->Code,
+                'modNo' => $modNo,
+                'colNo' => $colNo,
             ]);
 
             return;
         }
 
-        $article = $this->tryToFetchShopwareArticle($modelXML);
+        $articleNumber = $modNo . $colNo;
+        $article = $this->tryToFetchShopwareArticle($articleNumber);
 
         if ($article && !$this->isNewImportFileForArticle($modelXMLData->getImportFile(), $article)) {
             $this->logger->info(__METHOD__ . ' Already imported the same or newer data for the article', [
                 'sourceFilename' => $modelXMLData->getImportFile()->original_filename,
-                'model.code' => (string)$modelXML->Code,
+                'modNo' => $modNo,
+                'colNo' => $colNo,
                 'article.id' => $article->id,
             ]);
         } else {
             $article = $article
-                ? $this->updateArticle($article, $modelXMLData)
-                : $this->createArticle($modelXMLData);
+                ? $this->updateArticle($article, $modelNode, $articleNode)
+                : $this->createArticle($articleNumber, $modelNode, $articleNode);
         }
 
         $article->imports()->create(['import_file_id' => $modelXMLData->getImportFile()->id]);
     }
 
-    protected function isEligibleForImport(SimpleXMLElement $modelXML): bool
+    protected function isEligibleForImport(SimpleXMLElement $articleNode): bool
     {
-        $branches = $modelXML->xpath('/Model/Color/Size/Branch');
+        $branches = $articleNode->xpath('Size/Branch');
 
         return collect($branches)
             ->first([$this, 'isBranchEligible']) !== null;
@@ -90,9 +105,8 @@ class ModelXMLImporter
         return in_array($branchXML->Branchno ?? null, $this->branchesToImport);
     }
 
-    protected function tryToFetchShopwareArticle(SimpleXMLElement $modelXML): ?Article
+    protected function tryToFetchShopwareArticle(string $articleNumber): ?Article
     {
-        $articleNumber = (string)$modelXML->Modno;
         $loggingContext = ['articleNumber' => $articleNumber];
         $this->logger->info(__METHOD__, $loggingContext);
 
@@ -113,29 +127,33 @@ class ModelXMLImporter
         return $article;
     }
 
-    protected function updateArticle(Article $article, ModelXMLData $modelXMLData)
+    protected function updateArticle(
+        Article $article,
+        SimpleXMLElement $modelNode,
+        SimpleXMLElement $articleNode
+    )
     {
-        $modelXML = $modelXMLData->getSimpleXMLElement();
+        $articleNumber = $article->is_modno;
         $swArticleId = $article->sw_article_id;
 
         $loggingContext = [
-            'articleNumber' => (string)$modelXML->Modno,
+            'articleNumber' => $articleNumber,
             'swArticleId' => $swArticleId,
         ];
 
         $this->logger->info(__METHOD__, $loggingContext);
 
-        $variants = $this->generateVariantsFromModelXML($modelXML);
+        $variants = $this->generateVariants($modelNode, $articleNode);
         $pricesOfTheFirstVariant = data_get($variants, '0.prices');
 
         $articleData = [
             'active' => true,
-            'name' => (string)$modelXML->Moddeno,
-            'tax' => (string)$modelXML->Percentvat,
-            'supplier' => (string)$modelXML->Branddeno,
-            'descriptionLong' => (string)$modelXML->Longdescription,
+            'name' => (string)$modelNode->Moddeno . ' (' . (string)$articleNode->Colordeno . ')',
+            'tax' => (string)$modelNode->Percentvat,
+            'supplier' => (string)$modelNode->Branddeno,
+            'descriptionLong' => (string)$modelNode->Longdescription,
             'mainDetail' => [
-                'number' => (string)$modelXML->Modno,
+                'number' => $articleNumber,
                 'prices' => $pricesOfTheFirstVariant,
             ],
             'configuratorSet' => [
@@ -151,27 +169,29 @@ class ModelXMLImporter
         return $article;
     }
 
-    protected function createArticle(ModelXMLData $modelXMLData): Article
+    protected function createArticle(
+        string $articleNumber,
+        SimpleXMLElement $modelNode,
+        SimpleXMLElement $articleNode
+    ): Article
     {
-        $modelXML = $modelXMLData->getSimpleXMLElement();
         $loggingContext = [
-            'articleNumber' => (string)$modelXML->Moddeno,
+            'articleNumber' => $articleNumber,
         ];
 
         $this->logger->info(__METHOD__, $loggingContext);
 
-        $variants = $this->generateVariantsFromModelXML($modelXML);
+        $variants = $this->generateVariants($modelNode, $articleNode);
         $pricesOfTheFirstVariant = data_get($variants, '0.prices');
 
-        $articleNumber = (string)$modelXML->Modno;
         $articleData = [
             'active' => true,
-            'name' => (string)$modelXML->Moddeno,
-            'tax' => (string)$modelXML->Percentvat,
-            'supplier' => (string)$modelXML->Branddeno,
-            'descriptionLong' => (string)$modelXML->Longdescription,
+            'name' => (string)$modelNode->Moddeno . ' (' . (string)$articleNode->Colordeno . ')',
+            'tax' => (string)$modelNode->Percentvat,
+            'supplier' => (string)$modelNode->Branddeno,
+            'descriptionLong' => (string)$modelNode->Longdescription,
             'mainDetail' => [
-                'number' => (string)$modelXML->Modno,
+                'number' => $articleNumber,
                 'prices' => $pricesOfTheFirstVariant,
             ],
             'configuratorSet' => [
@@ -191,6 +211,37 @@ class ModelXMLImporter
         $this->logger->info(__METHOD__ . ' Post Articles Response ', $loggingContext);
 
         return $article;
+    }
+
+    protected function generateVariants(SimpleXMLElement $modelNode, SimpleXMLElement $articleNode): Collection
+    {
+        $variants = collect($articleNode->xpath('Size'))
+            ->flatMap(function (SimpleXMLElement $sizeXML) use ($modelNode, $articleNode) {
+                $eligibleBranches = collect($sizeXML->xpath('Branch'))
+                    ->filter([$this, 'isBranchEligible']);
+
+                return $eligibleBranches
+                    ->map(function (SimpleXMLElement $branchXML) use ($modelNode, $articleNode, $sizeXML) {
+                        return [
+                            'number' => (string)$sizeXML->Itemno,
+                            'ean' => (string)$sizeXML->Ean,
+                            'prices' => [[
+                                'price' => (float)$branchXML->Saleprice,
+                                'pseudoPrice' => $branchXML->Xprice ? (float)$branchXML->Xprice : null,
+                            ]],
+                            'inStock' => (int)$branchXML->Stockqty,
+                            'attribute' => [
+                                'attr1' => (string)$sizeXML->Itemdeno,
+                            ],
+                            'configuratorOptions' => [
+                                ['group' => 'Size', 'option' => (string)$sizeXML->Sizedeno],
+                            ]
+                        ];
+                    })
+                    ->values();
+            });
+
+        return $variants;
     }
 
     /**
