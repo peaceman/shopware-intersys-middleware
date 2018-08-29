@@ -1,0 +1,12 @@
+[Unit]
+Description=shopware-intersys-middleware Laravel Horizon
+
+[Service]
+Type=simple
+ExecStart=%%PHP_PATH%% %%BASE_PATH%%/artisan horizon
+Restart=always
+
+WorkingDirectory=%%BASE_PATH%%
+
+[Install]
+WantedBy=default.target

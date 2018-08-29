@@ -1,0 +1,11 @@
+[Unit]
+Description=Run shopware-intersys-middleware Laravel Scheduler
+
+[Timer]
+OnActiveSec=0
+AccuracySec=1
+OnUnitInactiveSec=30
+RandomizedDelaySec=10
+
+[Install]
+WantedBy=timers.target

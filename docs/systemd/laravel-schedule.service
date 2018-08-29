@@ -1,0 +1,8 @@
+[Unit]
+Description=shopware-intersys-middleware Laravel Scheduler
+
+[Service]
+Type=simple
+ExecStart=%%PHP_PATH%% %%BASE_PATH%%/artisan schedule:run
+
+WorkingDirectory=%%BASE_PATH%%
