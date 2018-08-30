@@ -9,11 +9,16 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Redis;
 use Psr\Log\LoggerInterface;
 
 class ScanImportFiles implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public $timeout = 60 * 30;
+
+    public $tries = 1;
 
     /**
      * Create a new job instance.
@@ -32,13 +37,22 @@ class ScanImportFiles implements ShouldQueue
      */
     public function handle(ImportFileScanner $importFileScanner)
     {
-        $importFiles = $importFileScanner->scan();
-        if ($importFiles->isEmpty()) return;
+        Redis::funnel('scan-import-files')
+            ->limit(1)
+            ->releaseAfter($this->timeout)
+            ->then(function () use ($importFileScanner) {
+                $importFiles = $importFileScanner->scan();
+                if ($importFiles->isEmpty()) return;
 
-        $importFile = $importFiles->shift();
-        dispatch(new ParseBaseXML($importFile))
-            ->chain($importFiles->map(function (ImportFile $importFile) {
-                return new ParseBaseXML($importFile);
-            }));
+                $importFile = $importFiles->shift();
+                dispatch(new ParseBaseXML($importFile))
+                    ->chain($importFiles->map(function (ImportFile $importFile) {
+                        return new ParseBaseXML($importFile);
+                    }));
+            }, function () {
+                // Could not obtain lock...
+                logger()->info('Could not obtain lock, delete job');
+                $this->delete();
+            });
     }
 }
