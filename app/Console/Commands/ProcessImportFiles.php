@@ -39,7 +39,7 @@ class ProcessImportFiles extends Command
      */
     public function handle()
     {
-        $importFiles = ImportFile::readyForImport()->orderBy('original_filename', 'desc')->get();
+        $importFiles = ImportFile::readyForImport()->orderBy('original_filename', 'asc')->get();
 
         $importFile = $importFiles->shift();
         dispatch(new ParseBaseXML($importFile))
