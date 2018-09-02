@@ -146,13 +146,13 @@ class ModelXMLImporterTest extends TestCase
             'tax' => '19.00',
             'supplier' => 'NEW ERA',
             'descriptionLong' => '',
+            'lastStock' => true,
             'mainDetail' => [
                 'number' => '10003436H000',
                 'prices' => [[
                     'price' => 35,
                     'pseudoPrice' => null,
                 ]],
-                'lastStock' => true,
                 'weight' => Article::DEFAULTS_WEIGHT,
                 'shippingTime' => Article::DEFAULTS_SHIPPING_TIME,
             ],
@@ -163,8 +163,10 @@ class ModelXMLImporterTest extends TestCase
             ],
             'variants' => [
                 [
+                    'active' => true,
                     'number' => '10003436HP2900004',
                     'ean' => '',
+                    'lastStock' => true,
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -178,8 +180,10 @@ class ModelXMLImporterTest extends TestCase
                     ]
                 ],
                 [
+                    'active' => true,
                     'number' => '10003436HP2900005',
                     'ean' => '',
+                    'lastStock' => true,
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -193,8 +197,10 @@ class ModelXMLImporterTest extends TestCase
                     ]
                 ],
                 [
+                    'active' => true,
                     'number' => '10003436HP2900009',
                     'ean' => '',
+                    'lastStock' => true,
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -234,13 +240,13 @@ class ModelXMLImporterTest extends TestCase
             'tax' => '19.00',
             'supplier' => 'NEW ERA',
             'descriptionLong' => '',
+            'lastStock' => true,
             'mainDetail' => [
                 'number' => '10003436H004',
                 'prices' => [[
                     'price' => 35,
                     'pseudoPrice' => null,
                 ]],
-                'lastStock' => true,
                 'weight' => Article::DEFAULTS_WEIGHT,
                 'shippingTime' => Article::DEFAULTS_SHIPPING_TIME,
             ],
@@ -251,8 +257,10 @@ class ModelXMLImporterTest extends TestCase
             ],
             'variants' => [
                 [
+                    'active' => true,
                     'number' => '10003436HP2900413',
                     'ean' => '',
+                    'lastStock' => true,
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -266,8 +274,10 @@ class ModelXMLImporterTest extends TestCase
                     ]
                 ],
                 [
+                    'active' => true,
                     'number' => '10003436HP2900417',
                     'ean' => '',
+                    'lastStock' => true,
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,

@@ -146,6 +146,8 @@ class ModelXMLImporter
         $variants = $this->generateVariants($modelNode, $articleNode)
             ->map(function ($variant) {
                 unset($variant['attribute']);
+                unset($variant['active']);
+                unset($variant['lastStock']);
 
                 return $variant;
             });
@@ -190,10 +192,10 @@ class ModelXMLImporter
             'tax' => (string)$modelNode->Percentvat,
             'supplier' => (string)$modelNode->Branddeno,
             'descriptionLong' => (string)$modelNode->Longdescription,
+            'lastStock' => true,
             'mainDetail' => [
                 'number' => $articleNumber,
                 'prices' => $pricesOfTheFirstVariant,
-                'lastStock' => true,
                 'weight' => Article::DEFAULTS_WEIGHT,
                 'shippingTime' => Article::DEFAULTS_SHIPPING_TIME,
             ],
@@ -226,8 +228,10 @@ class ModelXMLImporter
                 return $eligibleBranches
                     ->map(function (SimpleXMLElement $branchXML) use ($modelNode, $articleNode, $sizeXML) {
                         return [
+                            'active' => true,
                             'number' => (string)$sizeXML->Itemno,
                             'ean' => (string)$sizeXML->Ean,
+                            'lastStock' => true,
                             'prices' => [[
                                 'price' => (float)$branchXML->Saleprice,
                                 'pseudoPrice' => $branchXML->Xprice ? (float)$branchXML->Xprice : null,
