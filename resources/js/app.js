@@ -9,14 +9,25 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+import VueI18n from 'vue-i18n'
+
+Vue.use(VueI18n);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('manufacturer-size-mappings', require('./components/ManufacturerSizeMappings.vue'));
+
+// Create VueI18n instance with options
+const i18n = new VueI18n({
+    locale: 'en', // set locale
+    messages: {}, // set locale messages
+})
 
 const app = new Vue({
+    i18n,
     el: '#app'
 });
