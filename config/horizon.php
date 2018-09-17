@@ -79,6 +79,15 @@ return [
                 'processes' => 10,
                 'tries' => 3,
             ],
+
+            'supervisor-long-running' => [
+                'connection' => 'redis-long-running',
+                'queue' => ['long-running'],
+                'balance' => 'simple',
+                'processes' => 5,
+                'tries' => 2,
+                'timeout' => 15 * 60,
+            ],
         ],
 
         'local' => [
@@ -88,6 +97,15 @@ return [
                 'balance' => 'simple',
                 'processes' => 5,
                 'tries' => 3,
+            ],
+
+            'supervisor-long-running' => [
+                'connection' => 'redis-long-running',
+                'queue' => ['long-running'],
+                'balance' => 'simple',
+                'processes' => 5,
+                'tries' => 2,
+                'timeout' => 15 * 60,
             ],
         ],
     ],

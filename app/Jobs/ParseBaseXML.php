@@ -9,16 +9,17 @@ use App\Domain\Import\BaseXMLReader;
 use App\ImportFile;
 use Illuminate\Bus\Dispatcher;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 use Psr\Log\LoggerInterface;
 
 class ParseBaseXML implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     /**
      * @var ImportFile
      */
@@ -31,6 +32,7 @@ class ParseBaseXML implements ShouldQueue
      */
     public function __construct(ImportFile $importFile)
     {
+        $this->onQueue('long-running');
         $this->importFile = $importFile;
     }
 

@@ -5,12 +5,11 @@ namespace App\Jobs;
 use App\Domain\Import\ImportFileScanner;
 use App\ImportFile;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Redis;
-use Psr\Log\LoggerInterface;
 
 class ScanImportFiles implements ShouldQueue
 {
@@ -27,7 +26,7 @@ class ScanImportFiles implements ShouldQueue
      */
     public function __construct()
     {
-        //
+        $this->onQueue('long-running');
     }
 
     /**
