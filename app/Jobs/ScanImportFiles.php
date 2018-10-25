@@ -26,7 +26,7 @@ class ScanImportFiles implements ShouldQueue
      */
     public function __construct()
     {
-        $this->onQueue('long-running');
+        $this->onConnection('redis-long-running');
     }
 
     /**

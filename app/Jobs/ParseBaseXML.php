@@ -32,7 +32,7 @@ class ParseBaseXML implements ShouldQueue
      */
     public function __construct(ImportFile $importFile)
     {
-        $this->onQueue('long-running');
+        $this->onConnection('redis-long-running');
         $this->importFile = $importFile;
     }
 
