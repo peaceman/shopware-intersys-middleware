@@ -163,6 +163,7 @@ class ModelXMLImporter
         $articleData = [
             'mainDetail' => $mainDetail,
             'configuratorSet' => [
+                'type' => 2,
                 'groups' => $this->createConfiguratorSetGroupsFromVariants($variants),
             ],
             'variants' => $variants,
@@ -204,6 +205,7 @@ class ModelXMLImporter
                 'shippingTime' => Article::DEFAULTS_SHIPPING_TIME,
             ],
             'configuratorSet' => [
+                'type' => 2, // variant display type picture
                 'groups' => $this->createConfiguratorSetGroupsFromVariants($variants),
             ],
             'variants' => $variants,

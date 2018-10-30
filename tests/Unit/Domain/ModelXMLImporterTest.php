@@ -156,6 +156,7 @@ class ModelXMLImporterTest extends TestCase
                 'shippingTime' => Article::DEFAULTS_SHIPPING_TIME,
             ],
             'configuratorSet' => [
+                'type' => 2,
                 'groups' => [
                     ['name' => 'Size', 'options' => [['name' => 'XS'], ['name' => 'S'], ['name' => 'M']]],
                 ],
@@ -250,6 +251,7 @@ class ModelXMLImporterTest extends TestCase
                 'shippingTime' => Article::DEFAULTS_SHIPPING_TIME,
             ],
             'configuratorSet' => [
+                'type' => 2,
                 'groups' => [
                     ['name' => 'Size', 'options' => [['name' => 'L'], ['name' => 'XL']]],
                 ],
@@ -361,6 +363,7 @@ class ModelXMLImporterTest extends TestCase
                 ]],
             ],
             'configuratorSet' => [
+                'type' => 2,
                 'groups' => [
                     ['name' => 'Size', 'options' => [['name' => 'XS'], ['name' => 'S'], ['name' => 'M']]],
                 ],
@@ -429,6 +432,7 @@ class ModelXMLImporterTest extends TestCase
                 ]],
             ],
             'configuratorSet' => [
+                'type' => 2,
                 'groups' => [
                     ['name' => 'Size', 'options' => [['name' => 'L'], ['name' => 'XL']]],
                 ],
