@@ -12,7 +12,7 @@ class ShopwareArticleInfoTest extends TestCase
     public function testFullPriceProtectedArticle()
     {
         $articleJSON = file_get_contents(base_path('docs/fixtures/full-price-protected-article-response.json'));
-        $articleInfo = new ShopwareArticleInfo($articleJSON);
+        $articleInfo = new ShopwareArticleInfo(json_decode($articleJSON, true));
 
         static::assertEquals(true, $articleInfo->isPriceProtected('10003436H000'));
         static::assertEquals(true, $articleInfo->isPriceProtected('10003436HP2900004'));
@@ -22,7 +22,7 @@ class ShopwareArticleInfoTest extends TestCase
     public function testPartialPriceProtectedArticle()
     {
         $articleJSON = file_get_contents(base_path('docs/fixtures/partial-price-protected-article-response.json'));
-        $articleInfo = new ShopwareArticleInfo($articleJSON);
+        $articleInfo = new ShopwareArticleInfo(json_decode($articleJSON, true));
 
         static::assertEquals(false, $articleInfo->isPriceProtected('10003436H004'));
         static::assertEquals(false, $articleInfo->isPriceProtected('10003436HP2900413'));

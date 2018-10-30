@@ -12,7 +12,6 @@ use App\Domain\Import\ModelXMLImporter;
 use App\Domain\ShopwareAPI;
 use App\ImportFile;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -311,7 +310,9 @@ class ModelXMLImporterTest extends TestCase
         $container = [];
         $history = Middleware::history($container);
         $mock = new MockHandler([
+            new Response(200, [], file_get_contents(base_path('docs/fixtures/price-unprotected-article-response.json'))),
             new Response(201, [], '{"success":true,"data":{"id":23,"location":"https:\/\/www.foobar.de\/api\/articles\/1008"}}'),
+            new Response(200, [], file_get_contents(base_path('docs/fixtures/price-unprotected-article-response.json'))),
             new Response(201, [], '{"success":true,"data":{"id":24,"location":"https:\/\/www.foobar.de\/api\/articles\/1008"}}'),
         ]);
 
@@ -344,11 +345,11 @@ class ModelXMLImporterTest extends TestCase
         $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
         $modelXMLImporter->import(new ModelXMLData($importFile, $xmlString));
 
-        static::assertCount(2, $container);
+        static::assertCount(4, $container);
 
         // check first article
         /** @var \GuzzleHttp\Psr7\Request $updateRequest */
-        $updateRequest = $container[0]['request'];
+        $updateRequest = $container[1]['request'];
 
         $updateBody = json_decode((string)$updateRequest->getBody(), true);
 
@@ -416,7 +417,7 @@ class ModelXMLImporterTest extends TestCase
 
         // check second article
         /** @var \GuzzleHttp\Psr7\Request $updateRequest */
-        $updateRequest = $container[1]['request'];
+        $updateRequest = $container[3]['request'];
 
         $updateBody = json_decode((string)$updateRequest->getBody(), true);
 
@@ -469,5 +470,88 @@ class ModelXMLImporterTest extends TestCase
 
         [, $articleImport] = $articleImports;
         static::assertEquals($articleImport->import_file_id, $importFile->id);
+    }
+
+    public function testArticlePriceWontBeUpdatedIfItIsWriteProtected()
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(200, [], file_get_contents(base_path('docs/fixtures/full-price-protected-article-response.json'))),
+            new Response(201, [], '{"success":true,"data":{"id":23,"location":"https:\/\/www.foobar.de\/api\/articles\/1008"}}'),
+            new Response(200, [], file_get_contents(base_path('docs/fixtures/partial-price-protected-article-response.json'))),
+            new Response(201, [], '{"success":true,"data":{"id":24,"location":"https:\/\/www.foobar.de\/api\/articles\/1008"}}'),
+        ]);
+
+        $stack = HandlerStack::create($mock);
+        $stack->push($history);
+
+        $client = new Client([
+            'handler' => $stack,
+        ]);
+
+        $alreadyImportedFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-19-23-05.xml']);
+        $alreadyImportedFile->save();
+
+        $articleA = new Article(['is_modno' => '10003436H000', 'is_active' => true, 'sw_article_id' => 23]);
+        $articleA->save();
+
+        $articleA->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
+
+        $articleB = new Article(['is_modno' => '10003436H004', 'is_active' => true, 'sw_article_id' => 24]);
+        $articleB->save();
+
+        $articleB->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
+
+        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), new ShopwareAPI(new NullLogger(), $client));
+        $modelXMLImporter->setBranchesToImport(['006']);
+
+        $importFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => str_random(40)]);
+        $importFile->save();
+
+        $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
+        $modelXMLImporter->import(new ModelXMLData($importFile, $xmlString));
+
+        // the complete article is price write protected
+        /** @var Request $articleAInfoRequest */
+        $articleAInfoRequest = $container[0]['request'];
+        static::assertNotNull($articleAInfoRequest);
+        static::assertEquals('GET', $articleAInfoRequest->getMethod());
+        static::assertEquals("/api/articles/{$articleA->is_modno}", $articleAInfoRequest->getUri()->getPath());
+
+        /** @var Request $articleAUpdateRequest */
+        $articleAUpdateRequest = $container[1]['request'];
+        static::assertNotNull($articleAUpdateRequest);
+        static::assertEquals('PUT', $articleAUpdateRequest->getMethod());
+        static::assertEquals(
+            "/api/articles/{$articleA->sw_article_id}",
+            $articleAUpdateRequest->getUri()->getPath()
+        );
+
+        $updateBody = json_decode((string)$articleAUpdateRequest->getBody(), true);
+        static::assertNull(data_get($updateBody, 'mainDetail.prices'));
+        static::assertContainsOnly('null', data_get($updateBody, 'variants.*.prices'));
+
+        // just a variant of the article is write protected
+        /** @var Request $articleBInfoRequest */
+        $articleBInfoRequest = $container[2]['request'];
+        static::assertNotNull($articleBInfoRequest);
+        static::assertEquals('GET', $articleBInfoRequest->getMethod());
+        static::assertEquals("/api/articles/{$articleB->is_modno}", $articleBInfoRequest->getUri()->getPath());
+
+        $articleBUpdateRequest = $container[3]['request'];
+        static::assertNotNull($articleBUpdateRequest);
+        static::assertEquals('PUT', $articleBUpdateRequest->getMethod());
+        static::assertEquals(
+            "/api/articles/{$articleB->sw_article_id}",
+            $articleBUpdateRequest->getUri()->getPath()
+        );
+
+        $updateBody = json_decode((string)$articleBUpdateRequest->getBody(), true);
+        static::assertNotNull(data_get($updateBody, 'mainDetail.prices'));
+        static::assertThat(
+            data_get($updateBody, 'variants.*.prices'),
+            static::logicalNot(static::containsOnly('null'))
+        );
     }
 }

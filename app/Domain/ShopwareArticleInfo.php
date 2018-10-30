@@ -17,9 +17,14 @@ class ShopwareArticleInfo
      * ShopwareArticleInfo constructor.
      * @param array $articleData
      */
-    public function __construct(string $articleData)
+    public function __construct(array $articleData)
     {
-        $this->articleData = json_decode($articleData, true);
+        $this->articleData = $articleData;
+    }
+
+    public function getMainDetailArticleId(): int
+    {
+        return data_get($this->articleData, 'data.id');
     }
 
     public function isPriceProtected(string $swArticleNumber): bool

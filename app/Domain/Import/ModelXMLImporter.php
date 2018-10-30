@@ -6,8 +6,6 @@ namespace App\Domain\Import;
 
 use App\Article;
 use App\Domain\ShopwareAPI;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Collection;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
@@ -135,6 +133,7 @@ class ModelXMLImporter
     {
         $articleNumber = $article->is_modno;
         $swArticleId = $article->sw_article_id;
+        $swArticleInfo = $this->shopwareAPI->searchShopwareArticleInfoByArticleNumber($articleNumber);
 
         $loggingContext = [
             'articleNumber' => $articleNumber,
@@ -144,20 +143,25 @@ class ModelXMLImporter
         $this->logger->info(__METHOD__, $loggingContext);
 
         $variants = $this->generateVariants($modelNode, $articleNode)
-            ->map(function ($variant) {
+            ->map(function ($variant) use ($swArticleInfo) {
                 unset($variant['attribute']);
                 unset($variant['active']);
                 unset($variant['lastStock']);
+
+                if ($swArticleInfo->isPriceProtected($variant['number']))
+                    unset($variant['prices']);
 
                 return $variant;
             });
 
         $pricesOfTheFirstVariant = data_get($variants, '0.prices');
 
+        $mainDetail = [];
+        if (!$swArticleInfo->isPriceProtected($articleNumber))
+            $mainDetail['prices'] = $pricesOfTheFirstVariant;
+
         $articleData = [
-            'mainDetail' => [
-                'prices' => $pricesOfTheFirstVariant,
-            ],
+            'mainDetail' => $mainDetail,
             'configuratorSet' => [
                 'groups' => $this->createConfiguratorSetGroupsFromVariants($variants),
             ],
