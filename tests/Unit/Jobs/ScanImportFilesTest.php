@@ -7,8 +7,7 @@ namespace Tests\Unit\Jobs;
 
 use App\Domain\Import\ImportFileScanner;
 use App\ImportFile;
-use App\Jobs\ParseBaseXML;
-use App\Jobs\ParseModelXML;
+use App\Jobs\ReadImportFile;
 use App\Jobs\ScanImportFiles;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Queue;
@@ -34,9 +33,9 @@ class ScanImportFilesTest extends TestCase
         $scanImportFiles = new ScanImportFiles();
         $scanImportFiles->handle($importFileScanner);
 
-        Queue::assertPushedWithChain(ParseBaseXML::class, [
-            new ParseBaseXML($importFiles[1]),
-            new ParseBaseXML($importFiles[2]),
+        Queue::assertPushedWithChain(ReadImportFile::class, [
+            new ReadImportFile($importFiles[1]),
+            new ReadImportFile($importFiles[2]),
         ]);
     }
 }

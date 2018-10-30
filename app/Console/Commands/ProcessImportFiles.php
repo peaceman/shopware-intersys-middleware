@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\ImportFile;
-use App\Jobs\ParseBaseXML;
+use App\Jobs\ReadImportFile;
 use Illuminate\Console\Command;
 
 class ProcessImportFiles extends Command
@@ -42,9 +42,9 @@ class ProcessImportFiles extends Command
         $importFiles = ImportFile::readyForImport()->orderBy('original_filename', 'asc')->get();
 
         $importFile = $importFiles->shift();
-        dispatch(new ParseBaseXML($importFile))
+        dispatch(new ReadImportFile($importFile))
             ->chain($importFiles->map(function (ImportFile $importFile) {
-                return new ParseBaseXML($importFile);
+                return new ReadImportFile($importFile);
             }));
     }
 }

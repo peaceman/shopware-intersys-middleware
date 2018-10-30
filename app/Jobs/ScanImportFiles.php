@@ -44,9 +44,9 @@ class ScanImportFiles implements ShouldQueue
                 if ($importFiles->isEmpty()) return;
 
                 $importFile = $importFiles->shift();
-                dispatch(new ParseBaseXML($importFile))
+                dispatch(new ReadImportFile($importFile))
                     ->chain($importFiles->map(function (ImportFile $importFile) {
-                        return new ParseBaseXML($importFile);
+                        return new ReadImportFile($importFile);
                     }));
             }, function () {
                 // Could not obtain lock...

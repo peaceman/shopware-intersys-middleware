@@ -5,16 +5,16 @@
 
 namespace Tests\Unit\Domain;
 
-use App\Domain\Import\BaseXMLReader;
+use App\Domain\Import\ImportFileReader;
 use App\Domain\Import\ModelXMLData;
 use App\ImportFile;
-use function GuzzleHttp\Psr7\stream_for;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Storage;
 use Psr\Log\NullLogger;
 use Tests\TestCase;
+use function GuzzleHttp\Psr7\stream_for;
 
-class BaseXMLReaderTest extends TestCase
+class ImportFileReaderTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -31,7 +31,7 @@ class BaseXMLReaderTest extends TestCase
         $localFS = Storage::disk('local');
         $localFS->put($importFile->storage_path, stream_for(fopen(base_path('docs/fixtures/2018-08-10-03-25.xml'), 'r')));
 
-        $baseXMLReader = new BaseXMLReader(new NullLogger(), $localFS);
+        $baseXMLReader = new ImportFileReader(new NullLogger(), $localFS);
 
         $dataObjects = iterator_to_array(new \LimitIterator($baseXMLReader($importFile), 0, 3));
         static::assertCount(3, $dataObjects);
@@ -51,7 +51,7 @@ class BaseXMLReaderTest extends TestCase
 
         Storage::fake('local');
         $localFS = Storage::disk('local');
-        $baseXMLReader = new BaseXMLReader(new NullLogger(), $localFS);
+        $baseXMLReader = new ImportFileReader(new NullLogger(), $localFS);
 
         $dataObjects = iterator_to_array($baseXMLReader($importFile));
 
@@ -71,7 +71,7 @@ class BaseXMLReaderTest extends TestCase
         $localFS = Storage::disk('local');
         $localFS->put($importFile->storage_path, stream_for(fopen(base_path('docs/fixtures/2018-08-10-03-25.xml'), 'r')));
 
-        $baseXMLReader = new BaseXMLReader(new NullLogger(), $localFS);
+        $baseXMLReader = new ImportFileReader(new NullLogger(), $localFS);
         $iter = $baseXMLReader($importFile);
 
         while ($iter->valid()) $iter->next();

@@ -11,7 +11,7 @@ use Illuminate\Contracts\Filesystem\Filesystem;
 use Psr\Log\LoggerInterface;
 use XMLReader;
 
-class BaseXMLReader
+class ImportFileReader
 {
     /**
      * @var LoggerInterface
@@ -33,7 +33,7 @@ class BaseXMLReader
     {
         if (!$importFile->qualifiesForImport()) return;
 
-        $this->logger->info(__METHOD__ . ' Open base xml file', [
+        $this->logger->info(__METHOD__ . ' Open xml file', [
             'importFile' => [
                 'originalFilename' => $importFile->original_filename,
                 'storagePath' => $importFile->storage_path,
@@ -58,7 +58,7 @@ class BaseXMLReader
         $importFile->update(['processed_at' => now()]);
 
         $elapsedTime = microtime(true) - $startTime;
-        $this->logger->info(__METHOD__ . ' Finished reading base xml file', [
+        $this->logger->info(__METHOD__ . ' Finished reading xml file', [
             'importFile' => [
                 'originalFilename' => $importFile->original_filename,
                 'storagePath' => $importFile->storage_path,

@@ -5,7 +5,7 @@
 
 namespace App\Jobs;
 
-use App\Domain\Import\BaseXMLReader;
+use App\Domain\Import\ImportFileReader;
 use App\ImportFile;
 use Illuminate\Bus\Dispatcher;
 use Illuminate\Bus\Queueable;
@@ -16,7 +16,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 use Psr\Log\LoggerInterface;
 
-class ParseBaseXML implements ShouldQueue
+class ReadImportFile implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -43,9 +43,9 @@ class ParseBaseXML implements ShouldQueue
      */
     public function handle(LoggerInterface $logger, Dispatcher $dispatcher)
     {
-        $baseXMLReader = new BaseXMLReader($logger, Storage::disk('local'));
+        $importFileReader = new ImportFileReader($logger, Storage::disk('local'));
 
-        $modelXMLDataGenerator = $baseXMLReader($this->importFile);
+        $modelXMLDataGenerator = $importFileReader($this->importFile);
 
         foreach ($modelXMLDataGenerator as $modelXMLData) {
             $dispatcher->dispatch(new ParseModelXML($modelXMLData));
