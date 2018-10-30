@@ -133,11 +133,12 @@ class ModelXMLImporter
     {
         $articleNumber = $article->is_modno;
         $swArticleId = $article->sw_article_id;
-        $swArticleInfo = $this->shopwareAPI->searchShopwareArticleInfoByArticleNumber($articleNumber);
+        $swArticleInfo = $this->shopwareAPI->searchShopwareArticleInfoByArticle($article);
 
         $loggingContext = [
             'articleNumber' => $articleNumber,
             'swArticleId' => $swArticleId,
+            'foundSWArticleInfo' => !is_null($swArticleInfo),
         ];
 
         $this->logger->info(__METHOD__, $loggingContext);

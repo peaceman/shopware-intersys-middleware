@@ -521,7 +521,7 @@ class ModelXMLImporterTest extends TestCase
         $articleAInfoRequest = $container[0]['request'];
         static::assertNotNull($articleAInfoRequest);
         static::assertEquals('GET', $articleAInfoRequest->getMethod());
-        static::assertEquals("/api/articles/{$articleA->is_modno}", $articleAInfoRequest->getUri()->getPath());
+        static::assertEquals("/api/articles/{$articleA->sw_article_id}", $articleAInfoRequest->getUri()->getPath());
 
         /** @var Request $articleAUpdateRequest */
         $articleAUpdateRequest = $container[1]['request'];
@@ -541,7 +541,7 @@ class ModelXMLImporterTest extends TestCase
         $articleBInfoRequest = $container[2]['request'];
         static::assertNotNull($articleBInfoRequest);
         static::assertEquals('GET', $articleBInfoRequest->getMethod());
-        static::assertEquals("/api/articles/{$articleB->is_modno}", $articleBInfoRequest->getUri()->getPath());
+        static::assertEquals("/api/articles/{$articleB->sw_article_id}", $articleBInfoRequest->getUri()->getPath());
 
         $articleBUpdateRequest = $container[3]['request'];
         static::assertNotNull($articleBUpdateRequest);

@@ -6,6 +6,7 @@
 namespace App\Domain;
 
 
+use App\Article;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Psr\Log\LoggerInterface;
@@ -93,21 +94,17 @@ class ShopwareAPI
         ]);
     }
 
-    public function searchShopwareArticleInfoByArticleNumber(string $articleNumber): ?ShopwareArticleInfo
+    public function searchShopwareArticleInfoByArticle(Article $article): ?ShopwareArticleInfo
     {
         try {
-            $response = $this->httpClient->get("/api/articles/{$articleNumber}", [
-                'query' => [
-                    'useNumberAsId' => true,
-                ],
-            ]);
+            $response = $this->httpClient->get("/api/articles/{$article->sw_article_id}");
 
             $swArticleData = json_decode($response->getBody(), true);
             $swArticleInfo = new ShopwareArticleInfo($swArticleData);
 
             if ($swArticleInfo) {
                 $this->logger->info(__METHOD__ . ' Found article in shopware', [
-                    'articleNumber' => $articleNumber,
+                    'articleNumber' => $article->is_modno,
                     'swArticleId' => $swArticleInfo->getMainDetailArticleId(),
                 ]);
             }
@@ -116,7 +113,7 @@ class ShopwareAPI
         } catch (ClientException $e) {
             if ($e->getCode() === 404) {
                 $this->logger->info(__METHOD__ . ' Article does not exist in shopware', [
-                    'articleNumber' => $articleNumber,
+                    'articleNumber' => $article->is_modno,
                 ]);
 
                 return null;
