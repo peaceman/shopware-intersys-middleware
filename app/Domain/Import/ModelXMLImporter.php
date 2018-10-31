@@ -153,7 +153,7 @@ class ModelXMLImporter
 
         $variants = $this->generateVariants($modelNode, $articleNode)
             ->map(function ($variant) use ($swArticleInfo) {
-                unset($variant['attribute']);
+                $variant['attribute'] = array_only($variant['attribute'], ['availability']);
                 unset($variant['active']);
                 unset($variant['lastStock']);
 
@@ -236,36 +236,43 @@ class ModelXMLImporter
     protected function generateVariants(SimpleXMLElement $modelNode, SimpleXMLElement $articleNode): Collection
     {
         $variants = collect($articleNode->xpath('Size'))
-            ->flatMap(function (SimpleXMLElement $sizeXML) use ($modelNode, $articleNode) {
-                $eligibleBranches = collect($sizeXML->xpath('Branch'))
-                    ->filter([$this, 'isBranchEligible']);
+            ->map(function (SimpleXMLElement $sizeXML) use ($modelNode, $articleNode) {
+                [$eligibleBranches, $nonEligibleBranches] = collect($sizeXML->xpath('Branch'))
+                    ->partition([$this, 'isBranchEligible']);
 
-                return $eligibleBranches
-                    ->map(function (SimpleXMLElement $branchXML) use ($modelNode, $articleNode, $sizeXML) {
-                        $sourceSize = (string)$sizeXML->Sizedeno;
-                        $manufacturer = (string)$modelNode->Branddeno;
-                        $fedas = (string)$modelNode->Fedas;
-                        $mappedSize = $this->sizeMapper->mapSize($manufacturer, $fedas, $sourceSize);
+                [$eligibleBranch] = $eligibleBranches;
+                if (!$eligibleBranch) return [];
 
-                        return [
-                            'active' => true,
-                            'number' => (string)$sizeXML->Itemno,
-                            'ean' => (string)$sizeXML->Ean,
-                            'lastStock' => true,
-                            'prices' => [[
-                                'price' => (float)$branchXML->Saleprice,
-                                'pseudoPrice' => $branchXML->Xprice ? (float)$branchXML->Xprice : null,
-                            ]],
-                            'inStock' => (int)$branchXML->Stockqty,
-                            'attribute' => [
-                                'attr1' => (string)$sizeXML->Itemdeno,
-                            ],
-                            'configuratorOptions' => [
-                                ['group' => 'Size', 'option' => $mappedSize],
-                            ]
-                        ];
-                    })
-                    ->values();
+                $sourceSize = (string)$sizeXML->Sizedeno;
+                $manufacturer = (string)$modelNode->Branddeno;
+                $fedas = (string)$modelNode->Fedas;
+                $mappedSize = $this->sizeMapper->mapSize($manufacturer, $fedas, $sourceSize);
+
+                $availability = $nonEligibleBranches->map(function (SimpleXMLElement $branchXML) {
+                    return [
+                        'branchNo' => (string)$branchXML->Branchno,
+                        'stock' => (int)$branchXML->Stockqty,
+                    ];
+                })->values();
+
+                return [
+                    'active' => true,
+                    'number' => (string)$sizeXML->Itemno,
+                    'ean' => (string)$sizeXML->Ean,
+                    'lastStock' => true,
+                    'prices' => [[
+                        'price' => (float)$eligibleBranch->Saleprice,
+                        'pseudoPrice' => $eligibleBranch->Xprice ? (float)$eligibleBranch->Xprice : null,
+                    ]],
+                    'inStock' => (int)$eligibleBranch->Stockqty,
+                    'attribute' => [
+                        'attr1' => (string)$sizeXML->Itemdeno,
+                        'availability' => json_encode($availability),
+                    ],
+                    'configuratorOptions' => [
+                        ['group' => 'Size', 'option' => $mappedSize],
+                    ]
+                ];
             });
 
         return $variants;

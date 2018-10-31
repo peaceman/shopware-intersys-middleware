@@ -179,6 +179,16 @@ class ModelXMLImporterTest extends TestCase
                     'inStock' => 2,
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3436 BLACK/WHITE XS',
+                        'availability' => json_encode([
+                            [
+                                'branchNo' => '009',
+                                'stock' => 8,
+                            ],
+                            [
+                                'branchNo' => '011',
+                                'stock' => 23,
+                            ]
+                        ]),
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'R'],
@@ -196,6 +206,7 @@ class ModelXMLImporterTest extends TestCase
                     'inStock' => 1,
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3436 BLACK/WHITE S',
+                        'availability' => json_encode([]),
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'S'],
@@ -213,6 +224,7 @@ class ModelXMLImporterTest extends TestCase
                     'inStock' => 2,
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3436 BLACK/WHITE M',
+                        'availability' => json_encode([]),
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'M'],
@@ -274,6 +286,7 @@ class ModelXMLImporterTest extends TestCase
                     'inStock' => 0,
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3438 GREY/WHITE L',
+                        'availability' => json_encode([]),
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'L'],
@@ -291,6 +304,7 @@ class ModelXMLImporterTest extends TestCase
                     'inStock' => 0,
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3438 GREY/WHITE XL',
+                        'availability' => json_encode([]),
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'XL'],
@@ -384,6 +398,18 @@ class ModelXMLImporterTest extends TestCase
                         'pseudoPrice' => null,
                     ]],
                     'inStock' => 2,
+                    'attribute' => [
+                        'availability' => json_encode([
+                            [
+                                'branchNo' => '009',
+                                'stock' => 8,
+                            ],
+                            [
+                                'branchNo' => '011',
+                                'stock' => 23,
+                            ]
+                        ]),
+                    ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'R'],
                     ]
@@ -396,6 +422,9 @@ class ModelXMLImporterTest extends TestCase
                         'pseudoPrice' => null,
                     ]],
                     'inStock' => 1,
+                    'attribute' => [
+                        'availability' => json_encode([]),
+                    ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'S'],
                     ]
@@ -408,6 +437,9 @@ class ModelXMLImporterTest extends TestCase
                         'pseudoPrice' => null,
                     ]],
                     'inStock' => 2,
+                    'attribute' => [
+                        'availability' => json_encode([]),
+                    ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'M'],
                     ]
@@ -453,6 +485,9 @@ class ModelXMLImporterTest extends TestCase
                         'pseudoPrice' => null,
                     ]],
                     'inStock' => 0,
+                    'attribute' => [
+                        'availability' => json_encode([]),
+                    ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'L'],
                     ]
@@ -465,6 +500,9 @@ class ModelXMLImporterTest extends TestCase
                         'pseudoPrice' => null,
                     ]],
                     'inStock' => 0,
+                    'attribute' => [
+                        'availability' => json_encode([]),
+                    ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'XL'],
                     ]

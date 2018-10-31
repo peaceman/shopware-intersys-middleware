@@ -22,6 +22,16 @@
                 <Stockqty>2</Stockqty>
                 <Saleprice>35.00</Saleprice>
             </Branch>
+            <Branch>
+                <Branchno>009</Branchno>
+                <Stockqty>8</Stockqty>
+                <Saleprice>35.00</Saleprice>
+            </Branch>
+            <Branch>
+                <Branchno>011</Branchno>
+                <Stockqty>23</Stockqty>
+                <Saleprice>35.00</Saleprice>
+            </Branch>
         </Size>
         <Size>
             <Columnx>05</Columnx>
