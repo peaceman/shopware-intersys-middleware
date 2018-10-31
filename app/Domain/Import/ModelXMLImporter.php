@@ -240,8 +240,9 @@ class ModelXMLImporter
                 [$eligibleBranches, $nonEligibleBranches] = collect($sizeXML->xpath('Branch'))
                     ->partition([$this, 'isBranchEligible']);
 
-                [$eligibleBranch] = $eligibleBranches;
-                if (!$eligibleBranch) return [];
+                if (!count($eligibleBranches)) return null;
+
+                [$eligibleBranch] = $eligibleBranches->values();
 
                 $mappedSize = $this->mapSize($modelNode, (string)$sizeXML->Sizedeno);
                 $availability = $this->generateAvailabilityAttributeFromNonEligibleBranches($nonEligibleBranches);
@@ -264,7 +265,8 @@ class ModelXMLImporter
                         ['group' => 'Size', 'option' => $mappedSize],
                     ]
                 ];
-            });
+            })
+            ->filter();
 
         return $variants;
     }
@@ -287,47 +289,6 @@ class ModelXMLImporter
                 ];
             })
             ->values();
-    }
-
-    /**
-     * @param SimpleXMLElement $modelXML
-     * @return Collection
-     */
-    protected function generateVariantsFromModelXML(SimpleXMLElement $modelXML): Collection
-    {
-        $variants = collect($modelXML->xpath('Color'))
-            ->flatMap(function (SimpleXMLElement $colorXML) {
-                return collect($colorXML->xpath('Size'))
-                    ->flatMap(function (SimpleXMLElement $sizeXML) use ($colorXML) {
-                        $eligibleBranches = collect($sizeXML->xpath('Branch'))
-                            ->filter([$this, 'isBranchEligible']);
-
-                        return $eligibleBranches
-                            ->map(function (SimpleXMLElement $branchXML) use ($sizeXML, $colorXML) {
-                                return [
-                                    'additionaltext' => (string)$colorXML->Colordeno,
-                                    'number' => (string)$sizeXML->Itemno,
-                                    'ean' => (string)$sizeXML->Ean,
-                                    'prices' => [[
-                                        'price' => (float)$branchXML->Saleprice,
-                                        'pseudoPrice' => $branchXML->Xprice ? (float)$branchXML->Xprice : null,
-                                    ]],
-                                    'inStock' => (int)$branchXML->Stockqty,
-                                    'attribute' => [
-                                        'attr1' => (string)$sizeXML->Itemdeno,
-                                    ],
-                                    'configuratorOptions' => [
-                                        ['group' => 'Color', 'option' => (string)$colorXML->Colordeno],
-                                        ['group' => 'Size', 'option' => (string)$sizeXML->Sizedeno],
-                                    ]
-                                ];
-                            })
-                            ->values();
-                    })
-                    ->values();
-            });
-
-        return $variants;
     }
 
     /**
