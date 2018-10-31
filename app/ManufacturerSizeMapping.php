@@ -27,6 +27,10 @@ class ManufacturerSizeMapping extends Model
 {
     use SoftDeletes;
 
+    const GENDER_MALE_UNISEX = 'male';
+    const GENDER_FEMALE = 'female';
+    const GENDER_CHILD = 'child';
+
     protected $table = 'manufacturer_size_mappings';
 
     public function manufacturer(): BelongsTo

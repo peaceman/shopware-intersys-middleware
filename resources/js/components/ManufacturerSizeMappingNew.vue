@@ -38,7 +38,7 @@
         },
         data() {
             return {
-                genders: ['male', 'female', 'unisex', 'child'],
+                genders: ['male', 'female', 'child'],
                 sizeMapping: {},
                 errors: {},
             };
