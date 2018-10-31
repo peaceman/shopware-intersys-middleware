@@ -7,7 +7,6 @@ use App\Domain\Import\ModelXMLImporter;
 use App\Domain\Import\SkippingImportFileScanner;
 use App\Domain\ShopwareAPI;
 use GuzzleHttp\Client;
-use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use Psr\Log\LoggerInterface;
@@ -51,12 +50,11 @@ class AppServiceProvider extends ServiceProvider
 
     protected function registerModelXMLImporter(): void
     {
-        $this->app->bind(ModelXMLImporter::class, function () {
+        $this->app->extend(ModelXMLImporter::class, function (ModelXMLImporter $modelXMLImporter) {
             $branchesToImport = collect(explode(',', config('shopware.branchesToImport')))
                 ->map(function ($branch) { return trim($branch); })
                 ->toArray();
 
-            $modelXMLImporter = new ModelXMLImporter($this->app[LoggerInterface::class], $this->app[ShopwareAPI::class]);
             $modelXMLImporter->setBranchesToImport($branchesToImport);
 
             return $modelXMLImporter;
