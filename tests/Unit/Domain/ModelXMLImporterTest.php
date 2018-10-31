@@ -10,7 +10,10 @@ use App\ArticleImport;
 use App\Domain\Import\ModelXMLData;
 use App\Domain\Import\ModelXMLImporter;
 use App\Domain\ShopwareAPI;
+use App\Domain\SizeMapper;
 use App\ImportFile;
+use App\Manufacturer;
+use App\ManufacturerSizeMapping;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -33,7 +36,7 @@ class ModelXMLImporterTest extends TestCase
         $stack->push($history);
         $client = new Client(['handler' => $stack]);
 
-        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), new ShopwareAPI(new NullLogger(), $client));
+        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
         $modelXMLImporter->setBranchesToImport(['006']);
 
         $xmlString = file_get_contents(base_path('docs/fixtures/model-non-eligible.xml'));
@@ -50,7 +53,7 @@ class ModelXMLImporterTest extends TestCase
         $stack->push($history);
         $client = new Client(['handler' => $stack]);
 
-        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), new ShopwareAPI(new NullLogger(), $client));
+        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
         $modelXMLImporter->setBranchesToImport(['006']);
 
         $alreadyImportedFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-19-23-05.xml']);
@@ -80,7 +83,7 @@ class ModelXMLImporterTest extends TestCase
         $stack->push($history);
         $client = new Client(['handler' => $stack]);
 
-        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), new ShopwareAPI(new NullLogger(), $client));
+        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
         $modelXMLImporter->setBranchesToImport(['006']);
 
         $alreadyImportedFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-19-23-05.xml']);
@@ -122,7 +125,9 @@ class ModelXMLImporterTest extends TestCase
             'handler' => $stack,
         ]);
 
-        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), new ShopwareAPI(new NullLogger(), $client));
+        $this->createSizeMappings();
+
+        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
         $modelXMLImporter->setBranchesToImport(['006']);
 
         $importFile = new ImportFile(['type' => 'base', 'original_filename' => 'lel.xml', 'storage_path' => str_random(40)]);
@@ -158,7 +163,7 @@ class ModelXMLImporterTest extends TestCase
             'configuratorSet' => [
                 'type' => 2,
                 'groups' => [
-                    ['name' => 'Size', 'options' => [['name' => 'XS'], ['name' => 'S'], ['name' => 'M']]],
+                    ['name' => 'Size', 'options' => [['name' => 'R'], ['name' => 'S'], ['name' => 'M']]],
                 ],
             ],
             'variants' => [
@@ -176,7 +181,7 @@ class ModelXMLImporterTest extends TestCase
                         'attr1' => 'MLB BASIC NY YANKEES 3436 BLACK/WHITE XS',
                     ],
                     'configuratorOptions' => [
-                        ['group' => 'Size', 'option' => 'XS'],
+                        ['group' => 'Size', 'option' => 'R'],
                     ]
                 ],
                 [
@@ -325,6 +330,8 @@ class ModelXMLImporterTest extends TestCase
             'handler' => $stack,
         ]);
 
+        $this->createSizeMappings();
+
         $alreadyImportedFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-19-23-05.xml']);
         $alreadyImportedFile->save();
 
@@ -338,7 +345,7 @@ class ModelXMLImporterTest extends TestCase
 
         $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
-        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), new ShopwareAPI(new NullLogger(), $client));
+        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
         $modelXMLImporter->setBranchesToImport(['006']);
 
         $importFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => str_random(40)]);
@@ -365,7 +372,7 @@ class ModelXMLImporterTest extends TestCase
             'configuratorSet' => [
                 'type' => 2,
                 'groups' => [
-                    ['name' => 'Size', 'options' => [['name' => 'XS'], ['name' => 'S'], ['name' => 'M']]],
+                    ['name' => 'Size', 'options' => [['name' => 'R'], ['name' => 'S'], ['name' => 'M']]],
                 ],
             ],
             'variants' => [
@@ -378,7 +385,7 @@ class ModelXMLImporterTest extends TestCase
                     ]],
                     'inStock' => 2,
                     'configuratorOptions' => [
-                        ['group' => 'Size', 'option' => 'XS'],
+                        ['group' => 'Size', 'option' => 'R'],
                     ]
                 ],
                 [
@@ -507,7 +514,7 @@ class ModelXMLImporterTest extends TestCase
 
         $articleB->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
-        $modelXMLImporter = new ModelXMLImporter(new NullLogger(), new ShopwareAPI(new NullLogger(), $client));
+        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
         $modelXMLImporter->setBranchesToImport(['006']);
 
         $importFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => str_random(40)]);
@@ -557,5 +564,33 @@ class ModelXMLImporterTest extends TestCase
             data_get($updateBody, 'variants.*.prices'),
             static::logicalNot(static::containsOnly('null'))
         );
+    }
+
+    /**
+     * @param $client
+     * @return ModelXMLImporter
+     */
+    protected function createModelXMLImporterWithHTTPClient($client): ModelXMLImporter
+    {
+        return new ModelXMLImporter(new NullLogger(), new ShopwareAPI(new NullLogger(), $client), new SizeMapper());
+    }
+
+    protected function createSizeMappings(): void
+    {
+        /** @var Manufacturer $manufacturer */
+        $manufacturer = Manufacturer::unguarded(function () {
+            $m = new Manufacturer(['name' => 'NEW ERA']);
+            $m->save();
+
+            return $m;
+        });
+
+        ManufacturerSizeMapping::unguarded(function () use ($manufacturer) {
+            $manufacturer->sizeMappings()->create([
+                'gender' => ManufacturerSizeMapping::GENDER_FEMALE,
+                'source_size' => 'XS',
+                'target_size' => 'R',
+            ]);
+        });
     }
 }

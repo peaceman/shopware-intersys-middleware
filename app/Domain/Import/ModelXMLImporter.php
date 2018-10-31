@@ -6,6 +6,7 @@ namespace App\Domain\Import;
 
 use App\Article;
 use App\Domain\ShopwareAPI;
+use App\Domain\SizeMapper;
 use Illuminate\Support\Collection;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
@@ -23,6 +24,11 @@ class ModelXMLImporter
     protected $shopwareAPI;
 
     /**
+     * @var SizeMapper
+     */
+    protected $sizeMapper;
+
+    /**
      * @var string[]
      */
     protected $branchesToImport = [];
@@ -31,11 +37,13 @@ class ModelXMLImporter
      * ModelXMLImporter constructor.
      * @param LoggerInterface $logger
      * @param ShopwareAPI $shopwareAPI
+     * @param SizeMapper $sizeMapper
      */
-    public function __construct(LoggerInterface $logger, ShopwareAPI $shopwareAPI)
+    public function __construct(LoggerInterface $logger, ShopwareAPI $shopwareAPI, SizeMapper $sizeMapper)
     {
         $this->logger = $logger;
         $this->shopwareAPI = $shopwareAPI;
+        $this->sizeMapper = $sizeMapper;
     }
 
     /**
@@ -234,6 +242,11 @@ class ModelXMLImporter
 
                 return $eligibleBranches
                     ->map(function (SimpleXMLElement $branchXML) use ($modelNode, $articleNode, $sizeXML) {
+                        $sourceSize = (string)$sizeXML->Sizedeno;
+                        $manufacturer = (string)$modelNode->Branddeno;
+                        $fedas = (string)$modelNode->Fedas;
+                        $mappedSize = $this->sizeMapper->mapSize($manufacturer, $fedas, $sourceSize);
+
                         return [
                             'active' => true,
                             'number' => (string)$sizeXML->Itemno,
@@ -248,7 +261,7 @@ class ModelXMLImporter
                                 'attr1' => (string)$sizeXML->Itemdeno,
                             ],
                             'configuratorOptions' => [
-                                ['group' => 'Size', 'option' => (string)$sizeXML->Sizedeno],
+                                ['group' => 'Size', 'option' => $mappedSize],
                             ]
                         ];
                     })
