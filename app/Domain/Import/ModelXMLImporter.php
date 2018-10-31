@@ -243,17 +243,8 @@ class ModelXMLImporter
                 [$eligibleBranch] = $eligibleBranches;
                 if (!$eligibleBranch) return [];
 
-                $sourceSize = (string)$sizeXML->Sizedeno;
-                $manufacturer = (string)$modelNode->Branddeno;
-                $fedas = (string)$modelNode->Fedas;
-                $mappedSize = $this->sizeMapper->mapSize($manufacturer, $fedas, $sourceSize);
-
-                $availability = $nonEligibleBranches->map(function (SimpleXMLElement $branchXML) {
-                    return [
-                        'branchNo' => (string)$branchXML->Branchno,
-                        'stock' => (int)$branchXML->Stockqty,
-                    ];
-                })->values();
+                $mappedSize = $this->mapSize($modelNode, (string)$sizeXML->Sizedeno);
+                $availability = $this->generateAvailabilityAttributeFromNonEligibleBranches($nonEligibleBranches);
 
                 return [
                     'active' => true,
@@ -276,6 +267,26 @@ class ModelXMLImporter
             });
 
         return $variants;
+    }
+
+    protected function mapSize(SimpleXMLElement $modelNode, string $sourceSize): string
+    {
+        $manufacturer = (string)$modelNode->Branddeno;
+        $fedas = (string)$modelNode->Fedas;
+
+        return $this->sizeMapper->mapSize($manufacturer, $fedas, $sourceSize);
+    }
+
+    protected function generateAvailabilityAttributeFromNonEligibleBranches(Collection $nonEligibleBranches): Collection
+    {
+        return $nonEligibleBranches
+            ->map(function (SimpleXMLElement $branchXML) {
+                return [
+                    'branchNo' => (string)$branchXML->Branchno,
+                    'stock' => (int)$branchXML->Stockqty,
+                ];
+            })
+            ->values();
     }
 
     /**
