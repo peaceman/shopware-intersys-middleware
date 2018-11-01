@@ -8,6 +8,7 @@ namespace Tests\Unit\Domain\Export;
 use App\Domain\Export\Order;
 use App\Domain\Export\OrderArticle;
 use App\Domain\Export\OrderXMLGenerator;
+use App\OrderExport;
 use Tests\TestCase;
 
 class OrderXMLGeneratorTest extends TestCase
@@ -45,7 +46,7 @@ class OrderXMLGeneratorTest extends TestCase
 
         $exportDate = $testDate;
 
-        $saleXMLContent = $orderXMLGenerator->generate(OrderXMLGenerator::TYPE_SALE, $exportDate, $order, $orderArticles);
+        $saleXMLContent = $orderXMLGenerator->generate(OrderExport::TYPE_SALE, $exportDate, $order, $orderArticles);
         static::assertEquals(
             file_get_contents(base_path('docs/fixtures/export-sale.xml')),
             $saleXMLContent

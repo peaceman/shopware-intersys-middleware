@@ -5,11 +5,10 @@
 
 namespace App\Domain\Export;
 
+use App\OrderExport;
+
 class OrderXMLGenerator
 {
-    const TYPE_SALE = 'sale';
-    const TYPE_RETURN = 'return';
-
     protected $accountingBranchNo;
     protected $stockBranchNo;
 
@@ -79,7 +78,7 @@ class OrderXMLGenerator
         $item->appendChild($this->xml->createElement('Saleqty', $orderArticle->getQuantity()));
         $item->appendChild($this->createCostElement($orderArticle));
         $item->appendChild($this->xml->createElement('Dateoftrans', $this->formatDate($dateOfTrans)));
-        $item->appendChild($this->xml->createElement('Type', $type === static::TYPE_RETURN ? 'R' : 'S'));
+        $item->appendChild($this->xml->createElement('Type', $type === OrderExport::TYPE_RETURN ? 'R' : 'S'));
         $item->appendChild($this->xml->createElement('Branchno', $this->stockBranchNo));
 
         $commentEl = $this->xml->createElement('Comment');

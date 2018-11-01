@@ -50,7 +50,7 @@ class OrderXMLExporterTest extends TestCase
         $orderXMLGenerator->shouldReceive('generate')->withArgs((function (
             string $type, \DateTimeImmutable $exportDate, Order $order, array $orderArticles
         ) use ($orders) {
-            if ($type !== OrderXMLGenerator::TYPE_SALE) return false;
+            if ($type !== OrderExport::TYPE_SALE) return false;
             if ($order !== $orders[0]) return false;
 
             $articles = $order->getArticles();
@@ -66,7 +66,7 @@ class OrderXMLExporterTest extends TestCase
         $orderXMLGenerator->shouldReceive('generate')->withArgs(function (
             string $type, \DateTimeImmutable $exportDate, Order $order, array $orderArticles
         ) use ($orders) {
-            if ($type !== OrderXMLGenerator::TYPE_SALE) return false;
+            if ($type !== OrderExport::TYPE_SALE) return false;
             if ($order !== $orders[1]) return false;
 
             $articles = $order->getArticles();
@@ -82,7 +82,7 @@ class OrderXMLExporterTest extends TestCase
         $orderProvider = Mockery::mock(OrderProvider::class);
         $orderProvider->expects()->getOrders()->andReturn($orders);
 
-        $exporter->export(OrderXMLGenerator::TYPE_SALE, $orderProvider);
+        $exporter->export(OrderExport::TYPE_SALE, $orderProvider);
 
         // check existing remote files
         static::assertTrue($this->remoteFS->exists('order/order-23235S_Webshop_2018-10-31_23-05-55.xml'));

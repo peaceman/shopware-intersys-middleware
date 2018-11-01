@@ -135,7 +135,7 @@ class OrderXMLExporter
 
     private function generateRemoteFilenameForExportXML(string $type, Order $order)
     {
-        $typePart = $type === OrderXMLGenerator::TYPE_SALE ? 'S' : 'R';
+        $typePart = $type === OrderExport::TYPE_SALE ? 'S' : 'R';
         $orderTime = $order->getOrderTime()->format('Y-m-d_H-i-s');
 
         return "order-{$order->getOrderNumber()}{$typePart}_Webshop_{$orderTime}.xml";

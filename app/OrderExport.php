@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class OrderExport extends Model
 {
+    public const TYPE_RETURN = 'return';
+    public const TYPE_SALE = 'sale';
     protected $table = 'order_exports';
 
     public function orderExportArticles(): HasMany
