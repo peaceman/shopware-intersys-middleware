@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Collection;
 
 class SizeMapper
 {
+    protected $sizeMappings = [];
+
     public function mapSize(string $manufacturerName, ?string $fedas, string $sourceSize)
     {
         if (empty($fedas)) return $sourceSize;
@@ -28,6 +30,7 @@ class SizeMapper
 
         if (!$sizeMappings = ($this->sizeMappings[$manufacturerName] ?? null)) {
             $sizeMappings = $this->loadSizeMappingsForManufacturer($manufacturerName);
+            $this->sizeMappings[$manufacturerName] = $sizeMappings;
         }
 
         return $sizeMappings;
