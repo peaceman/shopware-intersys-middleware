@@ -19,7 +19,7 @@ class SizeMapperTest extends TestCase
     protected $manufacturer;
 
     /**
-     * @var \App\Domain\SizeMapper
+     * @var \App\Domain\Import\SizeMapper
      */
     protected $sizeMapper;
 
@@ -55,7 +55,7 @@ class SizeMapperTest extends TestCase
             ]);
         });
 
-        $this->sizeMapper = new \App\Domain\SizeMapper();
+        $this->sizeMapper = new \App\Domain\Import\SizeMapper();
     }
 
     public function testSizeMapping()

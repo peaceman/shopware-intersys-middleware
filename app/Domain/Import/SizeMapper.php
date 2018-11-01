@@ -3,7 +3,7 @@
  * lel since 31.10.18
  */
 
-namespace App\Domain;
+namespace App\Domain\Import;
 
 use App\Manufacturer;
 use App\ManufacturerSizeMapping;

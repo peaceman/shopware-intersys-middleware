@@ -6,7 +6,6 @@ namespace App\Domain\Import;
 
 use App\Article;
 use App\Domain\ShopwareAPI;
-use App\Domain\SizeMapper;
 use Illuminate\Support\Collection;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;

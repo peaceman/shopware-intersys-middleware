@@ -3,7 +3,7 @@
  * lel since 30.10.18
  */
 
-namespace App\Domain;
+namespace App\Domain\Import;
 
 
 class ShopwareArticleInfo

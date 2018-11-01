@@ -4,7 +4,7 @@
  */
 namespace Tests\Unit\Domain;
 
-use App\Domain\ShopwareArticleInfo;
+use App\Domain\Import\ShopwareArticleInfo;
 use Tests\TestCase;
 
 class ShopwareArticleInfoTest extends TestCase

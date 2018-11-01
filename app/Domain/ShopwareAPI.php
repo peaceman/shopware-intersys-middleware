@@ -7,6 +7,7 @@ namespace App\Domain;
 
 
 use App\Article;
+use App\Domain\Import\ShopwareArticleInfo;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Psr\Log\LoggerInterface;
