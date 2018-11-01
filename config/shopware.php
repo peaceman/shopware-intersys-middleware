@@ -25,5 +25,7 @@ return [
             ],
             'afterExportStatus' => env('SHOPWARE_ORDER_RETURN_AFTER_EXPORT_STATUS', 22), // retoure an intersys
         ],
+        'branchNoAccounting' => env('SHOPWARE_BRANCH_ACCOUNTING'),
+        'branchNoStock' => env('SHOPWARE_BRANCH_STOCK'),
     ],
 ];

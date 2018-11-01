@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Domain\Export\OrderReturnProvider;
 use App\Domain\Export\OrderSaleProvider;
+use App\Domain\Export\OrderXMLExporter;
+use App\Domain\Export\OrderXMLGenerator;
 use App\Domain\Import\ImportFileScanner;
 use App\Domain\Import\ModelXMLImporter;
 use App\Domain\Import\SkippingImportFileScanner;
@@ -36,6 +38,8 @@ class AppServiceProvider extends ServiceProvider
         $this->registerModelXMLImporter();
         $this->registerImportFileScanner();
         $this->registerOrderProvider();
+        $this->registerOrderXMLGenerator();
+        $this->registerOrderXMLExporter();
     }
 
     protected function registerShopwareAPI(): void
@@ -105,6 +109,33 @@ class AppServiceProvider extends ServiceProvider
             $osp->setReturnRequirements(config('shopware.order.return.requirements'));
 
             return $osp;
+        });
+    }
+
+    protected function registerOrderXMLExporter(): void
+    {
+        $this->app->bind(OrderXMLExporter::class, function () {
+            $exporter = new OrderXMLExporter(
+                $this->app[LoggerInterface::class],
+                Storage::disk('local'),
+                Storage::disk('intersys'),
+                $this->app[OrderXMLGenerator::class]
+            );
+
+            $exporter->setBaseFolder(config('intersys.folder.order'));
+
+            return $exporter;
+        });
+    }
+
+    protected function registerOrderXMLGenerator(): void
+    {
+        $this->app->bind(OrderXMLGenerator::class, function () {
+            $oxg = new OrderXMLGenerator();
+            $oxg->setAccountingBranchNo(config('shopware.order.branchNoAccounting'));
+            $oxg->setStockBranchNo(config('shopware.order.branchNoStock'));
+
+            return $oxg;
         });
     }
 }
