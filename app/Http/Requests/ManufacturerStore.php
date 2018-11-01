@@ -25,7 +25,11 @@ class ManufacturerStore extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', Rule::unique('manufacturers', 'name')],
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('manufacturers', 'name')->whereNull('deleted_at'),
+            ],
         ];
     }
 }

@@ -27,7 +27,8 @@ class ManufacturerSizeMappingStore extends FormRequest
         $gender = $this->input('gender');
 
         $uniqueRule = Rule::unique('manufacturer_size_mappings', 'source_size')
-            ->where('manufacturer_id', $this->route('manufacturer')->id);
+            ->where('manufacturer_id', $this->route('manufacturer')->id)
+            ->whereNull('deleted_at');
 
         if (!empty($gender)) $uniqueRule->where('gender', $gender);
 

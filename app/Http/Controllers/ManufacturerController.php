@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ManufacturerStore;
 use App\Manufacturer;
-use Illuminate\Http\Request;
 
 class ManufacturerController extends Controller
 {
@@ -47,36 +46,16 @@ class ManufacturerController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Manufacturer  $manufacturer
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Manufacturer $manufacturer)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Manufacturer  $manufacturer
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Manufacturer $manufacturer)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Manufacturer  $manufacturer
+     * @param  \App\Manufacturer $manufacturer
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Manufacturer $manufacturer)
     {
-        //
+        $manufacturer->delete();
+
+        return redirect()->route('manufacturers.index');
     }
 }
