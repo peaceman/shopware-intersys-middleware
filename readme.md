@@ -5,3 +5,5 @@
 `php artisan is:process-import-files`
 
 `php artisan sw:deactivate-articles`
+
+`php artisan sw:export-orders`
