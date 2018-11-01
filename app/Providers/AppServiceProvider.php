@@ -119,7 +119,8 @@ class AppServiceProvider extends ServiceProvider
                 $this->app[LoggerInterface::class],
                 Storage::disk('local'),
                 Storage::disk('intersys'),
-                $this->app[OrderXMLGenerator::class]
+                $this->app[OrderXMLGenerator::class],
+                $this->app[ShopwareAPI::class]
             );
 
             $exporter->setBaseFolder(config('intersys.folder.order'));
