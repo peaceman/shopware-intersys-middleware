@@ -9,6 +9,7 @@ namespace App\Domain;
 use App\Article;
 use App\Domain\Import\ShopwareArticleInfo;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException;
 use Psr\Log\LoggerInterface;
 
@@ -121,6 +122,44 @@ class ShopwareAPI
             }
 
             throw $e;
+        }
+    }
+
+    public function fetchOrders(array $filters): ?array
+    {
+        $loggingContext = ['filters' => $filters];
+
+        try {
+            $this->logger->info(__METHOD__, $loggingContext);
+            $response = $this->httpClient->get('/api/orders', [
+                'query' => [
+                    'filter' => $filters,
+                ],
+            ]);
+
+            return \GuzzleHttp\json_decode((string)$response->getBody(), true);
+        } catch (BadResponseException | \InvalidArgumentException $e) {
+            $this->logger->warning(__METHOD__ . ' Failed to fetch orders from shopware', $loggingContext);
+            report($e);
+
+            return null;
+        }
+    }
+
+    public function fetchOrderDetails(int $orderID): ?array
+    {
+        $loggingContext = ['orderID' => $orderID];
+
+        try {
+            $this->logger->info(__METHOD__, $loggingContext);
+            $response = $this->httpClient->get("/api/orders/{$orderID}");
+
+            return \GuzzleHttp\json_decode((string)$response->getBody(), true);
+        } catch (BadResponseException | \InvalidArgumentException $e) {
+            $this->logger->warning(__METHOD__ . ' Failed to fetch order details from shopware', $loggingContext);
+            report($e);
+
+            return null;
         }
     }
 }

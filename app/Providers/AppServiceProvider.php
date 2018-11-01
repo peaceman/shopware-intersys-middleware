@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Domain\Export\OrderSaleProvider;
 use App\Domain\Import\ImportFileScanner;
 use App\Domain\Import\ModelXMLImporter;
 use App\Domain\Import\SkippingImportFileScanner;
@@ -33,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerShopwareAPI();
         $this->registerModelXMLImporter();
         $this->registerImportFileScanner();
+        $this->registerOrderProvider();
     }
 
     protected function registerShopwareAPI(): void
@@ -87,6 +89,15 @@ class AppServiceProvider extends ServiceProvider
             $scanner->setDeltaFileFolder(config('intersys.folder.delta'));
 
             return $scanner;
+        });
+    }
+
+    protected function registerOrderProvider(): void
+    {
+        $this->app->extend(OrderSaleProvider::class, function (OrderSaleProvider $osp) {
+            $osp->setSaleRequirements(config('shopware.order.sale.requirements'));
+
+            return $osp;
         });
     }
 }
