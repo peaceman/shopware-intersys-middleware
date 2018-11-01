@@ -123,6 +123,8 @@ class AppServiceProvider extends ServiceProvider
             );
 
             $exporter->setBaseFolder(config('intersys.folder.order'));
+            $exporter->setAfterExportStatusReturn(config('shopware.order.return.afterExportStatus'));
+            $exporter->setAfterExportStatusSale(config('shopware.order.sale.afterExportStatus'));
 
             return $exporter;
         });

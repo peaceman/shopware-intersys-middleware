@@ -5,6 +5,7 @@
 
 namespace App\Domain\Export;
 
+use App\Domain\ShopwareAPI;
 use App\OrderExport;
 use App\OrderExportArticle;
 use Illuminate\Contracts\Filesystem\Filesystem;
@@ -37,16 +38,33 @@ class OrderXMLExporter
      */
     private $orderXMLGenerator;
 
+    /**
+     * @var ShopwareAPI
+     */
+    private $shopwareAPI;
+
+    /**
+     * @var int
+     */
+    private $afterExportStatusSale;
+
+    /**
+     * @var int
+     */
+    private $afterExportStatusReturn;
+
     public function __construct(
         LoggerInterface $logger,
         Filesystem $localFS,
         Filesystem $remoteFS,
-        OrderXMLGenerator $orderXMLGenerator
+        OrderXMLGenerator $orderXMLGenerator,
+        ShopwareAPI $shopwareAPI
     ) {
         $this->logger = $logger;
         $this->localFS = $localFS;
         $this->remoteFS = $remoteFS;
         $this->orderXMLGenerator = $orderXMLGenerator;
+        $this->shopwareAPI = $shopwareAPI;
     }
 
     public function setBaseFolder(string $baseFolder)
@@ -54,11 +72,23 @@ class OrderXMLExporter
         $this->baseFolder = $baseFolder;
     }
 
+    public function setAfterExportStatusSale(int $statusID)
+    {
+        $this->afterExportStatusSale = $statusID;
+    }
+
+    public function setAfterExportStatusReturn(int $statusID)
+    {
+        $this->afterExportStatusReturn = $statusID;
+    }
+
     public function export(string $type, OrderProvider $orderProvider)
     {
         /** @var Order $order */
         foreach ($orderProvider->getOrders() as $order) {
-            $this->exportOrder($type, $order);
+            rescue(function () use ($type, $order) {
+                $this->exportOrder($type, $order);
+            });
         }
     }
 
@@ -78,6 +108,8 @@ class OrderXMLExporter
         $exportXML = $this->orderXMLGenerator->generate($type, new \DateTimeImmutable(), $order, $articleInfo);
         $this->storeExportXMLOnRemoteFS($type, $order, $exportXML);
         $orderExport = $this->createOrderExportEntries($type, $order, $articleInfo, $exportXML);
+
+        $this->updateShopwareOrderState($type, $order);
         $this->logger->info(__METHOD__ . ' Finished', array_merge($loggingContext, ['orderExportID' => $orderExport->id]));
     }
 
@@ -186,5 +218,14 @@ class OrderXMLExporter
         $oea->save();
 
         return $oea;
+    }
+
+    private function updateShopwareOrderState(string $type, Order $order)
+    {
+        $newStatusID = $type === OrderExport::TYPE_SALE
+            ? $this->afterExportStatusSale
+            : $this->afterExportStatusReturn;
+
+        $this->shopwareAPI->updateOrderStatus($order->getID(), $newStatusID);
     }
 }

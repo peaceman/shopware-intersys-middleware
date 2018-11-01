@@ -9,7 +9,13 @@ use App\Domain\Export\OrderArticle;
 use App\Domain\Export\OrderProvider;
 use App\Domain\Export\OrderXMLExporter;
 use App\Domain\Export\OrderXMLGenerator;
+use App\Domain\ShopwareAPI;
 use App\OrderExport;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Storage;
@@ -44,6 +50,20 @@ class OrderXMLExporterTest extends TestCase
 
     public function testSaleExport()
     {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(200, [], json_encode(['data' => []])),
+            new Response(200, [], json_encode(['data' => []])),
+        ]);
+
+        $stack = HandlerStack::create($mock);
+        $stack->push($history);
+
+        $client = new Client([
+            'handler' => $stack,
+        ]);
+
         $orders = $this->generateOrdersForSaleExport();
 
         $orderXMLGenerator = Mockery::mock(OrderXMLGenerator::class);
@@ -76,8 +96,15 @@ class OrderXMLExporterTest extends TestCase
             return true;
         });
 
-        $exporter = new OrderXMLExporter(new NullLogger(), $this->localFS, $this->remoteFS, $orderXMLGenerator);
+        $shopwareAPI = new ShopwareAPI(new NullLogger(), $client);
+        $exporter = new OrderXMLExporter(
+            new NullLogger(),
+            $this->localFS, $this->remoteFS, $orderXMLGenerator,
+            $shopwareAPI
+        );
         $exporter->setBaseFolder('order');
+        $exporter->setAfterExportStatusSale(42);
+        $exporter->setAfterExportStatusReturn(43);
 
         $orderProvider = Mockery::mock(OrderProvider::class);
         $orderProvider->expects()->getOrders()->andReturn($orders);
@@ -101,6 +128,18 @@ class OrderXMLExporterTest extends TestCase
             'sw_order_number' => 23236,
             'sw_order_id' => 6,
         ]);
+
+        static::assertCount(2, $container);
+
+        $request = $container[0]['request'];
+        static::assertEquals('/api/orders/5', $request->getUri()->getPath());
+        $requestData = json_decode((string)$request->getBody(), true);
+        static::assertEquals(['orderStatusId' => 42], $requestData);
+
+        $request = $container[1]['request'];
+        static::assertEquals('/api/orders/6', $request->getUri()->getPath());
+        $requestData = json_decode((string)$request->getBody(), true);
+        static::assertEquals(['orderStatusId' => 42], $requestData);
     }
 
     protected function compareDateTime(\DateTimeInterface $dateTimeA, \DateTimeInterface $dateTimeB)
