@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Domain\Export\OrderReturnProvider;
 use App\Domain\Export\OrderSaleProvider;
 use App\Domain\Import\ImportFileScanner;
 use App\Domain\Import\ModelXMLImporter;
@@ -96,6 +97,12 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->extend(OrderSaleProvider::class, function (OrderSaleProvider $osp) {
             $osp->setSaleRequirements(config('shopware.order.sale.requirements'));
+
+            return $osp;
+        });
+
+        $this->app->extend(OrderReturnProvider::class, function (OrderReturnProvider $osp) {
+            $osp->setReturnRequirements(config('shopware.order.return.requirements'));
 
             return $osp;
         });
