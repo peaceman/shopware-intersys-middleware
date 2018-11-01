@@ -31,4 +31,9 @@ class OrderArticle
     {
         return $this->data['quantity'];
     }
+
+    public function getFullPrice(): float
+    {
+        return $this->getPrice() * $this->getQuantity();
+    }
 }
