@@ -138,7 +138,7 @@ class OrderXMLExporter
         $time = $startTime;
 
         while ($this->orderExportWithDateOfTransExists($article, $time)) {
-            $time = $time->add(new \DateInterval('P1M'));
+            $time = $time->add(new \DateInterval('PT1M'));
         }
 
         return $time;
