@@ -163,13 +163,23 @@ class ShopwareAPI
         }
     }
 
-    public function updateOrderStatus(int $orderID, int $newStatusID)
+    public function updateOrderStatus(int $orderID, int $newStatusID, array $positionIDs, int $newPositionStatusID)
     {
-        $loggingContext = ['orderID' => $orderID, 'newStatusID' => $newStatusID];
+        $loggingContext = [
+            'orderID' => $orderID, 'newStatusID' => $newStatusID,
+            'positionIDs' => $positionIDs, 'newPositionStatusID' => $newPositionStatusID
+        ];
         $this->logger->info(__METHOD__, $loggingContext);
+
         $response = $this->httpClient->put("/api/orders/{$orderID}", [
             'json' => [
                 'orderStatusId' => $newStatusID,
+                'details' => array_map(function (int $positionID) use ($newPositionStatusID) {
+                    return [
+                        'id' => $positionID,
+                        'status' => $newPositionStatusID,
+                    ];
+                }, $positionIDs),
             ],
         ]);
     }

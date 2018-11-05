@@ -9,7 +9,9 @@ use App\Domain\ShopwareAPI;
 use App\OrderExport;
 use App\OrderExportArticle;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Database\Eloquent\Builder;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 class OrderXMLExporter
 {
@@ -53,6 +55,11 @@ class OrderXMLExporter
      */
     private $afterExportStatusReturn;
 
+    /**
+     * @var int
+     */
+    private $afterExportPositionStatusReturn;
+
     public function __construct(
         LoggerInterface $logger,
         Filesystem $localFS,
@@ -82,6 +89,11 @@ class OrderXMLExporter
         $this->afterExportStatusReturn = $statusID;
     }
 
+    public function setAfterExportPositionStatusReturn(int $statusID)
+    {
+        $this->afterExportPositionStatusReturn = $statusID;
+    }
+
     public function export(string $type, OrderProvider $orderProvider)
     {
         /** @var Order $order */
@@ -94,7 +106,7 @@ class OrderXMLExporter
 
     protected function exportOrder(string $type, Order $order): void
     {
-        $loggingContext = ['orderNumber' => $order, 'swOrderID' => $order->getID()];
+        $loggingContext = ['orderNumber' => $order->getOrderNumber(), 'swOrderID' => $order->getID()];
         $this->logger->info(__METHOD__, $loggingContext);
 
         $articles = $order->getArticles();
@@ -103,7 +115,7 @@ class OrderXMLExporter
             return;
         }
 
-        $articleInfo = $this->prepareArticles($order, $articles);
+        $articleInfo = $this->prepareArticles($type, $order, $articles);
 
         $exportXML = $this->orderXMLGenerator->generate($type, new \DateTimeImmutable(), $order, $articleInfo);
         $this->storeExportXMLOnRemoteFS($type, $order, $exportXML);
@@ -113,21 +125,28 @@ class OrderXMLExporter
         $this->logger->info(__METHOD__ . ' Finished', array_merge($loggingContext, ['orderExportID' => $orderExport->id]));
     }
 
-    private function prepareArticles(Order $order, array $articles): array
+    private function prepareArticles(string $type, Order $order, array $articles): array
     {
-        return array_map(function (OrderArticle $article) use ($order) {
-            return $this->prepareArticle($order, $article);
+        return array_map(function (OrderArticle $article) use ($type, $order) {
+            return $this->prepareArticle($type, $order, $article);
         }, $articles);
     }
 
-    private function prepareArticle(Order $order, OrderArticle $article): array
+    private function prepareArticle(string $type, Order $order, OrderArticle $article): array
     {
-        $dateOfTrans = $this->determineFreeDateOfTransForArticle($article, $order->getOrderTime());
+        $dateOfTrans = $this->determineDateOfTransForArticle($type, $order, $article);
 
         return [
             'dateOfTrans' => $dateOfTrans,
             'article' => $article,
         ];
+    }
+
+    private function determineDateOfTransForArticle(string $type, Order $order, OrderArticle $article): \DateTimeImmutable
+    {
+        return $type === OrderExport::TYPE_SALE
+            ? $this->determineFreeDateOfTransForArticle($article, $order->getOrderTime())
+            : $this->determineDateOfTransForReturnArticle($order, $article);
     }
 
     private function determineFreeDateOfTransForArticle(
@@ -142,6 +161,29 @@ class OrderXMLExporter
         }
 
         return $time;
+    }
+
+    private function determineDateOfTransForReturnArticle(Order $order, OrderArticle $article): \DateTimeImmutable
+    {
+        /** @var OrderExportArticle $saleOrderArticle */
+        $saleOrderArticle = OrderExportArticle::query()
+            ->whereHas('orderExport', function (Builder $q) use ($order) {
+                $q->where('sw_order_number', $order->getOrderNumber());
+            })
+            ->where('sw_article_number', $article->getArticleNumber())
+            ->first();
+
+        if (!$saleOrderArticle) {
+            $this->logger->warning(__METHOD__ . ' Failed to find the corresponding sale order for a return order', [
+                'orderNumber' => $order->getOrderNumber(),
+                'orderTime' => $order->getOrderTime(),
+                'swArticleNumber' => $article->getArticleNumber(),
+            ]);
+
+            throw new RuntimeException('Failed to find the corresponding sale order for a return order');
+        }
+
+        return \DateTimeImmutable::createFromMutable($saleOrderArticle->date_of_trans);
     }
 
     /**
@@ -222,10 +264,20 @@ class OrderXMLExporter
 
     private function updateShopwareOrderState(string $type, Order $order)
     {
-        $newStatusID = $type === OrderExport::TYPE_SALE
-            ? $this->afterExportStatusSale
-            : $this->afterExportStatusReturn;
+        if ($type === OrderExport::TYPE_SALE) {
+            $newStatusID = $this->afterExportStatusSale;
+            $positionIDs = [];
+        } else {
+            $newStatusID = $this->afterExportStatusReturn;
 
-        $this->shopwareAPI->updateOrderStatus($order->getID(), $newStatusID);
+            $positionIDs = array_map(function (OrderArticle $orderArticle) {
+                return $orderArticle->getPositionID();
+            }, $order->getArticles());
+        }
+
+        $this->shopwareAPI->updateOrderStatus(
+            $order->getID(), $newStatusID,
+            $positionIDs, $this->afterExportPositionStatusReturn
+        );
     }
 }

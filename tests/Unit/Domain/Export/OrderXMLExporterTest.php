@@ -11,10 +11,12 @@ use App\Domain\Export\OrderXMLExporter;
 use App\Domain\Export\OrderXMLGenerator;
 use App\Domain\ShopwareAPI;
 use App\OrderExport;
+use App\OrderExportArticle;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -46,6 +48,112 @@ class OrderXMLExporterTest extends TestCase
 
         $this->localFS = Storage::disk('local');
         $this->remoteFS = Storage::disk('intersys');
+    }
+
+    public function testReturnExport()
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(200, [], json_encode(['data' => []])),
+        ]);
+
+        $stack = HandlerStack::create($mock);
+        $stack->push($history);
+
+        $client = new Client([
+            'handler' => $stack,
+        ]);
+
+        $order = $this->generateOrderForReturnExport();
+        [$orderArticle] = $order->getArticles();
+
+        $orderExport = new OrderExport();
+        $orderExport->type = 'sale';
+        $orderExport->storage_path = str_random(40) . '.xml';
+        $orderExport->sw_order_number = $order->getOrderNumber();
+        $orderExport->sw_order_id = $order->getID();
+        $orderExport->save();
+
+        $orderExportArticle = new OrderExportArticle();
+        $orderExportArticle->orderExport()->associate($orderExport);
+        $orderExportArticle->sw_article_number = $orderArticle->getArticleNumber();
+        $orderExportArticle->date_of_trans = \DateTime::createFromFormat('Ymd-His', '20181031-230555');
+        $orderExportArticle->save();
+
+        $orderXMLGenerator = Mockery::mock(OrderXMLGenerator::class);
+        $orderXMLGenerator->shouldReceive('generate')->withArgs(function (
+            string $type, \DateTimeImmutable $exportDate, Order $orderToCheck, array $orderArticles
+        ) use ($order, $orderExportArticle) {
+            if ($type !== OrderExport::TYPE_RETURN) return false;
+            if ($orderToCheck !== $order) return false;
+
+            if (!$this->compareDateTime($orderArticles[0]['dateOfTrans'], $orderExportArticle->date_of_trans))
+                return false;
+
+            $articles = $orderToCheck->getArticles();
+            if ($orderArticles[0]['article'] !== $articles[0]) return false;
+
+            return true;
+        });
+
+        $shopwareAPI = new ShopwareAPI(new NullLogger(), $client);
+        $exporter = new OrderXMLExporter(
+            new NullLogger(),
+            $this->localFS, $this->remoteFS, $orderXMLGenerator,
+            $shopwareAPI
+        );
+
+        $exporter->setBaseFolder('order');
+        $exporter->setAfterExportStatusSale(42);
+        $exporter->setAfterExportStatusReturn(43);
+        $exporter->setAfterExportPositionStatusReturn(16);
+
+        $orderProvider = Mockery::mock(OrderProvider::class);
+        $orderProvider->expects()->getOrders()->andReturn([$order]);
+
+        $exporter->export(OrderExport::TYPE_RETURN, $orderProvider);
+
+        // check existing remote files
+        static::assertTrue($this->remoteFS->exists('order/order-23235R_Webshop_2018-10-31_23-05-55.xml'));
+
+        OrderExport::query()->where('type', OrderExport::TYPE_RETURN)
+            ->get()->each(function (OrderExport $orderExport) {
+            static::assertTrue($this->localFS->exists($orderExport->storage_path));
+        });
+
+        /** @var OrderExport $orderExportReturn */
+        $orderExportReturn = OrderExport::query()->where('type', OrderExport::TYPE_RETURN)->first();
+        static::assertNotNull($orderExportReturn);
+        static::assertEquals($orderExportReturn->sw_order_number, '23235');
+        static::assertEquals($orderExportReturn->sw_order_id, 5);
+
+        [$orderExportArticleReturn] = $orderExportReturn->orderExportArticles;
+        static::assertNotNull($orderExportArticleReturn);
+        static::assertEquals($orderExportArticle->date_of_trans, $orderExportArticleReturn->date_of_trans);
+
+        static::assertDatabaseHas('order_exports', [
+            'type' => OrderExport::TYPE_RETURN,
+            'sw_order_number' => 23235,
+            'sw_order_id' => 5,
+        ]);
+
+        // check shopware api requests
+        static::assertCount(1, $container);
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+        static::assertEquals('/api/orders/5', $request->getUri()->getPath());
+        $requestData = json_decode((string)$request->getBody(), true);
+        static::assertEquals([
+            'orderStatusId' => 43,
+            'details' => [
+                [
+                    'id' => 11,
+                    'status' => 16,
+                ],
+            ]
+        ], $requestData);
     }
 
     public function testSaleExport()
@@ -105,6 +213,7 @@ class OrderXMLExporterTest extends TestCase
         $exporter->setBaseFolder('order');
         $exporter->setAfterExportStatusSale(42);
         $exporter->setAfterExportStatusReturn(43);
+        $exporter->setAfterExportPositionStatusReturn(16);
 
         $orderProvider = Mockery::mock(OrderProvider::class);
         $orderProvider->expects()->getOrders()->andReturn($orders);
@@ -134,12 +243,12 @@ class OrderXMLExporterTest extends TestCase
         $request = $container[0]['request'];
         static::assertEquals('/api/orders/5', $request->getUri()->getPath());
         $requestData = json_decode((string)$request->getBody(), true);
-        static::assertEquals(['orderStatusId' => 42], $requestData);
+        static::assertEquals(['orderStatusId' => 42, 'details' => []], $requestData);
 
         $request = $container[1]['request'];
         static::assertEquals('/api/orders/6', $request->getUri()->getPath());
         $requestData = json_decode((string)$request->getBody(), true);
-        static::assertEquals(['orderStatusId' => 42], $requestData);
+        static::assertEquals(['orderStatusId' => 42, 'details' => []], $requestData);
     }
 
     protected function compareDateTime(\DateTimeInterface $dateTimeA, \DateTimeInterface $dateTimeB)
@@ -193,5 +302,26 @@ class OrderXMLExporterTest extends TestCase
         $orders[] = $order;
 
         return $orders;
+    }
+
+    public function generateOrderForReturnExport(): Order
+    {
+        $order = new Order([
+            'id' => 5,
+            'number' => '23235',
+            'orderTime' => \DateTimeImmutable::createFromFormat('Ymd-His', '20181031-230555')
+                ->format(\DateTime::ISO8601),
+        ]);
+
+        $order->setArticles([
+            new OrderArticle([
+                'id' => 11,
+                'articleNumber' => 'ABC123',
+                'price' => 23.5,
+                'quantity' => 23,
+            ]),
+        ]);
+
+        return $order;
     }
 }

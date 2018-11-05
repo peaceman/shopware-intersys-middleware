@@ -22,8 +22,10 @@ return [
             'requirements' => [
                 'status' => env('SHOPWARE_ORDER_RETURN_REQ_STATUS', 4), // storniert abgelehnt
                 'cleared' => env('SHOPWARE_ORDER_RETURN_REQ_CLEARED', 12), // komplett bezahlt
+                'positionStatus' => env('SHOPWARE_ORDER_RETURN_REQ_POSITION_STATUS', 4), // retoure (export ausstehend)
             ],
             'afterExportStatus' => env('SHOPWARE_ORDER_RETURN_AFTER_EXPORT_STATUS', 22), // retoure an intersys
+            'afterExportPositionStatus' => env('SHOPWARE_ORDER_RETURN_AFTER_EXPORT_POSITION_STATUS', 5), // retoure (exportiert)
         ],
         'branchNoAccounting' => env('SHOPWARE_BRANCH_ACCOUNTING'),
         'branchNoStock' => env('SHOPWARE_BRANCH_STOCK'),

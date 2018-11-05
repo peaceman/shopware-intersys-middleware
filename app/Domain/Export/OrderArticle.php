@@ -36,4 +36,9 @@ class OrderArticle
     {
         return $this->getPrice() * $this->getQuantity();
     }
+
+    public function getPositionID(): int
+    {
+        return $this->data['id'];
+    }
 }

@@ -126,6 +126,7 @@ class AppServiceProvider extends ServiceProvider
             $exporter->setBaseFolder(config('intersys.folder.order'));
             $exporter->setAfterExportStatusReturn(config('shopware.order.return.afterExportStatus'));
             $exporter->setAfterExportStatusSale(config('shopware.order.sale.afterExportStatus'));
+            $exporter->setAfterExportPositionStatusReturn(config('shopware.order.return.afterExportPositionStatus'));
 
             return $exporter;
         });
