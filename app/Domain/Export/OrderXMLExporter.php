@@ -9,9 +9,7 @@ use App\Domain\ShopwareAPI;
 use App\OrderExport;
 use App\OrderExportArticle;
 use Illuminate\Contracts\Filesystem\Filesystem;
-use Illuminate\Database\Eloquent\Builder;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 
 class OrderXMLExporter
 {
@@ -151,8 +149,8 @@ class OrderXMLExporter
                     ? true
                     : $this->hasRequiredPositionStatusForExport($orderArticle);
             })
-            ->map(function (OrderArticle $orderArticle) use ($type, $order) {
-                return $this->prepareArticle($type, $order, $orderArticle);
+            ->map(function (OrderArticle $orderArticle) use ($order) {
+                return $this->prepareArticle($order, $orderArticle);
             })
             ->values()->toArray();
     }
@@ -162,9 +160,9 @@ class OrderXMLExporter
         return $orderArticle->getPositionStatusID() === $this->orderPositionStatusRequirementReturn;
     }
 
-    private function prepareArticle(string $type, Order $order, OrderArticle $article): array
+    private function prepareArticle(Order $order, OrderArticle $article): array
     {
-        $dateOfTrans = $this->determineDateOfTransForArticle($type, $order, $article);
+        $dateOfTrans = $this->determineDateOfTransForArticle($order, $article);
 
         return [
             'dateOfTrans' => $dateOfTrans,
@@ -172,11 +170,9 @@ class OrderXMLExporter
         ];
     }
 
-    private function determineDateOfTransForArticle(string $type, Order $order, OrderArticle $article): \DateTimeImmutable
+    private function determineDateOfTransForArticle(Order $order, OrderArticle $article): \DateTimeImmutable
     {
-        return $type === OrderExport::TYPE_SALE
-            ? $this->determineFreeDateOfTransForArticle($article, $order->getOrderTime())
-            : $this->determineDateOfTransForReturnArticle($order, $article);
+        return $this->determineFreeDateOfTransForArticle($article, $order->getOrderTime());
     }
 
     private function determineFreeDateOfTransForArticle(
@@ -191,29 +187,6 @@ class OrderXMLExporter
         }
 
         return $time;
-    }
-
-    private function determineDateOfTransForReturnArticle(Order $order, OrderArticle $article): \DateTimeImmutable
-    {
-        /** @var OrderExportArticle $saleOrderArticle */
-        $saleOrderArticle = OrderExportArticle::query()
-            ->whereHas('orderExport', function (Builder $q) use ($order) {
-                $q->where('sw_order_number', $order->getOrderNumber());
-            })
-            ->where('sw_article_number', $article->getArticleNumber())
-            ->first();
-
-        if (!$saleOrderArticle) {
-            $this->logger->warning(__METHOD__ . ' Failed to find the corresponding sale order for a return order', [
-                'orderNumber' => $order->getOrderNumber(),
-                'orderTime' => $order->getOrderTime(),
-                'swArticleNumber' => $article->getArticleNumber(),
-            ]);
-
-            throw new RuntimeException('Failed to find the corresponding sale order for a return order');
-        }
-
-        return \DateTimeImmutable::createFromMutable($saleOrderArticle->date_of_trans);
     }
 
     /**

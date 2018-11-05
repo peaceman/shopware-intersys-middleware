@@ -88,7 +88,7 @@ class OrderXMLExporterTest extends TestCase
             if ($type !== OrderExport::TYPE_RETURN) return false;
             if ($orderToCheck !== $order) return false;
 
-            if (!$this->compareDateTime($orderArticles[0]['dateOfTrans'], $orderExportArticle->date_of_trans))
+            if ($this->compareDateTime($orderArticles[0]['dateOfTrans'], $orderExportArticle->date_of_trans))
                 return false;
 
             $articles = $orderToCheck->getArticles();
@@ -132,7 +132,7 @@ class OrderXMLExporterTest extends TestCase
 
         [$orderExportArticleReturn] = $orderExportReturn->orderExportArticles;
         static::assertNotNull($orderExportArticleReturn);
-        static::assertEquals($orderExportArticle->date_of_trans, $orderExportArticleReturn->date_of_trans);
+        static::assertNotEquals($orderExportArticle->date_of_trans, $orderExportArticleReturn->date_of_trans);
 
         static::assertDatabaseHas('order_exports', [
             'type' => OrderExport::TYPE_RETURN,
