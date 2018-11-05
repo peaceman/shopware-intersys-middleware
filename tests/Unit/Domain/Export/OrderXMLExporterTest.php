@@ -161,6 +161,52 @@ class OrderXMLExporterTest extends TestCase
         ], $requestData);
     }
 
+    public function testSaleExportWithVouchers()
+    {
+        $mock = new MockHandler([
+            new Response(200, [], json_encode(['data' => []])),
+            new Response(200, [], json_encode(['data' => []])),
+        ]);
+
+        $stack = HandlerStack::create($mock);
+
+        $client = new Client([
+            'handler' => $stack,
+        ]);
+
+        $order = $this->generateOrderForSaleExportWithVoucher();
+        $orderXMLGenerator = Mockery::mock(OrderXMLGenerator::class);
+        $orderXMLGenerator->shouldReceive('generate')->withArgs((function (
+            string $type, \DateTimeImmutable $exportDate, Order $orderToCheck, array $orderArticles
+        ) use ($order) {
+            if ($type !== OrderExport::TYPE_SALE) return false;
+            if ($order !== $orderToCheck) return false;
+
+            foreach ($order->getArticles() as $article) {
+                if (!$article->isVoucher() && $article->getVoucherReduction() !== 10.0)
+                    return false;
+            }
+
+            return true;
+        }));
+
+        $shopwareAPI = new ShopwareAPI(new NullLogger(), $client);
+        $exporter = new OrderXMLExporter(
+            new NullLogger(),
+            $this->localFS, $this->remoteFS, $orderXMLGenerator,
+            $shopwareAPI
+        );
+        $exporter->setBaseFolder('order');
+        $exporter->setAfterExportStatusSale(42);
+        $exporter->setAfterExportStatusReturn(43);
+        $exporter->setAfterExportPositionStatusReturn(16);
+
+        $orderProvider = Mockery::mock(OrderProvider::class);
+        $orderProvider->expects()->getOrders()->andReturn([$order]);
+
+        $exporter->export(OrderExport::TYPE_SALE, $orderProvider);
+    }
+
     public function testSaleExport()
     {
         $container = [];
@@ -278,11 +324,13 @@ class OrderXMLExporterTest extends TestCase
                 'articleNumber' => 'ABC123',
                 'price' => 23.5,
                 'quantity' => 23,
+                'mode' => 0,
             ]),
             new OrderArticle([
                 'articleNumber' => 'ABC127',
                 'price' => 23.5,
                 'quantity' => 23,
+                'mode' => 0,
             ])
         ]);
 
@@ -301,12 +349,47 @@ class OrderXMLExporterTest extends TestCase
                 'articleNumber' => 'ABC127',
                 'price' => 23.5,
                 'quantity' => 5,
+                'mode' => 0,
             ])
         ]);
 
         $orders[] = $order;
 
         return $orders;
+    }
+
+    protected function generateOrderForSaleExportWithVoucher(): Order
+    {
+        $order = new Order([
+            'id' => 5,
+            'number' => '23235',
+            'orderTime' => \DateTimeImmutable::createFromFormat('Ymd-His', '20181031-230555')
+                ->format(\DateTime::ISO8601),
+        ]);
+
+        $order->setArticles([
+            new OrderArticle([
+                'articleNumber' => 'ABC123',
+                'price' => 23.5,
+                'quantity' => 23,
+                'mode' => 0,
+            ]),
+            new OrderArticle([
+                'articleNumber' => 'ABC127',
+                'price' => 23.5,
+                'quantity' => 23,
+                'mode' => 0,
+            ]),
+            new OrderArticle([
+                'id' => 13,
+                'articleNumber' => 'VOUCHER-0x1',
+                'price' => -10,
+                'quantity' => 2,
+                'mode' => 2,
+            ])
+        ]);
+
+        return $order;
     }
 
     public function generateOrderForReturnExport(): Order
@@ -325,6 +408,7 @@ class OrderXMLExporterTest extends TestCase
                 'price' => 23.5,
                 'quantity' => 23,
                 'statusId' => 15,
+                'mode' => 0,
             ]),
             new OrderArticle([
                 'id' => 12,
@@ -332,6 +416,7 @@ class OrderXMLExporterTest extends TestCase
                 'price' => 23.5,
                 'quantity' => 23,
                 'statusId' => 45,
+                'mode' => 0,
             ]),
         ]);
 

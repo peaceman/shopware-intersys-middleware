@@ -114,9 +114,13 @@ class OrderXMLExporter
     {
         /** @var Order $order */
         foreach ($orderProvider->getOrders() as $order) {
-            rescue(function () use ($type, $order) {
+            if (app()->runningUnitTests()) {
                 $this->exportOrder($type, $order);
-            });
+            } else {
+                rescue(function () use ($type, $order) {
+                    $this->exportOrder($type, $order);
+                });
+            }
         }
     }
 
@@ -126,7 +130,7 @@ class OrderXMLExporter
         $this->logger->info(__METHOD__, $loggingContext);
 
         $articles = $order->getArticles();
-        $articleInfo = $this->prepareArticles($type, $order, $articles);
+        $articleInfo = $this->prepareArticlesForExport($type, $order, $articles);
 
         if (empty($articleInfo)) {
             $this->logger->info(__METHOD__, ' Order has no articles to export', $loggingContext);
@@ -141,18 +145,33 @@ class OrderXMLExporter
         $this->logger->info(__METHOD__ . ' Finished', array_merge($loggingContext, ['orderExportID' => $orderExport->id]));
     }
 
-    private function prepareArticles(string $type, Order $order, array $articles): array
+    private function prepareArticlesForExport(string $type, Order $order, array $articles): array
     {
-        return collect($articles)
+        [$voucherArticles, $nonVoucherArticles] = collect($articles)
+            ->partition(function (OrderArticle $orderArticle) {
+                return $orderArticle->isVoucher();
+            });
+
+        $voucherReduction = $voucherArticles->reduce(function (float $result, OrderArticle $orderArticle) {
+            return $result + abs($orderArticle->getFullPrice());
+        }, 0);
+
+        $voucherReductionPerArticle = $voucherReduction / ($nonVoucherArticles->count() ?: 1);
+
+        $articlesToExport = $nonVoucherArticles
             ->filter(function (OrderArticle $orderArticle) use ($type) {
                 return $type === OrderExport::TYPE_SALE
                     ? true
                     : $this->hasRequiredPositionStatusForExport($orderArticle);
             })
-            ->map(function (OrderArticle $orderArticle) use ($order) {
+            ->map(function (OrderArticle $orderArticle) use ($order, $voucherReductionPerArticle) {
+                $orderArticle->setVoucherReduction($voucherReductionPerArticle);
+
                 return $this->prepareArticle($order, $orderArticle);
             })
             ->values()->toArray();
+
+        return $articlesToExport;
     }
 
     private function hasRequiredPositionStatusForExport(OrderArticle $orderArticle): bool
