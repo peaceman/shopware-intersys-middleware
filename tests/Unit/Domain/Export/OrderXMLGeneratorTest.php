@@ -36,11 +36,11 @@ class OrderXMLGeneratorTest extends TestCase
             ],
             [
                 'dateOfTrans' => $testDate,
-                'article' => new OrderArticle([
+                'article' => (new OrderArticle([
                     'articleNumber' => 'ABC127',
                     'price' => 23.5,
                     'quantity' => 23,
-                ]),
+                ]))->setVoucherReduction(10),
             ],
         ];
 
