@@ -40,7 +40,7 @@ class OrderXMLGeneratorTest extends TestCase
                     'articleNumber' => 'ABC127',
                     'price' => 23.5,
                     'quantity' => 23,
-                ]))->setVoucherReduction(10),
+                ]))->setVoucherPercentage(0.1),
             ],
         ];
 

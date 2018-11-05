@@ -18,7 +18,7 @@ class OrderArticle
     /**
      * @var float
      */
-    protected $voucherReduction = 0.0;
+    protected $voucherPercentage = 0.0;
 
     /**
      * OrderArticle constructor.
@@ -46,7 +46,7 @@ class OrderArticle
 
     public function getFullPrice(): float
     {
-        return $this->getPrice() * $this->getQuantity() - $this->getVoucherReduction();
+        return $this->getPrice() * $this->getQuantity() * (1 - $this->getVoucherPercentage());
     }
 
     public function getPositionID(): int
@@ -62,18 +62,18 @@ class OrderArticle
     /**
      * @return float
      */
-    public function getVoucherReduction(): float
+    public function getVoucherPercentage(): float
     {
-        return $this->voucherReduction;
+        return $this->voucherPercentage;
     }
 
     /**
-     * @param float $voucherReduction
+     * @param float $voucherPercentage
      * @return OrderArticle
      */
-    public function setVoucherReduction(float $voucherReduction): OrderArticle
+    public function setVoucherPercentage(float $voucherPercentage): OrderArticle
     {
-        $this->voucherReduction = $voucherReduction;
+        $this->voucherPercentage = $voucherPercentage;
 
         return $this;
     }

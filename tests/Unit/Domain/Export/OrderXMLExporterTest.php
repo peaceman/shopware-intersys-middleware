@@ -183,7 +183,7 @@ class OrderXMLExporterTest extends TestCase
             if ($order !== $orderToCheck) return false;
 
             foreach ($order->getArticles() as $article) {
-                if (!$article->isVoucher() && $article->getVoucherReduction() !== 10.0)
+                if (!$article->isVoucher() && abs(($article->getVoucherPercentage() - 0.4) / 0.4) > 0.00001)
                     return false;
             }
 
@@ -383,7 +383,7 @@ class OrderXMLExporterTest extends TestCase
             new OrderArticle([
                 'id' => 13,
                 'articleNumber' => 'VOUCHER-0x1',
-                'price' => -10,
+                'price' => -216.2,
                 'quantity' => 2,
                 'mode' => 2,
             ])

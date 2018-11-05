@@ -152,11 +152,19 @@ class OrderXMLExporter
                 return $orderArticle->isVoucher();
             });
 
-        $voucherReduction = $voucherArticles->reduce(function (float $result, OrderArticle $orderArticle) {
-            return $result + abs($orderArticle->getFullPrice());
-        }, 0);
+        $nonVoucherFullPriceSum = $nonVoucherArticles
+            ->map(function (OrderArticle $orderArticle) {
+                return $orderArticle->getFullPrice();
+            })
+            ->sum();
 
-        $voucherReductionPerArticle = $voucherReduction / ($nonVoucherArticles->count() ?: 1);
+        $voucherFullPriceSum = $voucherArticles
+            ->map(function (OrderArticle $orderArticle) {
+                return abs($orderArticle->getFullPrice());
+            })
+            ->sum();
+
+        $voucherPercentage = $voucherFullPriceSum / $nonVoucherFullPriceSum;
 
         $articlesToExport = $nonVoucherArticles
             ->filter(function (OrderArticle $orderArticle) use ($type) {
@@ -164,8 +172,8 @@ class OrderXMLExporter
                     ? true
                     : $this->hasRequiredPositionStatusForExport($orderArticle);
             })
-            ->map(function (OrderArticle $orderArticle) use ($order, $voucherReductionPerArticle) {
-                $orderArticle->setVoucherReduction($voucherReductionPerArticle);
+            ->map(function (OrderArticle $orderArticle) use ($order, $voucherPercentage) {
+                $orderArticle->setVoucherPercentage($voucherPercentage);
 
                 return $this->prepareArticle($order, $orderArticle);
             })
