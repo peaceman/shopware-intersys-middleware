@@ -27,13 +27,4 @@ class OrderReturnProvider extends OrderProvider
     {
         $this->returnRequirements = $returnRequirements;
     }
-
-    protected function fetchOrderArticles(Order $order): array
-    {
-        $orderArticles = parent::fetchOrderArticles($order);
-
-        return array_filter($orderArticles, function (OrderArticle $orderArticle) {
-            return $orderArticle->getPositionStatusID() === $this->returnRequirements['positionStatus'];
-        });
-    }
 }

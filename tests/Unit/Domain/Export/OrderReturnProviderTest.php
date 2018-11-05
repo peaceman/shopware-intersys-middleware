@@ -99,7 +99,12 @@ class OrderReturnProviderTest extends TestCase
 
         /** @var OrderArticle[] $articles */
         $articles = $order->getArticles();
-        static::assertCount(1, $articles);
+        static::assertCount(2, $articles);
+
+        $article = array_shift($articles);
+        static::assertEquals('90389615640349', $article->getArticleNumber());
+        static::assertEquals(1, $article->getQuantity());
+        static::assertEquals(90, $article->getPrice());
 
         $article = array_shift($articles);
         static::assertEquals('90389615640350', $article->getArticleNumber());

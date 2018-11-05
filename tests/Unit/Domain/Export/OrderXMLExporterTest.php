@@ -108,6 +108,7 @@ class OrderXMLExporterTest extends TestCase
         $exporter->setAfterExportStatusSale(42);
         $exporter->setAfterExportStatusReturn(43);
         $exporter->setAfterExportPositionStatusReturn(16);
+        $exporter->setOrderPositionStatusRequirementReturn(15);
 
         $orderProvider = Mockery::mock(OrderProvider::class);
         $orderProvider->expects()->getOrders()->andReturn([$order]);
@@ -127,6 +128,7 @@ class OrderXMLExporterTest extends TestCase
         static::assertNotNull($orderExportReturn);
         static::assertEquals($orderExportReturn->sw_order_number, '23235');
         static::assertEquals($orderExportReturn->sw_order_id, 5);
+        static::assertEquals(1, $orderExportReturn->orderExportArticles->count());
 
         [$orderExportArticleReturn] = $orderExportReturn->orderExportArticles;
         static::assertNotNull($orderExportArticleReturn);
@@ -151,6 +153,9 @@ class OrderXMLExporterTest extends TestCase
                 [
                     'id' => 11,
                     'status' => 16,
+                ],
+                [
+                    'id' => 12,
                 ],
             ]
         ], $requestData);
@@ -319,6 +324,14 @@ class OrderXMLExporterTest extends TestCase
                 'articleNumber' => 'ABC123',
                 'price' => 23.5,
                 'quantity' => 23,
+                'statusId' => 15,
+            ]),
+            new OrderArticle([
+                'id' => 12,
+                'articleNumber' => 'ABC123',
+                'price' => 23.5,
+                'quantity' => 23,
+                'statusId' => 45,
             ]),
         ]);
 

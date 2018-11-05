@@ -60,6 +60,19 @@ class OrderXMLExporter
      */
     private $afterExportPositionStatusReturn;
 
+    /**
+     * @var int
+     */
+    private $orderPositionStatusRequirementReturn;
+
+    /**
+     * OrderXMLExporter constructor.
+     * @param LoggerInterface $logger
+     * @param Filesystem $localFS
+     * @param Filesystem $remoteFS
+     * @param OrderXMLGenerator $orderXMLGenerator
+     * @param ShopwareAPI $shopwareAPI
+     */
     public function __construct(
         LoggerInterface $logger,
         Filesystem $localFS,
@@ -94,6 +107,11 @@ class OrderXMLExporter
         $this->afterExportPositionStatusReturn = $statusID;
     }
 
+    public function setOrderPositionStatusRequirementReturn(int $positionStatusID): void
+    {
+        $this->orderPositionStatusRequirementReturn = $positionStatusID;
+    }
+
     public function export(string $type, OrderProvider $orderProvider)
     {
         /** @var Order $order */
@@ -110,12 +128,12 @@ class OrderXMLExporter
         $this->logger->info(__METHOD__, $loggingContext);
 
         $articles = $order->getArticles();
-        if (empty($articles)) {
-            $this->logger->info(__METHOD__, ' Order has no articles', $loggingContext);
+        $articleInfo = $this->prepareArticles($type, $order, $articles);
+
+        if (empty($articleInfo)) {
+            $this->logger->info(__METHOD__, ' Order has no articles to export', $loggingContext);
             return;
         }
-
-        $articleInfo = $this->prepareArticles($type, $order, $articles);
 
         $exportXML = $this->orderXMLGenerator->generate($type, new \DateTimeImmutable(), $order, $articleInfo);
         $this->storeExportXMLOnRemoteFS($type, $order, $exportXML);
@@ -127,9 +145,21 @@ class OrderXMLExporter
 
     private function prepareArticles(string $type, Order $order, array $articles): array
     {
-        return array_map(function (OrderArticle $article) use ($type, $order) {
-            return $this->prepareArticle($type, $order, $article);
-        }, $articles);
+        return collect($articles)
+            ->filter(function (OrderArticle $orderArticle) use ($type) {
+                return $type === OrderExport::TYPE_SALE
+                    ? true
+                    : $this->hasRequiredPositionStatusForExport($orderArticle);
+            })
+            ->map(function (OrderArticle $orderArticle) use ($type, $order) {
+                return $this->prepareArticle($type, $order, $orderArticle);
+            })
+            ->values()->toArray();
+    }
+
+    private function hasRequiredPositionStatusForExport(OrderArticle $orderArticle): bool
+    {
+        return $orderArticle->getPositionStatusID() === $this->orderPositionStatusRequirementReturn;
     }
 
     private function prepareArticle(string $type, Order $order, OrderArticle $article): array
@@ -266,18 +296,23 @@ class OrderXMLExporter
     {
         if ($type === OrderExport::TYPE_SALE) {
             $newStatusID = $this->afterExportStatusSale;
-            $positionIDs = [];
+            $details = [];
         } else {
             $newStatusID = $this->afterExportStatusReturn;
 
-            $positionIDs = array_map(function (OrderArticle $orderArticle) {
-                return $orderArticle->getPositionID();
+            $details = array_map(function (OrderArticle $orderArticle) {
+                $data = ['id' => $orderArticle->getPositionID()];
+
+                if ($this->hasRequiredPositionStatusForExport($orderArticle)) {
+                    $data['status'] = $this->afterExportPositionStatusReturn;
+                }
+
+                return $data;
             }, $order->getArticles());
         }
 
         $this->shopwareAPI->updateOrderStatus(
-            $order->getID(), $newStatusID,
-            $positionIDs, $this->afterExportPositionStatusReturn
+            $order->getID(), $newStatusID, $details
         );
     }
 }

@@ -127,6 +127,7 @@ class AppServiceProvider extends ServiceProvider
             $exporter->setAfterExportStatusReturn(config('shopware.order.return.afterExportStatus'));
             $exporter->setAfterExportStatusSale(config('shopware.order.sale.afterExportStatus'));
             $exporter->setAfterExportPositionStatusReturn(config('shopware.order.return.afterExportPositionStatus'));
+            $exporter->setOrderPositionStatusRequirementReturn(config('shopware.order.return.requirements.positionStatus'));
 
             return $exporter;
         });
