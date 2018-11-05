@@ -24,6 +24,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ImportFile extends Model
 {
+    const TYPE_BASE = 'base';
+    const TYPE_DELTA = 'delta';
+
     protected static $unguarded = true;
 
     public function scopeType($query, $type)

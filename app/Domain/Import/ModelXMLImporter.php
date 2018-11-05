@@ -6,6 +6,7 @@ namespace App\Domain\Import;
 
 use App\Article;
 use App\Domain\ShopwareAPI;
+use App\ImportFile;
 use Illuminate\Support\Collection;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
@@ -90,7 +91,7 @@ class ModelXMLImporter
             ]);
         } else {
             $article = $article
-                ? $this->updateArticle($article, $modelNode, $articleNode)
+                ? $this->updateArticle($modelXMLData, $article, $modelNode, $articleNode)
                 : $this->createArticle($articleNumber, $modelNode, $articleNode);
         }
 
@@ -133,6 +134,7 @@ class ModelXMLImporter
     }
 
     protected function updateArticle(
+        ModelXMLData $modelXMLData,
         Article $article,
         SimpleXMLElement $modelNode,
         SimpleXMLElement $articleNode
@@ -176,6 +178,9 @@ class ModelXMLImporter
             ],
             'variants' => $variants,
         ];
+
+        if ($modelXMLData->getImportFile()->type === ImportFile::TYPE_DELTA)
+            unset($articleData['configuratorSet']);
 
         $this->shopwareAPI->updateShopwareArticle($swArticleId, $articleData);
 
