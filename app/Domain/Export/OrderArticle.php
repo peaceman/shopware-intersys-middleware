@@ -41,4 +41,9 @@ class OrderArticle
     {
         return $this->data['id'];
     }
+
+    public function getPositionStatusID(): int
+    {
+        return $this->data['statusId'];
+    }
 }

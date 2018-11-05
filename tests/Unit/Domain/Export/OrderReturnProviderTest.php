@@ -5,12 +5,15 @@
 
 namespace Tests\Unit\Domain\Export;
 
+use App\Domain\Export\Order;
+use App\Domain\Export\OrderArticle;
 use App\Domain\Export\OrderReturnProvider;
 use App\Domain\ShopwareAPI;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Psr\Log\NullLogger;
 use Tests\TestCase;
@@ -33,11 +36,7 @@ class OrderReturnProviderTest extends TestCase
             'handler' => $stack,
         ]);
 
-        $orp = new OrderReturnProvider(new ShopwareAPI(new NullLogger(), $client));
-        $orp->setReturnRequirements([
-            'status' => 23,
-            'cleared' => 42,
-        ]);
+        $orp = $this->createOrderReturnProvider($client);
 
         $orders = $orp->getOrders();
 
@@ -59,5 +58,52 @@ class OrderReturnProviderTest extends TestCase
             ],
             parse_query($requestURI->getQuery())
         );
+    }
+
+    /**
+     * @param $client
+     * @return OrderReturnProvider
+     */
+    private function createOrderReturnProvider($client): OrderReturnProvider
+    {
+        $orp = new OrderReturnProvider(new ShopwareAPI(new NullLogger(), $client));
+        $orp->setReturnRequirements([
+            'status' => 23,
+            'cleared' => 42,
+            'positionStatus' => 24,
+        ]);
+        return $orp;
+    }
+
+    public function testOrderData()
+    {
+        $mock = new MockHandler([
+            new Response(200, [], file_get_contents(base_path('docs/fixtures/shopware-api-orders-return-response.json'))),
+            new Response(200, [], file_get_contents(base_path('docs/fixtures/shopware-api-order-details-return-response-55.json'))),
+        ]);
+
+        $client = new Client([
+            'handler' => HandlerStack::create($mock),
+        ]);
+
+        $orderReturnProvider = $this->createOrderReturnProvider($client);
+
+        /** @var Order[] $orders */
+        $orders = iterator_to_array($orderReturnProvider->getOrders());
+        static::assertCount(1, $orders);
+
+        // check order 55
+        $order = array_shift($orders);
+        static::assertEquals('20002', $order->getOrderNumber());
+        static::assertEquals('2018-10-31T20:12:42+0100', $order->getOrderTime()->format(\DateTime::ISO8601));
+
+        /** @var OrderArticle[] $articles */
+        $articles = $order->getArticles();
+        static::assertCount(1, $articles);
+
+        $article = array_shift($articles);
+        static::assertEquals('90389615640350', $article->getArticleNumber());
+        static::assertEquals(1, $article->getQuantity());
+        static::assertEquals(90, $article->getPrice());
     }
 }

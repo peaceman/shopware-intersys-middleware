@@ -1,0 +1,60 @@
+{
+  "data": [
+    {
+      "id": 55,
+      "changed": "2018-10-31T20:12:42+0100",
+      "number": "20002",
+      "customerId": 8,
+      "paymentId": 5,
+      "dispatchId": 9,
+      "partnerId": "",
+      "shopId": 1,
+      "invoiceAmount": 90,
+      "invoiceAmountNet": 75.63,
+      "invoiceShipping": 0,
+      "invoiceShippingNet": 0,
+      "invoiceShippingTaxRate": null,
+      "orderTime": "2018-10-31T20:12:42+0100",
+      "transactionId": "",
+      "comment": "",
+      "customerComment": "",
+      "internalComment": "",
+      "net": 0,
+      "taxFree": 0,
+      "temporaryId": "",
+      "referer": "",
+      "clearedDate": null,
+      "trackingCode": "",
+      "languageIso": "1",
+      "currency": "EUR",
+      "currencyFactor": 1,
+      "remoteAddress": "79.238.0.0",
+      "deviceType": "desktop",
+      "isProportionalCalculation": false,
+      "attribute": {
+        "id": 55,
+        "orderId": 55,
+        "attribute1": null,
+        "attribute2": null,
+        "attribute3": null,
+        "attribute4": null,
+        "attribute5": null,
+        "attribute6": null,
+        "netiStoreId": null,
+        "netiPickupDatetime": null,
+        "swagPaypalUnifiedPaymentType": null,
+        "swagPayalBillingAgreementId": null,
+        "swagPayalExpress": null,
+        "viisonTransferCustomerContactDataAllowed": false
+      },
+      "customer": {
+        "id": 8,
+        "email": "m.mustermann@mail.de"
+      },
+      "paymentStatusId": 17,
+      "orderStatusId": 0
+    }
+  ],
+  "total": 3,
+  "success": true
+}
