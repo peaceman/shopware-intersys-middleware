@@ -148,6 +148,10 @@ class ModelXMLImporter
             'articleNumber' => $articleNumber,
             'swArticleId' => $swArticleId,
             'foundSWArticleInfo' => !is_null($swArticleInfo),
+            'importFile' => [
+                'id' => $modelXMLData->getImportFile()->id,
+                'type' => $modelXMLData->getImportFile()->type,
+            ],
         ];
 
         $this->logger->info(__METHOD__, $loggingContext);
@@ -164,7 +168,12 @@ class ModelXMLImporter
                 return $variant;
             });
 
-        $pricesOfTheFirstVariant = data_get($variants, '0.prices');
+        $loggingContext['variants'] = $variants->toArray();
+        $firstVariant = $variants->first(function ($variant) { return !is_null($variant['prices'] ?? null); });
+        $pricesOfTheFirstVariant = $firstVariant['prices'] ?? null;
+
+        if (is_null($pricesOfTheFirstVariant))
+            $this->logger->warning(__METHOD__ . ' price of the first variant is null', $loggingContext);
 
         $mainDetail = [];
         if (!$swArticleInfo->isPriceProtected($articleNumber))
@@ -270,7 +279,8 @@ class ModelXMLImporter
                     ]
                 ];
             })
-            ->filter();
+            ->filter()
+            ->values();
 
         return $variants;
     }
