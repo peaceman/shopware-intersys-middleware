@@ -326,7 +326,7 @@ class ModelXMLImporterTest extends TestCase
         static::assertEquals($articleImport->import_file_id, $importFile->id);
     }
 
-    public function testArticleUpdatesFromDeltaFileDontContainerTheConfiguratorSet()
+    public function testArticleUpdatesFromDeltaFileDontContainTheConfiguratorSet()
     {
         $container = [];
         $history = Middleware::history($container);
@@ -409,6 +409,7 @@ class ModelXMLImporterTest extends TestCase
                     ]
                 ],
                 [
+                    'active' => true,
                     'number' => '10003436HP2900005',
                     'ean' => '',
                     'prices' => [[
@@ -424,6 +425,7 @@ class ModelXMLImporterTest extends TestCase
                     ]
                 ],
                 [
+                    'active' => true,
                     'number' => '10003436HP2900009',
                     'ean' => '',
                     'prices' => [[
@@ -466,6 +468,7 @@ class ModelXMLImporterTest extends TestCase
             ],
             'variants' => [
                 [
+                    'active' => true,
                     'number' => '10003436HP2900413',
                     'ean' => '',
                     'prices' => [[
@@ -481,6 +484,7 @@ class ModelXMLImporterTest extends TestCase
                     ]
                 ],
                 [
+                    'active' => true,
                     'number' => '10003436HP2900417',
                     'ean' => '',
                     'prices' => [[
@@ -598,6 +602,7 @@ class ModelXMLImporterTest extends TestCase
                     ]
                 ],
                 [
+                    'active' => true,
                     'number' => '10003436HP2900005',
                     'ean' => '',
                     'prices' => [[
@@ -613,6 +618,7 @@ class ModelXMLImporterTest extends TestCase
                     ]
                 ],
                 [
+                    'active' => true,
                     'number' => '10003436HP2900009',
                     'ean' => '',
                     'prices' => [[
@@ -661,6 +667,7 @@ class ModelXMLImporterTest extends TestCase
             ],
             'variants' => [
                 [
+                    'active' => true,
                     'number' => '10003436HP2900413',
                     'ean' => '',
                     'prices' => [[
@@ -676,6 +683,7 @@ class ModelXMLImporterTest extends TestCase
                     ]
                 ],
                 [
+                    'active' => true,
                     'number' => '10003436HP2900417',
                     'ean' => '',
                     'prices' => [[

@@ -159,7 +159,6 @@ class ModelXMLImporter
         $variants = $this->generateVariants($modelNode, $articleNode, $swArticleInfo)
             ->map(function ($variant) use ($swArticleInfo) {
                 $variant['attribute'] = array_only($variant['attribute'], ['availability']);
-                unset($variant['active']);
                 unset($variant['lastStock']);
 
                 if ($swArticleInfo->isPriceProtected($variant['number']))
@@ -266,6 +265,9 @@ class ModelXMLImporter
                     'ean' => (string)$sizeXML->Ean,
                     'lastStock' => true,
                 ];
+
+                if ($swArticleInfo && $swArticleInfo->variantExists($variantData['number']))
+                    unset($variantData['active']);
 
                 if (!$eligibleBranch) {
                     if (!$swArticleInfo) return null;
