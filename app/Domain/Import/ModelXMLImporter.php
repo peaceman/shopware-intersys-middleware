@@ -156,7 +156,7 @@ class ModelXMLImporter
 
         $this->logger->info(__METHOD__, $loggingContext);
 
-        $variants = $this->generateVariants($modelNode, $articleNode)
+        $variants = $this->generateVariants($modelNode, $articleNode, $swArticleInfo)
             ->map(function ($variant) use ($swArticleInfo) {
                 $variant['attribute'] = array_only($variant['attribute'], ['availability']);
                 unset($variant['active']);
@@ -246,38 +246,52 @@ class ModelXMLImporter
         return $article;
     }
 
-    protected function generateVariants(SimpleXMLElement $modelNode, SimpleXMLElement $articleNode): Collection
+    protected function generateVariants(
+        SimpleXMLElement $modelNode, SimpleXMLElement $articleNode, ?ShopwareArticleInfo $swArticleInfo = null
+    ): Collection
     {
         $variants = collect($articleNode->xpath('Size'))
-            ->map(function (SimpleXMLElement $sizeXML) use ($modelNode, $articleNode) {
+            ->map(function (SimpleXMLElement $sizeXML) use ($swArticleInfo, $modelNode, $articleNode) {
                 [$eligibleBranches, $nonEligibleBranches] = collect($sizeXML->xpath('Branch'))
                     ->partition([$this, 'isBranchEligible']);
 
-                if (!count($eligibleBranches)) return null;
-
-                [$eligibleBranch] = $eligibleBranches->values();
+                $eligibleBranch = $eligibleBranches->values()->first();
 
                 $mappedSize = $this->mapSize($modelNode, (string)$sizeXML->Sizedeno);
                 $availability = $this->generateAvailabilityAttributeFromNonEligibleBranches($nonEligibleBranches);
 
-                return [
+                $variantData = [
                     'active' => true,
                     'number' => (string)$sizeXML->Itemno,
                     'ean' => (string)$sizeXML->Ean,
                     'lastStock' => true,
-                    'prices' => [[
-                        'price' => (float)$eligibleBranch->Saleprice,
-                        'pseudoPrice' => $eligibleBranch->Xprice ? (float)$eligibleBranch->Xprice : null,
-                    ]],
-                    'inStock' => (int)$eligibleBranch->Stockqty,
+                ];
+
+                if (!$eligibleBranch) {
+                    if (!$swArticleInfo) return null;
+
+                    if (!$swArticleInfo->variantExists($variantData['number'])) return null;
+                } else {
+                    $variantData = array_merge($variantData, [
+                        'prices' => [[
+                            'price' => (float)$eligibleBranch->Saleprice,
+                            'pseudoPrice' => $eligibleBranch->Xprice ? (float)$eligibleBranch->Xprice : null,
+                        ]],
+                        'inStock' => (int)$eligibleBranch->Stockqty,
+                    ]);
+                }
+
+                $variantData = array_merge($variantData, [
                     'attribute' => [
                         'attr1' => (string)$sizeXML->Itemdeno,
                         'availability' => json_encode($availability),
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => $mappedSize],
-                    ]
-                ];
+                    ],
+                ]);
+
+                return $variantData;
             })
             ->filter()
             ->values();

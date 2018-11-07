@@ -34,6 +34,13 @@ class ShopwareArticleInfo
             : $this->isPartiallyPriceProtected($swArticleNumber);
     }
 
+    public function variantExists(string $swArticleNumber): bool
+    {
+        return collect(data_get($this->articleData, 'data.details', []))
+                ->where('number', $swArticleNumber)
+                ->first() !== null;
+    }
+
     protected function isFullyPriceProtected(): bool
     {
         return $this->isMainDetailPriceProtected();
