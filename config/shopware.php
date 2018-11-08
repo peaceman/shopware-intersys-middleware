@@ -11,6 +11,9 @@ return [
     ],
     'branchesToImport' => env('SHOPWARE_BRANCHES_TO_IMPORT'),
     'order' => [
+        'paymentStatus' => [
+            'unpaid' => [env('SHOPWARE_ORDER_PAYMENT_STATUS_UNPAID_1', 17)],
+        ],
         'sale' => [
             'requirements' => [
                 [

@@ -9,6 +9,7 @@ use App\Domain\Export\OrderXMLGenerator;
 use App\Domain\Import\ImportFileScanner;
 use App\Domain\Import\ModelXMLImporter;
 use App\Domain\Import\SkippingImportFileScanner;
+use App\Domain\OrderTracking\UnpaidOrderProvider;
 use App\Domain\ShopwareAPI;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
@@ -40,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerOrderProvider();
         $this->registerOrderXMLGenerator();
         $this->registerOrderXMLExporter();
+        $this->registerUnpaidOrderProvider();
     }
 
     protected function registerShopwareAPI(): void
@@ -141,6 +143,13 @@ class AppServiceProvider extends ServiceProvider
             $oxg->setStockBranchNo(config('shopware.order.branchNoStock'));
 
             return $oxg;
+        });
+    }
+
+    protected function registerUnpaidOrderProvider(): void
+    {
+        $this->app->extend(UnpaidOrderProvider::class, function (UnpaidOrderProvider $orderProvider): UnpaidOrderProvider {
+            $orderProvider->setUnpaidPaymentStatusIDs(config('shopware.order.paymentStatus.unpaid'));
         });
     }
 }
