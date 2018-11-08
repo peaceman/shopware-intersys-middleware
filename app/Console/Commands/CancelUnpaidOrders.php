@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Domain\OrderTracking\OrdersToCancelProvider;
 use App\Domain\OrderTracking\UnpaidOrderCanceller;
-use App\Domain\OrderTracking\UnpaidOrderProvider;
 use Illuminate\Console\Command;
 
 class CancelUnpaidOrders extends Command
@@ -36,10 +36,10 @@ class CancelUnpaidOrders extends Command
      * Execute the console command.
      *
      * @param UnpaidOrderCanceller $unpaidOrderCanceller
-     * @param UnpaidOrderProvider $orderProvider
+     * @param OrdersToCancelProvider $orderProvider
      * @return mixed
      */
-    public function handle(UnpaidOrderCanceller $unpaidOrderCanceller, UnpaidOrderProvider $orderProvider)
+    public function handle(UnpaidOrderCanceller $unpaidOrderCanceller, OrdersToCancelProvider $orderProvider)
     {
         $unpaidOrderCanceller->cancel($orderProvider);
     }
