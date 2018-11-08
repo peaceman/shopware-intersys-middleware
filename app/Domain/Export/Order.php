@@ -48,12 +48,12 @@ class Order
 
     public function getOrderStatusID(): int
     {
-        return $this->data['orderStatus']['id'];
+        return $this->data['orderStatusId'];
     }
 
     public function getPaymentStatusID(): int
     {
-        return $this->data['paymentStatus']['id'];
+        return $this->data['paymentStatusId'];
     }
 
     public function getPaymentID(): int

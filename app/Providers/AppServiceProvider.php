@@ -154,6 +154,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->extend(UnpaidOrderProvider::class, function (UnpaidOrderProvider $orderProvider): UnpaidOrderProvider {
             $orderProvider->setUnpaidPaymentStatusIDs(config('shopware.order.paymentStatus.unpaid'));
+
+            return $orderProvider;
         });
     }
 
@@ -176,6 +178,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->extend(UnpaidOrderCanceller::class, function (UnpaidOrderCanceller $canceller): UnpaidOrderCanceller {
             $canceller->setReturnOrderStatusRequirement(config('shopware.order.return.requirements.status'));
             $canceller->setReturnOrderPositionStatusRequirement(config('shopware.order.return.requirements.positionStatus'));
+
+            return $canceller;
         });
     }
 }

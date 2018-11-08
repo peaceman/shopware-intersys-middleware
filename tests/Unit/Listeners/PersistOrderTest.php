@@ -58,12 +58,8 @@ class PersistOrderTest extends TestCase
             'id' => 5,
             'number' => '23235',
             'orderTime' => $orderTime->format(\DateTime::ISO8601),
-            'orderStatus' => [
-                'id' => 4 + 23,
-            ],
-            'paymentStatus' => [
-                'id' => 8 + 23,
-            ],
+            'orderStatusId' => 4 + 23,
+            'paymentStatusId' => 8 + 23,
             'paymentId' => 15,
         ]);
 
@@ -88,12 +84,8 @@ class PersistOrderTest extends TestCase
             'number' => '23235',
             'orderTime' => \DateTimeImmutable::createFromFormat('Ymd-His', '20181031-230555')
                 ->format(\DateTime::ISO8601),
-            'orderStatus' => [
-                'id' => 4,
-            ],
-            'paymentStatus' => [
-                'id' => 8,
-            ],
+            'orderStatusId' => 4,
+            'paymentStatusId' => 8,
             'paymentId' => 15,
         ]);
 
