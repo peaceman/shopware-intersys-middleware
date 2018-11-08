@@ -15,12 +15,21 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Support\Facades\Event;
 use Psr\Log\NullLogger;
 use Tests\TestCase;
 use function GuzzleHttp\Psr7\parse_query;
 
 class OrderReturnProviderTest extends TestCase
 {
+    protected function setUp()
+    {
+        parent::setUp();
+
+        Event::fake();
+    }
+
     public function testFilters(): void
     {
         $container = [];
@@ -66,7 +75,7 @@ class OrderReturnProviderTest extends TestCase
      */
     private function createOrderReturnProvider($client): OrderReturnProvider
     {
-        $orp = new OrderReturnProvider(new ShopwareAPI(new NullLogger(), $client));
+        $orp = new OrderReturnProvider(new ShopwareAPI(new NullLogger(), $client), $this->app[Dispatcher::class]);
         $orp->setReturnRequirements([
             'status' => 23,
             'cleared' => 42,

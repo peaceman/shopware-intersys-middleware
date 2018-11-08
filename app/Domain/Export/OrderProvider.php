@@ -6,6 +6,7 @@
 namespace App\Domain\Export;
 
 use App\Domain\ShopwareAPI;
+use Illuminate\Contracts\Events\Dispatcher;
 
 class OrderProvider
 {
@@ -14,9 +15,15 @@ class OrderProvider
      */
     private $shopwareAPI;
 
-    public function __construct(ShopwareAPI $shopwareAPI)
+    /**
+     * @var Dispatcher
+     */
+    private $eventDispatcher;
+
+    public function __construct(ShopwareAPI $shopwareAPI, Dispatcher $eventDispatcher)
     {
         $this->shopwareAPI = $shopwareAPI;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function getOrders(): iterable
@@ -31,6 +38,8 @@ class OrderProvider
             foreach ($apiOrders as $apiOrder) {
                 $order = new Order($apiOrder);
                 $order->setArticles($this->fetchOrderArticles($order));
+
+                $this->eventDispatcher->dispatch(new OrderFetched($order));
 
                 yield $order;
             }

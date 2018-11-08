@@ -7,6 +7,7 @@ namespace Tests\Unit\Domain\Export;
 
 use App\Domain\Export\Order;
 use App\Domain\Export\OrderArticle;
+use App\Domain\Export\OrderFetched;
 use App\Domain\Export\OrderSaleProvider;
 use App\Domain\ShopwareAPI;
 use GuzzleHttp\Client;
@@ -15,12 +16,21 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Support\Facades\Event;
 use Psr\Log\NullLogger;
 use Tests\TestCase;
 use function GuzzleHttp\Psr7\parse_query;
 
 class OrderSaleProviderTest extends TestCase
 {
+    protected function setUp()
+    {
+        parent::setUp();
+
+        Event::fake();
+    }
+
     public function testRequestFilters()
     {
         $container = [];
@@ -169,6 +179,14 @@ class OrderSaleProviderTest extends TestCase
         $orders = iterator_to_array($orderSaleProvider->getOrders());
         static::assertCount(3, $orders);
 
+        foreach ($orders as $order) {
+            Event::assertDispatched(OrderFetched::class, function (OrderFetched $e) use ($order) {
+                return $order === $e->order;
+            });
+        }
+
+        Event::assertDispatched(OrderFetched::class, 3);
+
         // check order 55
         $order = array_shift($orders);
         static::assertEquals('20002', $order->getOrderNumber());
@@ -229,7 +247,7 @@ class OrderSaleProviderTest extends TestCase
 
     protected function createOrderSaleProvider(Client $httpClient): OrderSaleProvider
     {
-        $osp = new OrderSaleProvider(new ShopwareAPI(new NullLogger(), $httpClient));
+        $osp = new OrderSaleProvider(new ShopwareAPI(new NullLogger(), $httpClient), $this->app[Dispatcher::class]);
         $osp->setSaleRequirements([
             [
                 'status' => 23,

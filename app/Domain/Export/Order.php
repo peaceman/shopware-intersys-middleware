@@ -45,4 +45,19 @@ class Order
     {
         return $this->articles;
     }
+
+    public function getOrderStatusID(): int
+    {
+        return $this->data['orderStatus']['id'];
+    }
+
+    public function getPaymentStatusID(): int
+    {
+        return $this->data['paymentStatus']['id'];
+    }
+
+    public function getPaymentID(): int
+    {
+        return $this->data['paymentId'];
+    }
 }

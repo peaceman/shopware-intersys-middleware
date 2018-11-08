@@ -82,4 +82,9 @@ class OrderArticle
     {
         return $this->data['mode'] === static::MODE_VOUCHER;
     }
+
+    public function getArticleName(): string
+    {
+        return $this->data['articleName'];
+    }
 }

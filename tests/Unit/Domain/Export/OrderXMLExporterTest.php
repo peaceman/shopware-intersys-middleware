@@ -302,11 +302,6 @@ class OrderXMLExporterTest extends TestCase
         static::assertEquals(['orderStatusId' => 42, 'details' => []], $requestData);
     }
 
-    protected function compareDateTime(\DateTimeInterface $dateTimeA, \DateTimeInterface $dateTimeB)
-    {
-        return $dateTimeA->format(\DateTime::ISO8601) === $dateTimeB->format(\DateTime::ISO8601);
-    }
-
     protected function generateOrdersForSaleExport(): array
     {
         $orders = [];
