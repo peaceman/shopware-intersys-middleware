@@ -17,8 +17,7 @@ class OrderReturnProvider extends OrderProvider
         return [
             [
                 ['property' => 'status', 'value' => $this->returnRequirements['status']],
-                ['property' => 'cleared', 'value' => $this->returnRequirements['cleared']],
-            ]
+            ],
         ];
     }
 
