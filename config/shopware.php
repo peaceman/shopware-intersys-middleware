@@ -11,6 +11,7 @@ return [
     ],
     'branchesToImport' => env('SHOPWARE_BRANCHES_TO_IMPORT'),
     'order' => [
+        'dailyOverviewRecipients' => env('SHOPWARE_ORDER_DAILY_OVERVIEW_RECIPIENTS', ''),
         'prePaymentId' => env('SHOPWARE_ORDER_PRE_PAYMENT_ID', 5),
         'cancelWaitingTimeInDays' => env('SHOPWARE_ORDER_CANCEL_WAITING_TIME_IN_DAYS', 14),
         'paymentStatus' => [

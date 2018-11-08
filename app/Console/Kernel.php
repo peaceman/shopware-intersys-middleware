@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\CancelUnpaidOrders;
 use App\Console\Commands\DeactivateArticles;
 use App\Console\Commands\ExportOrders;
+use App\Console\Commands\SendDailyOrderOverview;
 use App\Console\Commands\TrackUnpaidOrders;
 use App\Jobs\ScanImportFiles;
 use Illuminate\Console\Scheduling\Schedule;
@@ -34,6 +35,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(ExportOrders::class)->everyMinute();
         $schedule->command(TrackUnpaidOrders::class)->everyMinute();
         $schedule->command(CancelUnpaidOrders::class)->dailyAt('02:23');
+        $schedule->command(SendDailyOrderOverview::class)->dailyAt('05:23');
     }
 
     /**
