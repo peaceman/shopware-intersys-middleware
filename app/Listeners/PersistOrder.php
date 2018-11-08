@@ -63,6 +63,7 @@ class PersistOrder
     private function createOrderArticles(Order $order, ExportOrderArticle $exportOrderArticle): void
     {
         $orderArticle = new OrderArticle();
+        $orderArticle->sw_position_id = $exportOrderArticle->getPositionID();
         $orderArticle->sw_article_number = $exportOrderArticle->getArticleNumber();
         $orderArticle->sw_article_name = $exportOrderArticle->getArticleName();
         $orderArticle->sw_quantity = $exportOrderArticle->getQuantity();

@@ -18,6 +18,7 @@ class CreateOrderArticlesTable extends Migration
 
             $table->unsignedInteger('order_id');
 
+            $table->integer('sw_position_id');
             $table->string('sw_article_number');
             $table->string('sw_article_name');
             $table->unsignedInteger('sw_quantity');

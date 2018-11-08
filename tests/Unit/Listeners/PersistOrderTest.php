@@ -38,6 +38,7 @@ class PersistOrderTest extends TestCase
         static::assertEquals($exportOrderArticle->getArticleNumber(), $orderArticle->sw_article_number);
         static::assertEquals($exportOrderArticle->getArticleName(), $orderArticle->sw_article_name);
         static::assertEquals($exportOrderArticle->getQuantity(), $orderArticle->sw_quantity);
+        static::assertEquals($exportOrderArticle->getPositionID(), $orderArticle->sw_position_id);
 
         $exportOrderArticle = array_shift($exportOrderArticles);
         $orderArticle = array_shift($orderArticles);
@@ -46,6 +47,7 @@ class PersistOrderTest extends TestCase
         static::assertEquals($exportOrderArticle->getArticleNumber(), $orderArticle->sw_article_number);
         static::assertEquals($exportOrderArticle->getArticleName(), $orderArticle->sw_article_name);
         static::assertEquals($exportOrderArticle->getQuantity(), $orderArticle->sw_quantity);
+        static::assertEquals($exportOrderArticle->getPositionID(), $orderArticle->sw_position_id);
     }
 
     public function testExistingOrderIsUpdated()
