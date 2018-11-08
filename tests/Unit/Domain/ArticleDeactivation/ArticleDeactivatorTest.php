@@ -7,7 +7,7 @@ namespace Tests\Unit\Domain\ArticleDeactivation;
 
 
 use App\Article;
-use App\Domain\Import\ArticleDeactivation\ArticleIDProvider;
+use App\Domain\ArticleDeactivation\ArticleIDProvider;
 use App\Domain\ShopwareAPI;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
@@ -43,7 +43,7 @@ class ArticleDeactivatorTest extends TestCase
         $articles = factory(Article::class, 3)->create();
 
         $shopwareAPI = new ShopwareAPI(new NullLogger(), $client);
-        $deactivator = new \App\Domain\Import\ArticleDeactivation\ArticleDeactivator(new NullLogger(), $shopwareAPI);
+        $deactivator = new \App\Domain\ArticleDeactivation\ArticleDeactivator(new NullLogger(), $shopwareAPI);
         $deactivator->deactivate(new class($articles) implements ArticleIDProvider {
             protected $articles;
 

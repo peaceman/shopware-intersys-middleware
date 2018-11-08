@@ -5,7 +5,7 @@
 namespace Tests\Unit\Domain\ArticleDeactivation;
 
 use App\Article;
-use App\Domain\Import\ArticleDeactivation\AbandonedArticleIDProvider;
+use App\Domain\ArticleDeactivation\AbandonedArticleIDProvider;
 use App\ImportFile;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;

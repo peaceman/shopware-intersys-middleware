@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Domain\Import\ArticleDeactivation\AbandonedArticleIDProvider;
-use App\Domain\Import\ArticleDeactivation\ArticleDeactivator;
+use App\Domain\ArticleDeactivation\AbandonedArticleIDProvider;
+use App\Domain\ArticleDeactivation\ArticleDeactivator;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class DeactivateArticles extends Command
 {

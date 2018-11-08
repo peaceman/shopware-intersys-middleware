@@ -2,7 +2,7 @@
 /**
  * lel since 20.08.18
  */
-namespace App\Domain\Import\ArticleDeactivation;
+namespace App\Domain\ArticleDeactivation;
 
 use DB;
 
