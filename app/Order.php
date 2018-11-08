@@ -33,4 +33,10 @@ class Order extends Model
     {
         return $this->hasMany(OrderArticle::class, 'order_id', 'id');
     }
+
+    public function cancel(): void
+    {
+        $this->cancelled_at = now();
+        $this->save();
+    }
 }

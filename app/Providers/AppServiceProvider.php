@@ -10,6 +10,7 @@ use App\Domain\Import\ImportFileScanner;
 use App\Domain\Import\ModelXMLImporter;
 use App\Domain\Import\SkippingImportFileScanner;
 use App\Domain\OrderTracking\OrdersToCancelProvider;
+use App\Domain\OrderTracking\UnpaidOrderCanceller;
 use App\Domain\OrderTracking\UnpaidOrderProvider;
 use App\Domain\ShopwareAPI;
 use GuzzleHttp\Client;
@@ -44,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerOrderXMLExporter();
         $this->registerUnpaidOrderProvider();
         $this->registerOrdersToCancelProvider();
+        $this->registerUnpaidOrderCanceller();
     }
 
     protected function registerShopwareAPI(): void
@@ -155,7 +157,7 @@ class AppServiceProvider extends ServiceProvider
         });
     }
 
-    private function registerOrdersToCancelProvider(): void
+    protected function registerOrdersToCancelProvider(): void
     {
         $this->app->extend(
             OrdersToCancelProvider::class,
@@ -167,5 +169,13 @@ class AppServiceProvider extends ServiceProvider
                 return $orderProvider;
             }
         );
+    }
+
+    protected function registerUnpaidOrderCanceller(): void
+    {
+        $this->app->extend(UnpaidOrderCanceller::class, function (UnpaidOrderCanceller $canceller): UnpaidOrderCanceller {
+            $canceller->setReturnOrderStatusRequirement(config('shopware.order.return.requirements.status'));
+            $canceller->setReturnOrderPositionStatusRequirement(config('shopware.order.return.requirements.positionStatus'));
+        });
     }
 }

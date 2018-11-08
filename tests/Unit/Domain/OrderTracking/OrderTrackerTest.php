@@ -7,7 +7,6 @@ namespace Tests\Unit\Domain\OrderTracking;
 
 
 use App\Domain\Export\OrderFetched;
-use App\Domain\OrderTracking\OrderProvider;
 use App\Domain\OrderTracking\OrderTracker;
 use App\Domain\ShopwareAPI;
 use App\Order;
@@ -68,21 +67,4 @@ class OrderTrackerTest extends TestCase
         static::assertCount(2, $events);
     }
 
-    private function createOrderProviderFromOrders(iterable $orders): OrderProvider
-    {
-        return new class($orders) implements OrderProvider
-        {
-            private $orders;
-
-            public function __construct(iterable $orders)
-            {
-                $this->orders = $orders;
-            }
-
-            public function getOrders(): iterable
-            {
-                return $this->orders;
-            }
-        };
-    }
 }
