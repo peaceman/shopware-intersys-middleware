@@ -22,15 +22,18 @@ class OrderProvider
     public function getOrders(): iterable
     {
         $filters = $this->generateFilters();
-        $jsonResponse = $this->shopwareAPI->fetchOrders($filters);
 
-        $apiOrders = data_get($jsonResponse, 'data', []);
+        foreach ($filters as $subFilter) {
+            $jsonResponse = $this->shopwareAPI->fetchOrders($subFilter);
 
-        foreach ($apiOrders as $apiOrder) {
-            $order = new Order($apiOrder);
-            $order->setArticles($this->fetchOrderArticles($order));
+            $apiOrders = data_get($jsonResponse, 'data', []);
 
-            yield $order;
+            foreach ($apiOrders as $apiOrder) {
+                $order = new Order($apiOrder);
+                $order->setArticles($this->fetchOrderArticles($order));
+
+                yield $order;
+            }
         }
     }
 

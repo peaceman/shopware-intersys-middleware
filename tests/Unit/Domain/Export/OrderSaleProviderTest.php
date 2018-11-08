@@ -27,6 +27,7 @@ class OrderSaleProviderTest extends TestCase
         $history = Middleware::history($container);
         $mock = new MockHandler([
             new Response(200, [], json_encode(['data' => []])),
+            new Response(200, [], json_encode(['data' => []])),
         ]);
 
         $stack = HandlerStack::create($mock);
@@ -40,7 +41,7 @@ class OrderSaleProviderTest extends TestCase
         $orders = $orderSaleProvider->getOrders();
 
         static::assertEquals(0, iterator_count($orders));
-        static::assertCount(1, $container);
+        static::assertCount(2, $container);
 
         /** @var Request $request */
         $request = $container[0]['request'];
@@ -54,6 +55,23 @@ class OrderSaleProviderTest extends TestCase
                 'filter[0][value]' => '23',
                 'filter[1][property]' => 'cleared',
                 'filter[1][value]' => '42',
+            ],
+            parse_query($requestURI->getQuery())
+        );
+
+        $request = $container[1]['request'];
+
+        $requestURI = $request->getUri();
+        static::assertEquals('/api/orders', $requestURI->getPath());
+        static::assertEquals('GET', $request->getMethod());
+        static::assertEquals(
+            [
+                'filter[0][property]' => 'status',
+                'filter[0][value]' => '4',
+                'filter[1][property]' => 'cleared',
+                'filter[1][value]' => '8',
+                'filter[2][property]' => 'paymentId',
+                'filter[2][value]' => '15',
             ],
             parse_query($requestURI->getQuery())
         );
@@ -81,6 +99,12 @@ class OrderSaleProviderTest extends TestCase
         ]);
 
         $orderSaleProvider = $this->createOrderSaleProvider($client);
+        $orderSaleProvider->setSaleRequirements([
+            [
+                'status' => 23,
+                'cleared' => 42,
+            ],
+        ]);
         $orders = $orderSaleProvider->getOrders();
 
         static::assertEquals(3, iterator_count($orders));
@@ -108,6 +132,13 @@ class OrderSaleProviderTest extends TestCase
         ]);
 
         $orderSaleProvider = $this->createOrderSaleProvider($client);
+        $orderSaleProvider->setSaleRequirements([
+            [
+                'status' => 23,
+                'cleared' => 42,
+            ],
+        ]);
+
         /** @var Order[] $orders */
         $orders = iterator_to_array($orderSaleProvider->getOrders());
         static::assertCount(0, $orders);
@@ -127,6 +158,12 @@ class OrderSaleProviderTest extends TestCase
         ]);
 
         $orderSaleProvider = $this->createOrderSaleProvider($client);
+        $orderSaleProvider->setSaleRequirements([
+            [
+                'status' => 23,
+                'cleared' => 42,
+            ],
+        ]);
 
         /** @var Order[] $orders */
         $orders = iterator_to_array($orderSaleProvider->getOrders());
@@ -194,8 +231,15 @@ class OrderSaleProviderTest extends TestCase
     {
         $osp = new OrderSaleProvider(new ShopwareAPI(new NullLogger(), $httpClient));
         $osp->setSaleRequirements([
-            'status' => 23,
-            'cleared' => 42,
+            [
+                'status' => 23,
+                'cleared' => 42,
+            ],
+            [
+                'status' => 4,
+                'cleared' => 8,
+                'paymentId' => 15,
+            ],
         ]);
 
         return $osp;

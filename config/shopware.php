@@ -13,8 +13,15 @@ return [
     'order' => [
         'sale' => [
             'requirements' => [
-                'status' => env('SHOPWARE_ORDER_SALE_REQ_STATUS', 0), // offen
-                'cleared' => env('SHOPWARE_ORDER_SALE_REQ_CLEARED', 12), // komplett bezahlt
+                [
+                    'status' => env('SHOPWARE_ORDER_SALE_REQ_STATUS', 0), // offen
+                    'cleared' => env('SHOPWARE_ORDER_SALE_REQ_CLEARED', 12), // komplett bezahlt
+                ],
+                [
+                    'status' => env('SHOPWARE_ORDER_SALE_REQ_2_STATUS', 0), // offen
+                    'cleared' => env('SHOPWARE_ORDER_SALE_REQ_2_CLEARED_2', 17), // offen
+                    'paymentId' => env('SHOPWARE_ORDER_SALE_REQ_2_PAYMENT', 5), // vorkasse
+                ]
             ],
             'afterExportStatus' => env('SHOPWARE_ORDER_SALE_AFTER_EXPORT_STATUS', 5), // zur lieferung bereit
         ],

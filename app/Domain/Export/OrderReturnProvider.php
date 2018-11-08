@@ -15,8 +15,10 @@ class OrderReturnProvider extends OrderProvider
     public function generateFilters(): array
     {
         return [
-            ['property' => 'status', 'value' => $this->returnRequirements['status']],
-            ['property' => 'cleared', 'value' => $this->returnRequirements['cleared']],
+            [
+                ['property' => 'status', 'value' => $this->returnRequirements['status']],
+                ['property' => 'cleared', 'value' => $this->returnRequirements['cleared']],
+            ]
         ];
     }
 

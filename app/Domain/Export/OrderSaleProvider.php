@@ -22,9 +22,10 @@ class OrderSaleProvider extends OrderProvider
 
     public function generateFilters(): array
     {
-        return [
-            ['property' => 'status', 'value' => $this->saleRequirements['status']],
-            ['property' => 'cleared', 'value' => $this->saleRequirements['cleared']],
-        ];
+        return array_map(function (array $reqs): array {
+            return array_map(function ($reqVal, $reqKey): array {
+                return ['property' => $reqKey, 'value' => $reqVal];
+            }, $reqs, array_keys($reqs));
+        }, $this->saleRequirements);
     }
 }
