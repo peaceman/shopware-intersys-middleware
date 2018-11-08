@@ -34,7 +34,7 @@ class OrdersToCancelProvider implements OrderProvider
             ->whereIn('sw_payment_status_id', $this->unpaidPaymentStatusIDs)
             ->where('sw_payment_id', $this->prePaymentID)
             ->whereNull('cancelled_at')
-            ->whereDate('sw_order_time', now()->subDays($this->cancelWaitingTimeInDays));
+            ->whereDate('sw_order_time', '<=', now()->subDays($this->cancelWaitingTimeInDays));
 
         return $query->get();
     }

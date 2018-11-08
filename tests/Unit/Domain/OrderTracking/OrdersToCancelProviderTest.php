@@ -81,6 +81,19 @@ class OrdersToCancelProviderTest extends TestCase
         static::assertEquals($order->id, $orders[0]->id);
     }
 
+    public function testEarlierOrderTime()
+    {
+        $order = factory(Order::class)->create([
+            'sw_payment_status_id' => $this->unpaidPaymentStatus,
+            'sw_order_time' => now()->subDays(7),
+            'sw_payment_id' => $this->prePaymentId,
+        ]);
+
+        $orders = $this->createOrderProvider()->getOrders();
+        static::assertNotEmpty($orders);
+        static::assertEquals($order->id, $orders[0]->id);
+    }
+
     private function createOrderProvider(): OrderProvider
     {
         $op = new OrdersToCancelProvider();
