@@ -133,7 +133,7 @@ class OrderXMLExporter
         $articleInfo = $this->prepareArticlesForExport($type, $order, $articles);
 
         if (empty($articleInfo)) {
-            $this->logger->info(__METHOD__, ' Order has no articles to export', $loggingContext);
+            $this->logger->info(__METHOD__ . ' Order has no articles to export', $loggingContext);
             return;
         }
 
