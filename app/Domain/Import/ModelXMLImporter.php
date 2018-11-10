@@ -171,11 +171,8 @@ class ModelXMLImporter
         $firstVariant = $variants->first(function ($variant) { return !is_null($variant['prices'] ?? null); });
         $pricesOfTheFirstVariant = $firstVariant['prices'] ?? null;
 
-        if (is_null($pricesOfTheFirstVariant))
-            $this->logger->warning(__METHOD__ . ' price of the first variant is null', $loggingContext);
-
         $mainDetail = [];
-        if (!$swArticleInfo->isPriceProtected($articleNumber))
+        if (!$swArticleInfo->isPriceProtected($articleNumber) && !is_null($pricesOfTheFirstVariant))
             $mainDetail['prices'] = $pricesOfTheFirstVariant;
 
         $articleData = [
