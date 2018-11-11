@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->job(new ScanImportFiles())->everyMinute();
         $schedule->command(DeactivateArticles::class)->dailyAt('06:33');
-        $schedule->job(ExportOrders::class)->everyMinute();
+        $schedule->command(ExportOrders::class)->everyMinute();
         $schedule->command(TrackUnpaidOrders::class)->everyMinute();
         $schedule->command(CancelUnpaidOrders::class)->dailyAt('02:23');
         $schedule->command(SendDailyOrderOverview::class)->dailyAt('05:23');
