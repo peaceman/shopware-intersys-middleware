@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
         $schedule->command(ExportOrders::class)->everyMinute();
         $schedule->command(TrackUnpaidOrders::class)->everyMinute();
         $schedule->command(CancelUnpaidOrders::class)->dailyAt('02:23');
-        $schedule->command(SendDailyOrderOverview::class)->dailyAt('05:23');
+        $schedule->command(SendDailyOrderOverview::class)->dailyAt('04:23');
     }
 
     /**
