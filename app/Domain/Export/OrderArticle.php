@@ -8,7 +8,10 @@ namespace App\Domain\Export;
 class OrderArticle
 {
     const MODE_PRODUCT = 0;
+    const MODE_PREMIUM_PRODUCT = 1;
     const MODE_VOUCHER = 2;
+    const MODE_REBATE = 3;
+    const MODE_SURCHARGE_DISCOUNT = 4;
 
     /**
      * @var array
@@ -80,7 +83,12 @@ class OrderArticle
 
     public function isVoucher()
     {
-        return $this->data['mode'] === static::MODE_VOUCHER;
+        $voucher = (int)$this->data['mode'];
+
+        return in_array(
+            $voucher,
+            [static::MODE_VOUCHER, static::MODE_REBATE, static::MODE_SURCHARGE_DISCOUNT]
+        );
     }
 
     public function getArticleName(): string
