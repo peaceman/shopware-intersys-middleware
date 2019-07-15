@@ -6,6 +6,8 @@ use App\Domain\Export\OrderReturnProvider;
 use App\Domain\Export\OrderSaleProvider;
 use App\Domain\Export\OrderXMLExporter;
 use App\Domain\Export\OrderXMLGenerator;
+use App\Domain\HouseKeeping\OldImportFileDeleter;
+use App\Domain\HouseKeeping\OldImportFileProvider;
 use App\Domain\Import\ImportFileScanner;
 use App\Domain\Import\ModelXMLImporter;
 use App\Domain\Import\SkippingImportFileScanner;
@@ -14,6 +16,7 @@ use App\Domain\OrderTracking\UnpaidOrderCanceller;
 use App\Domain\OrderTracking\UnpaidOrderProvider;
 use App\Domain\ShopwareAPI;
 use GuzzleHttp\Client;
+use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use Psr\Log\LoggerInterface;
@@ -46,6 +49,8 @@ class AppServiceProvider extends ServiceProvider
         $this->registerUnpaidOrderProvider();
         $this->registerOrdersToCancelProvider();
         $this->registerUnpaidOrderCanceller();
+        $this->registerOldImportFileProvider();
+        $this->registerOldImportFileDeleter();
     }
 
     protected function registerShopwareAPI(): void
@@ -180,6 +185,24 @@ class AppServiceProvider extends ServiceProvider
             $canceller->setReturnOrderPositionStatusRequirement(config('shopware.order.return.requirements.positionStatus'));
 
             return $canceller;
+        });
+    }
+
+    protected function registerOldImportFileProvider(): void
+    {
+        $this->app->resolving(OldImportFileProvider::class, function (OldImportFileProvider $provider): void {
+            $provider->setKeepDurationInDays(2 * 30);
+        });
+    }
+
+    protected function registerOldImportFileDeleter(): void
+    {
+        $this->app->bind(OldImportFileDeleter::class, function () {
+            return new OldImportFileDeleter(
+                $this->app[LoggerInterface::class],
+                Storage::disk('local'),
+                $this->app[ConnectionInterface::class]
+            );
         });
     }
 }

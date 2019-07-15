@@ -8,6 +8,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class ImportFile
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon|null $processed_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property-read ArticleImport[] $articleImports
  */
 class ImportFile extends Model
 {
@@ -43,5 +46,15 @@ class ImportFile extends Model
     {
         return $query->whereNotNull('storage_path')
             ->whereNull('processed_at');
+    }
+
+    public function articleImports(): HasMany
+    {
+        return $this->hasMany(ArticleImport::class, 'import_file_id', 'id');
+    }
+
+    public function asLoggingContext(): array
+    {
+        return $this->only(['id', 'type', 'original_filename', 'storage_path', 'processed_at']);
     }
 }
