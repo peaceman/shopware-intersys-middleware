@@ -5,13 +5,11 @@
 
 namespace Tests\Feature;
 
-
-use App\Console\Commands\SendDailyOrderOverview;
+use App\Commands\SendDailyOrderOverview;
 use App\Mail\DailyOrderOverview;
 use App\Order;
 use App\OrderArticle;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
@@ -31,7 +29,8 @@ class SendDailyOrderOverviewTest extends TestCase
             $order->orderArticles()->saveMany($orderArticles);
         });
 
-        Artisan::call(SendDailyOrderOverview::class);
+        $sendDailyOrderOverview = $this->app->make(SendDailyOrderOverview::class);
+        $sendDailyOrderOverview();
 
         Mail::assertSent(DailyOrderOverview::class);
     }
