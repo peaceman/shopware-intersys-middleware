@@ -9,7 +9,7 @@ use App\Commands\ExportOrders as ExportOrdersAppCmd;
 use App\Console\Commands\ExportOrdersCommand;
 use Tests\TestCase;
 
-class ExportOrderCommandTest extends TestCase
+class ExportOrdersCommandTest extends TestCase
 {
     public function testExecution(): void
     {
