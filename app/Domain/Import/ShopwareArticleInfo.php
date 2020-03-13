@@ -36,9 +36,28 @@ class ShopwareArticleInfo
 
     public function variantExists(string $swArticleNumber): bool
     {
+        return $this->getVariant($swArticleNumber) !== null;
+    }
+
+    public function getAvailabilityInfo(string $swArticleNumber): array
+    {
+        $variant = $this->getVariant($swArticleNumber);
+
+        $availabilityJSON = data_get($variant, 'attribute.availability');
+        $availability = json_decode($availabilityJSON, true);
+        if (!$availability) return [];
+
+        // bail out on an invalid structure
+        if (!is_array(reset($availability))) return [];
+
+        return $availability ?? [];
+    }
+
+    protected function getVariant(string $swArticleNumber): ?array
+    {
         return collect(data_get($this->articleData, 'data.details', []))
-                ->where('number', $swArticleNumber)
-                ->first() !== null;
+            ->where('number', $swArticleNumber)
+            ->first();
     }
 
     protected function isFullyPriceProtected(): bool
