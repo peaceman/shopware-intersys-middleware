@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class DeactivateArticlesJob implements ShouldQueue
 {
-    public function handle(DeactivateArticles $deactivateArticles)
+    public function handle(DeactivateArticles $deactivateArticles): void
     {
         $deactivateArticles();
     }
