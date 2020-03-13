@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendDailyOrderOverviewJob implements ShouldQueue
 {
-    public function handle(SendDailyOrderOverview $sendDailyOrderOverview)
+    public function handle(SendDailyOrderOverview $sendDailyOrderOverview): void
     {
         $sendDailyOrderOverview();
     }
