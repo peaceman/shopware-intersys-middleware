@@ -16,8 +16,8 @@ class ExportOrdersJobTest extends TestCase
         $exportOrders = $this->createMock(ExportOrdersAppCmd::class);
         $exportOrders->expects(static::once())->method('__invoke');
 
-        /** @var ExportOrdersJob $exportOrdersCLICommand */
-        $exportOrdersCLICommand = $this->app->make(ExportOrdersJob::class);
-        $exportOrdersCLICommand->handle($exportOrders);
+        /** @var ExportOrdersJob $exportOrdersJob */
+        $exportOrdersJob = $this->app->make(ExportOrdersJob::class);
+        $exportOrdersJob->handle($exportOrders);
     }
 }
