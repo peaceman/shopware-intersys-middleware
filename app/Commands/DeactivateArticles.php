@@ -14,6 +14,7 @@ class DeactivateArticles
      * @var ArticleDeactivator
      */
     private $articleDeactivator;
+
     /**
      * @var AbandonedArticleIDProvider
      */
@@ -23,7 +24,6 @@ class DeactivateArticles
         ArticleDeactivator $articleDeactivator,
         AbandonedArticleIDProvider $abandonedArticleIDProvider
     ) {
-
         $this->articleDeactivator = $articleDeactivator;
         $this->abandonedArticleIDProvider = $abandonedArticleIDProvider;
     }
