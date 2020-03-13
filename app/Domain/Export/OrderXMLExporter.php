@@ -8,6 +8,9 @@ namespace App\Domain\Export;
 use App\Domain\ShopwareAPI;
 use App\OrderExport;
 use App\OrderExportArticle;
+use DateInterval;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Psr\Log\LoggerInterface;
 
@@ -112,6 +115,11 @@ class OrderXMLExporter
 
     public function export(string $type, OrderProvider $orderProvider)
     {
+        $startTime = microtime(true);
+        $this->logger->info(__METHOD__ . ' Starting order export', [
+            'type' => $type
+        ]);
+
         /** @var Order $order */
         foreach ($orderProvider->getOrders() as $order) {
             if (app()->runningUnitTests()) {
@@ -122,6 +130,11 @@ class OrderXMLExporter
                 });
             }
         }
+
+        $this->logger->info(__METHOD__ . ' Finished order export', [
+            'type' => $type,
+            'elapsed' => microtime(true) - $startTime,
+        ]);
     }
 
     protected function exportOrder(string $type, Order $order): void
@@ -137,7 +150,7 @@ class OrderXMLExporter
             return;
         }
 
-        $exportXML = $this->orderXMLGenerator->generate($type, new \DateTimeImmutable(), $order, $articleInfo);
+        $exportXML = $this->orderXMLGenerator->generate($type, new DateTimeImmutable(), $order, $articleInfo);
         $this->storeExportXMLOnRemoteFS($type, $order, $exportXML);
         $orderExport = $this->createOrderExportEntries($type, $order, $articleInfo, $exportXML);
 
@@ -197,20 +210,20 @@ class OrderXMLExporter
         ];
     }
 
-    private function determineDateOfTransForArticle(Order $order, OrderArticle $article): \DateTimeImmutable
+    private function determineDateOfTransForArticle(Order $order, OrderArticle $article): DateTimeImmutable
     {
         return $this->determineFreeDateOfTransForArticle($article, $order->getOrderTime());
     }
 
     private function determineFreeDateOfTransForArticle(
         OrderArticle $article,
-        \DateTimeImmutable $startTime
-    ): \DateTimeImmutable
+        DateTimeImmutable $startTime
+    ): DateTimeImmutable
     {
         $time = $startTime;
 
         while ($this->orderExportWithDateOfTransExists($article, $time)) {
-            $time = $time->add(new \DateInterval('PT1M'));
+            $time = $time->add(new DateInterval('PT1M'));
         }
 
         return $time;
@@ -218,10 +231,10 @@ class OrderXMLExporter
 
     /**
      * @param OrderArticle $article
-     * @param \DateTimeInterface $time
+     * @param DateTimeInterface $time
      * @return bool
      */
-    private function orderExportWithDateOfTransExists(OrderArticle $article, \DateTimeInterface $time): bool
+    private function orderExportWithDateOfTransExists(OrderArticle $article, DateTimeInterface $time): bool
     {
         $timeString = $time->format('Y-m-d H:i');
 
