@@ -1,0 +1,61 @@
+<Model>
+    <Code>10003436HP29</Code>
+    <Modno>10003436H</Modno>
+    <Brnno>P29</Brnno>
+    <Moddeno><![CDATA[MLB BASIC NY YANKEES]]></Moddeno>
+    <Branddeno><![CDATA[NEW ERA]]></Branddeno>
+    <Itemgroup>20001</Itemgroup>
+    <Itemgroupdeno><![CDATA[Mützen / Hüte / Caps]]></Itemgroupdeno>
+    <Percentvat>19.00</Percentvat>
+    <Fedas>215652</Fedas>
+    <Color>
+        <Colno>000</Colno>
+        <Colordeno><![CDATA[3436 BLACK/WHITE]]></Colordeno>
+        <Size>
+            <Columnx>04</Columnx>
+            <Sizedeno><![CDATA[XS]]></Sizedeno>
+            <Itemno>10003436HP2900004</Itemno>
+            <Itemdeno><![CDATA[MLB BASIC NY YANKEES 3436 BLACK/WHITE XS]]></Itemdeno>
+            <Ean></Ean>
+            <Branch>
+                <Branchno>006</Branchno>
+                <Stockqty>2</Stockqty>
+                <Saleprice>35.00</Saleprice>
+            </Branch>
+            <Branch>
+                <Branchno>009</Branchno>
+                <Stockqty>8</Stockqty>
+                <Saleprice>35.00</Saleprice>
+            </Branch>
+            <Branch>
+                <Branchno>011</Branchno>
+                <Stockqty>23</Stockqty>
+                <Saleprice>35.00</Saleprice>
+            </Branch>
+        </Size>
+        <Size>
+            <Columnx>05</Columnx>
+            <Sizedeno><![CDATA[S]]></Sizedeno>
+            <Itemno>10003436HP2900005</Itemno>
+            <Itemdeno><![CDATA[MLB BASIC NY YANKEES 3436 BLACK/WHITE S]]></Itemdeno>
+            <Ean></Ean>
+            <Branch>
+                <Branchno>006</Branchno>
+                <Stockqty>1</Stockqty>
+                <Saleprice>35.00</Saleprice>
+            </Branch>
+        </Size>
+        <Size>
+            <Columnx>09</Columnx>
+            <Sizedeno><![CDATA[M]]></Sizedeno>
+            <Itemno>10003436HP2900009</Itemno>
+            <Itemdeno><![CDATA[MLB BASIC NY YANKEES 3436 BLACK/WHITE M]]></Itemdeno>
+            <Ean></Ean>
+            <Branch>
+                <Branchno>006</Branchno>
+                <Stockqty>2</Stockqty>
+                <Saleprice>35.00</Saleprice>
+            </Branch>
+        </Size>
+    </Color>
+</Model>

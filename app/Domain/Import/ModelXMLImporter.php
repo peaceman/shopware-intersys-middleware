@@ -254,7 +254,6 @@ class ModelXMLImporter
                 $eligibleBranch = $eligibleBranches->values()->first();
 
                 $mappedSize = $this->mapSize($modelNode, (string)$sizeXML->Sizedeno);
-                $availability = $this->generateAvailabilityAttributeFromNonEligibleBranches($nonEligibleBranches);
 
                 $variantData = [
                     'active' => true,
@@ -265,6 +264,11 @@ class ModelXMLImporter
 
                 if ($swArticleInfo && $swArticleInfo->variantExists($variantData['number']))
                     unset($variantData['active']);
+
+                $availability = $this->mergeAvailabilityInfo(
+                    collect($swArticleInfo ? $swArticleInfo->getAvailabilityInfo($variantData['number']) : []),
+                    $this->generateAvailabilityAttributeFromNonEligibleBranches($nonEligibleBranches)
+                );
 
                 if (!$eligibleBranch) {
                     if (!$swArticleInfo) return null;
@@ -318,6 +322,14 @@ class ModelXMLImporter
             ->values();
     }
 
+    protected function mergeAvailabilityInfo(Collection $existing, Collection $new): Collection
+    {
+        $merged = $existing->keyBy('branchNo')
+            ->merge($new->keyBy('branchNo'));
+
+        return $merged->values();
+    }
+
     /**
      * @param $variants
      * @return mixed
@@ -349,7 +361,7 @@ class ModelXMLImporter
             ->values();
     }
 
-    protected function isNewImportFileForArticle(\App\ImportFile $importFile, Article $article): bool
+    protected function isNewImportFileForArticle(ImportFile $importFile, Article $article): bool
     {
         if ($article->imports()->where('import_file_id', $importFile->id)->exists()) return false;
 
