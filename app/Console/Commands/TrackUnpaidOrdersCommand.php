@@ -2,11 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Commands\TrackUnpaidOrders;
 use App\Domain\OrderTracking\OrderTracker;
 use App\Domain\OrderTracking\UnpaidOrderProvider;
 use Illuminate\Console\Command;
 
-class TrackUnpaidOrders extends Command
+class TrackUnpaidOrdersCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -23,24 +24,14 @@ class TrackUnpaidOrders extends Command
     protected $description = 'Track unpaid orders';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @param OrderTracker $orderTracker
      * @param UnpaidOrderProvider $orderProvider
      * @return mixed
      */
-    public function handle(OrderTracker $orderTracker, UnpaidOrderProvider $orderProvider)
+    public function handle(TrackUnpaidOrders $trackUnpaidOrders)
     {
-        $orderTracker->track($orderProvider);
+        $trackUnpaidOrders();
     }
 }
