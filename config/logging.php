@@ -35,12 +35,8 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['daily', 'bugsnag'],
+            'channels' => ['daily'],
             'tap' => [App\Logging\AddPID::class],
-        ],
-
-        'bugsnag' => [
-            'driver' => 'bugsnag',
         ],
 
         'single' => [
