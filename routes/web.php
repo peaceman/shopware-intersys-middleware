@@ -39,3 +39,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('manufacturers.size-mappings', 'ManufacturerSizeMappingController');
 });
 
+Route::get('/debug-sentry', function () {
+    throw new Exception('My first Sentry error!');
+});
