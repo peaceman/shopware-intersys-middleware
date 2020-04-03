@@ -23,6 +23,7 @@ use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Mockery;
 use Psr\Log\NullLogger;
 use Tests\TestCase;
@@ -72,7 +73,7 @@ class OrderXMLExporterTest extends TestCase
 
         $orderExport = new OrderExport();
         $orderExport->type = 'sale';
-        $orderExport->storage_path = str_random(40) . '.xml';
+        $orderExport->storage_path = Str::random(40) . '.xml';
         $orderExport->sw_order_number = $order->getOrderNumber();
         $orderExport->sw_order_id = $order->getID();
         $orderExport->save();

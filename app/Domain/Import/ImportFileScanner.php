@@ -9,7 +9,9 @@ namespace App\Domain\Import;
 use App\ImportFile;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Psr\Log\LoggerInterface;
+use SplFileInfo;
 
 class ImportFileScanner
 {
@@ -111,7 +113,7 @@ class ImportFileScanner
 
     protected function stripFolder(string $filePath): string
     {
-        $fileInfo = new \SplFileInfo($filePath);
+        $fileInfo = new SplFileInfo($filePath);
         return $fileInfo->getFilename();
     }
 
@@ -124,7 +126,7 @@ class ImportFileScanner
         $startDownloadTime = microtime(true);
         $this->logger->info(__METHOD__ . ' Start downloading', ['filePath' => $remoteFilePath]);
         $fileStream = $this->remoteFS->readStream($remoteFilePath);
-        $localFilename = str_random(40);
+        $localFilename = Str::random(40);
         $this->localFS->put($localFilename, $fileStream);
 
         $this->logger->info(__METHOD__ . ' Finished downloading', [

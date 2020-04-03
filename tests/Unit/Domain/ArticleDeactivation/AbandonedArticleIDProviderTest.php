@@ -7,7 +7,12 @@ namespace Tests\Unit\Domain\ArticleDeactivation;
 use App\Article;
 use App\Domain\ArticleDeactivation\AbandonedArticleIDProvider;
 use App\ImportFile;
+use DateInterval;
+use DatePeriod;
+use DateTimeImmutable;
+use DateTimeZone;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class AbandonedArticleIDProviderTest extends TestCase
@@ -33,15 +38,15 @@ class AbandonedArticleIDProviderTest extends TestCase
 
     protected function createImportFiles(int $amount, string $type): iterable
     {
-        $startDate = new \DateTimeImmutable('2018-05-23 23:05', new \DateTimeZone('+01:00'));
-        $datePeriod = new \DatePeriod($startDate, new \DateInterval('P1D'), $amount);
+        $startDate = new DateTimeImmutable('2018-05-23 23:05', new DateTimeZone('+01:00'));
+        $datePeriod = new DatePeriod($startDate, new DateInterval('P1D'), $amount);
 
         return collect($datePeriod)
-            ->map(function (\DateTimeImmutable $importDate) use ($type) {
+            ->map(function (DateTimeImmutable $importDate) use ($type) {
                 $if = new ImportFile([
                     'type' => $type,
                     'original_filename' => $importDate->format('Y-m-d-H-i') . '.xml',
-                    'storage_path' => str_random(54),
+                    'storage_path' => Str::random(54),
                 ]);
 
                 $if->save();

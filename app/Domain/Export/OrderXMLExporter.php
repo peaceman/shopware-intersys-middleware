@@ -12,6 +12,7 @@ use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 use Psr\Log\LoggerInterface;
 
 class OrderXMLExporter
@@ -276,7 +277,7 @@ class OrderXMLExporter
 
     private function createOrderExport(string $type, Order $order, string $exportXML): OrderExport
     {
-        $localFilename = str_random(40) . '.xml';
+        $localFilename = Str::random(40) . '.xml';
         $this->localFS->put($localFilename, $exportXML);
 
         $oe = new OrderExport();

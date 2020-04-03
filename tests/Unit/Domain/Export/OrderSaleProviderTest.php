@@ -18,6 +18,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;
 use Psr\Log\NullLogger;
 use Tests\TestCase;
@@ -121,7 +122,7 @@ class OrderSaleProviderTest extends TestCase
         static::assertEquals(3, iterator_count($orders));
         static::assertCount(4, $container);
 
-        $requests = array_pluck($container, 'request');
+        $requests = Arr::pluck($container, 'request');
         array_shift($requests);
 
         $requestURIPaths = array_map(function (Request $request) { return $request->getUri()->getPath(); }, $requests);

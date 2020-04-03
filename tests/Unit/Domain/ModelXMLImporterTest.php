@@ -21,6 +21,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Str;
 use Psr\Log\NullLogger;
 use Tests\TestCase;
 
@@ -130,7 +131,7 @@ class ModelXMLImporterTest extends TestCase
         $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
         $modelXMLImporter->setBranchesToImport(['006']);
 
-        $importFile = new ImportFile(['type' => 'base', 'original_filename' => 'lel.xml', 'storage_path' => str_random(40)]);
+        $importFile = new ImportFile(['type' => 'base', 'original_filename' => 'lel.xml', 'storage_path' => Str::random(40)]);
         $importFile->save();
 
         $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
@@ -362,7 +363,7 @@ class ModelXMLImporterTest extends TestCase
         $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
         $modelXMLImporter->setBranchesToImport(['006']);
 
-        $importFile = new ImportFile(['type' => ImportFile::TYPE_DELTA, 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => str_random(40)]);
+        $importFile = new ImportFile(['type' => ImportFile::TYPE_DELTA, 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => Str::random(40)]);
         $importFile->save();
 
         $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
@@ -548,7 +549,7 @@ class ModelXMLImporterTest extends TestCase
         $importFile = new ImportFile([
             'type' => ImportFile::TYPE_DELTA,
             'original_filename' => '2018-08-21-23-05.xml',
-            'storage_path' => str_random(40)
+            'storage_path' => Str::random(40)
         ]);
         $importFile->save();
 
@@ -669,7 +670,7 @@ class ModelXMLImporterTest extends TestCase
         $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
         $modelXMLImporter->setBranchesToImport(['006']);
 
-        $importFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => str_random(40)]);
+        $importFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => Str::random(40)]);
         $importFile->save();
 
         $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
@@ -866,7 +867,7 @@ class ModelXMLImporterTest extends TestCase
         $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
         $modelXMLImporter->setBranchesToImport(['006']);
 
-        $importFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => str_random(40)]);
+        $importFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => Str::random(40)]);
         $importFile->save();
 
         $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));

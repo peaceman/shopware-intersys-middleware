@@ -10,6 +10,9 @@ use App\Domain\Import\ModelXMLData;
 use App\ImportFile;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use LimitIterator;
+use Mockery;
 use Psr\Log\NullLogger;
 use Tests\TestCase;
 use function GuzzleHttp\Psr7\stream_for;
@@ -23,7 +26,7 @@ class ImportFileReaderTest extends TestCase
         $importFile = new ImportFile([
             'type' => 'base',
             'original_filename' => '2018-08-10-03-25.xml',
-            'storage_path' => str_random(40)
+            'storage_path' => Str::random(40)
         ]);
         $importFile->save();
 
@@ -33,7 +36,7 @@ class ImportFileReaderTest extends TestCase
 
         $baseXMLReader = new ImportFileReader(new NullLogger(), $localFS);
 
-        $dataObjects = iterator_to_array(new \LimitIterator($baseXMLReader($importFile), 0, 3));
+        $dataObjects = iterator_to_array(new LimitIterator($baseXMLReader($importFile), 0, 3));
         static::assertCount(3, $dataObjects);
         static::assertContainsOnlyInstancesOf(ModelXMLData::class, $dataObjects);
         static::assertNull($importFile->processed_at);
@@ -46,7 +49,7 @@ class ImportFileReaderTest extends TestCase
             'original_filename' => 'lel.xml',
         ]);
 
-        $importFile = \Mockery::mock($importFile);
+        $importFile = Mockery::mock($importFile);
         $importFile->expects()->qualifiesForImport()->andReturn(false);
 
         Storage::fake('local');
@@ -63,7 +66,7 @@ class ImportFileReaderTest extends TestCase
         $importFile = new ImportFile([
             'type' => 'base',
             'original_filename' => '2018-08-10-03-25.xml',
-            'storage_path' => str_random(40)
+            'storage_path' => Str::random(40)
         ]);
         $importFile->save();
 

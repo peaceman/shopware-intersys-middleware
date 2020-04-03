@@ -7,6 +7,7 @@ namespace App\Domain\Import;
 use App\Article;
 use App\Domain\ShopwareAPI;
 use App\ImportFile;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
@@ -158,7 +159,7 @@ class ModelXMLImporter
 
         $variants = $this->generateVariants($modelNode, $articleNode, $swArticleInfo)
             ->map(function ($variant) use ($swArticleInfo) {
-                $variant['attribute'] = array_only($variant['attribute'], ['availability']);
+                $variant['attribute'] = Arr::only($variant['attribute'], ['availability']);
                 unset($variant['lastStock']);
 
                 if ($swArticleInfo->isPriceProtected($variant['number']))
