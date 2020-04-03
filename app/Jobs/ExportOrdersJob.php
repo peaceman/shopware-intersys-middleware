@@ -13,6 +13,13 @@ class ExportOrdersJob implements ShouldQueue
 {
     use Queueable;
 
+    public $timeout = 5 * 60;
+
+    public function __construct()
+    {
+        $this->onConnection('redis-long-running');
+    }
+
     public function handle(ExportOrders $exportOrders): void
     {
         $exportOrders();
