@@ -17,7 +17,7 @@ class OldImportFileProviderTest extends TestCase
     /** @var OldImportFileProvider */
     protected $importFileProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

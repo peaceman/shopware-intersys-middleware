@@ -12,6 +12,8 @@ use App\Domain\Export\OrderXMLGenerator;
 use App\Domain\ShopwareAPI;
 use App\OrderExport;
 use App\OrderExportArticle;
+use DateTime;
+use DateTimeImmutable;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -39,7 +41,7 @@ class OrderXMLExporterTest extends TestCase
      */
     private $remoteFS;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -78,12 +80,12 @@ class OrderXMLExporterTest extends TestCase
         $orderExportArticle = new OrderExportArticle();
         $orderExportArticle->orderExport()->associate($orderExport);
         $orderExportArticle->sw_article_number = $orderArticle->getArticleNumber();
-        $orderExportArticle->date_of_trans = \DateTime::createFromFormat('Ymd-His', '20181031-230555');
+        $orderExportArticle->date_of_trans = DateTime::createFromFormat('Ymd-His', '20181031-230555');
         $orderExportArticle->save();
 
         $orderXMLGenerator = Mockery::mock(OrderXMLGenerator::class);
         $orderXMLGenerator->shouldReceive('generate')->withArgs(function (
-            string $type, \DateTimeImmutable $exportDate, Order $orderToCheck, array $orderArticles
+            string $type, DateTimeImmutable $exportDate, Order $orderToCheck, array $orderArticles
         ) use ($order, $orderExportArticle) {
             if ($type !== OrderExport::TYPE_RETURN) return false;
             if ($orderToCheck !== $order) return false;
@@ -177,7 +179,7 @@ class OrderXMLExporterTest extends TestCase
         $order = $this->generateOrderForSaleExportWithVoucher();
         $orderXMLGenerator = Mockery::mock(OrderXMLGenerator::class);
         $orderXMLGenerator->shouldReceive('generate')->withArgs((function (
-            string $type, \DateTimeImmutable $exportDate, Order $orderToCheck, array $orderArticles
+            string $type, DateTimeImmutable $exportDate, Order $orderToCheck, array $orderArticles
         ) use ($order) {
             if ($type !== OrderExport::TYPE_SALE) return false;
             if ($order !== $orderToCheck) return false;
@@ -227,7 +229,7 @@ class OrderXMLExporterTest extends TestCase
 
         $orderXMLGenerator = Mockery::mock(OrderXMLGenerator::class);
         $orderXMLGenerator->shouldReceive('generate')->withArgs((function (
-            string $type, \DateTimeImmutable $exportDate, Order $order, array $orderArticles
+            string $type, DateTimeImmutable $exportDate, Order $order, array $orderArticles
         ) use ($orders) {
             if ($type !== OrderExport::TYPE_SALE) return false;
             if ($order !== $orders[0]) return false;
@@ -243,7 +245,7 @@ class OrderXMLExporterTest extends TestCase
         }));
 
         $orderXMLGenerator->shouldReceive('generate')->withArgs(function (
-            string $type, \DateTimeImmutable $exportDate, Order $order, array $orderArticles
+            string $type, DateTimeImmutable $exportDate, Order $order, array $orderArticles
         ) use ($orders) {
             if ($type !== OrderExport::TYPE_SALE) return false;
             if ($order !== $orders[1]) return false;
@@ -310,8 +312,8 @@ class OrderXMLExporterTest extends TestCase
         $order = new Order([
             'id' => 5,
             'number' => '23235',
-            'orderTime' => \DateTimeImmutable::createFromFormat('Ymd-His', '20181031-230555')
-                ->format(\DateTime::ISO8601),
+            'orderTime' => DateTimeImmutable::createFromFormat('Ymd-His', '20181031-230555')
+                ->format(DateTime::ISO8601),
         ]);
 
         $order->setArticles([
@@ -335,8 +337,8 @@ class OrderXMLExporterTest extends TestCase
         $order = new Order([
             'id' => 6,
             'number' => '23236',
-            'orderTime' => \DateTimeImmutable::createFromFormat('Ymd-His', '20181031-230555')
-                ->format(\DateTime::ISO8601),
+            'orderTime' => DateTimeImmutable::createFromFormat('Ymd-His', '20181031-230555')
+                ->format(DateTime::ISO8601),
         ]);
 
         $order->setArticles([
@@ -358,8 +360,8 @@ class OrderXMLExporterTest extends TestCase
         $order = new Order([
             'id' => 5,
             'number' => '23235',
-            'orderTime' => \DateTimeImmutable::createFromFormat('Ymd-His', '20181031-230555')
-                ->format(\DateTime::ISO8601),
+            'orderTime' => DateTimeImmutable::createFromFormat('Ymd-His', '20181031-230555')
+                ->format(DateTime::ISO8601),
         ]);
 
         $order->setArticles([
@@ -392,8 +394,8 @@ class OrderXMLExporterTest extends TestCase
         $order = new Order([
             'id' => 5,
             'number' => '23235',
-            'orderTime' => \DateTimeImmutable::createFromFormat('Ymd-His', '20181031-230555')
-                ->format(\DateTime::ISO8601),
+            'orderTime' => DateTimeImmutable::createFromFormat('Ymd-His', '20181031-230555')
+                ->format(DateTime::ISO8601),
         ]);
 
         $order->setArticles([

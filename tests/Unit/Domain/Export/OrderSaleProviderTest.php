@@ -10,6 +10,7 @@ use App\Domain\Export\OrderArticle;
 use App\Domain\Export\OrderFetched;
 use App\Domain\Export\OrderSaleProvider;
 use App\Domain\ShopwareAPI;
+use DateTime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -24,7 +25,7 @@ use function GuzzleHttp\Psr7\parse_query;
 
 class OrderSaleProviderTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -190,7 +191,7 @@ class OrderSaleProviderTest extends TestCase
         // check order 55
         $order = array_shift($orders);
         static::assertEquals('20002', $order->getOrderNumber());
-        static::assertEquals('2018-10-31T20:12:42+0100', $order->getOrderTime()->format(\DateTime::ISO8601));
+        static::assertEquals('2018-10-31T20:12:42+0100', $order->getOrderTime()->format(DateTime::ISO8601));
 
         /** @var OrderArticle[] $articles */
         $articles = $order->getArticles();
@@ -204,7 +205,7 @@ class OrderSaleProviderTest extends TestCase
         // check order 59
         $order = array_shift($orders);
         static::assertEquals('20003', $order->getOrderNumber());
-        static::assertEquals('2018-10-31T21:36:23+0100', $order->getOrderTime()->format(\DateTime::ISO8601));
+        static::assertEquals('2018-10-31T21:36:23+0100', $order->getOrderTime()->format(DateTime::ISO8601));
 
         /** @var OrderArticle[] $articles */
         $articles = $order->getArticles();
@@ -228,7 +229,7 @@ class OrderSaleProviderTest extends TestCase
         // check order 61
         $order = array_shift($orders);
         static::assertEquals('20004', $order->getOrderNumber());
-        static::assertEquals('2018-11-01T11:55:16+0100', $order->getOrderTime()->format(\DateTime::ISO8601));
+        static::assertEquals('2018-11-01T11:55:16+0100', $order->getOrderTime()->format(DateTime::ISO8601));
 
         /** @var OrderArticle[] $articles */
         $articles = $order->getArticles();

@@ -4,6 +4,7 @@
  */
 namespace Tests\Unit\Domain;
 
+use App\Domain\Import\SizeMapper;
 use App\Manufacturer;
 use App\ManufacturerSizeMapping;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -19,11 +20,11 @@ class SizeMapperTest extends TestCase
     protected $manufacturer;
 
     /**
-     * @var \App\Domain\Import\SizeMapper
+     * @var SizeMapper
      */
     protected $sizeMapper;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -55,7 +56,7 @@ class SizeMapperTest extends TestCase
             ]);
         });
 
-        $this->sizeMapper = new \App\Domain\Import\SizeMapper();
+        $this->sizeMapper = new SizeMapper();
     }
 
     public function testSizeMapping()
