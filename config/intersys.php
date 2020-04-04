@@ -9,4 +9,9 @@ return [
         'delta' => env('INTERSYS_FOLDER_DELTA'),
         'order' => env('INTERSYS_FOLDER_ORDER'),
     ],
+    'orderExport' => [
+        'file' => [
+            'numberPrefix' => env('INTERSYS_ORDER_EXPORT_NUMBER_PREFIX')
+        ],
+    ],
 ];
