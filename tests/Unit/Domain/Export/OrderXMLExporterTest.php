@@ -258,6 +258,7 @@ class OrderXMLExporterTest extends TestCase
             return true;
         });
 
+        $orderNumberPrefix = 'foothebar';
         $shopwareAPI = new ShopwareAPI(new NullLogger(), $client);
         $exporter = new OrderXMLExporter(
             new NullLogger(),
@@ -268,6 +269,7 @@ class OrderXMLExporterTest extends TestCase
         $exporter->setAfterExportStatusSale(42);
         $exporter->setAfterExportStatusReturn(43);
         $exporter->setAfterExportPositionStatusReturn(16);
+        $exporter->setOrderNumberPrefix($orderNumberPrefix);
 
         $orderProvider = Mockery::mock(OrderProvider::class);
         $orderProvider->expects()->getOrders()->andReturn($orders);
@@ -275,8 +277,12 @@ class OrderXMLExporterTest extends TestCase
         $exporter->export(OrderExport::TYPE_SALE, $orderProvider);
 
         // check existing remote files
-        static::assertTrue($this->remoteFS->exists('order/order-23235S_Webshop_2018-10-31_23-05-55.xml'));
-        static::assertTrue($this->remoteFS->exists('order/order-23236S_Webshop_2018-10-31_23-05-55.xml'));
+        static::assertTrue($this->remoteFS->exists(
+            "order/order-$orderNumberPrefix-23235S_Webshop_2018-10-31_23-05-55.xml"
+        ));
+        static::assertTrue($this->remoteFS->exists(
+            "order/order-$orderNumberPrefix-23236S_Webshop_2018-10-31_23-05-55.xml"
+        ));
 
         OrderExport::all()->each(function (OrderExport $orderExport) {
             static::assertTrue($this->localFS->exists($orderExport->storage_path));

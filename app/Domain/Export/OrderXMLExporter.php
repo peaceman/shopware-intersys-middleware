@@ -68,6 +68,11 @@ class OrderXMLExporter
     private $orderPositionStatusRequirementReturn;
 
     /**
+     * @var string
+     */
+    private $orderNumberPrefix;
+
+    /**
      * OrderXMLExporter constructor.
      * @param LoggerInterface $logger
      * @param Filesystem $localFS
@@ -112,6 +117,11 @@ class OrderXMLExporter
     public function setOrderPositionStatusRequirementReturn(int $positionStatusID): void
     {
         $this->orderPositionStatusRequirementReturn = $positionStatusID;
+    }
+
+    public function setOrderNumberPrefix(string $orderNumberPrefix): void
+    {
+        $this->orderNumberPrefix = $orderNumberPrefix;
     }
 
     public function export(string $type, OrderProvider $orderProvider)
@@ -256,7 +266,19 @@ class OrderXMLExporter
         $typePart = $type === OrderExport::TYPE_SALE ? 'S' : 'R';
         $orderTime = $order->getOrderTime()->format('Y-m-d_H-i-s');
 
-        return "order-{$order->getOrderNumber()}{$typePart}_Webshop_{$orderTime}.xml";
+        return "order-{$this->getOrderNumberString($order)}{$typePart}_Webshop_{$orderTime}.xml";
+    }
+
+    private function getOrderNumberString(Order $order): string
+    {
+        $orderNumberParts = array_filter(
+            [$this->orderNumberPrefix, $order->getOrderNumber()],
+            static function (?string $v) {
+                return !empty($v);
+            }
+        );
+
+        return implode('-', $orderNumberParts);
     }
 
     private function createOrderExportEntries(
