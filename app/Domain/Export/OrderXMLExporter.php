@@ -119,7 +119,7 @@ class OrderXMLExporter
         $this->orderPositionStatusRequirementReturn = $positionStatusID;
     }
 
-    public function setOrderNumberPrefix(string $orderNumberPrefix): void
+    public function setOrderNumberPrefix(?string $orderNumberPrefix): void
     {
         $this->orderNumberPrefix = $orderNumberPrefix;
     }

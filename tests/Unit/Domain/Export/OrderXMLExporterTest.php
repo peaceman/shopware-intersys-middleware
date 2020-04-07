@@ -112,6 +112,7 @@ class OrderXMLExporterTest extends TestCase
         $exporter->setAfterExportStatusReturn(43);
         $exporter->setAfterExportPositionStatusReturn(16);
         $exporter->setOrderPositionStatusRequirementReturn(15);
+        $exporter->setOrderNumberPrefix(null); // explicitly test with null
 
         $orderProvider = Mockery::mock(OrderProvider::class);
         $orderProvider->expects()->getOrders()->andReturn([$order]);
