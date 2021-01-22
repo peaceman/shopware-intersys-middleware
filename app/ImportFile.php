@@ -7,6 +7,7 @@ namespace App;
 
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -29,6 +30,8 @@ class ImportFile extends Model
 {
     const TYPE_BASE = 'base';
     const TYPE_DELTA = 'delta';
+
+    use HasFactory;
 
     protected static $unguarded = true;
 

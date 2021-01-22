@@ -17,11 +17,11 @@ class UnpaidOrderProviderTest extends TestCase
 
     public function testOrderProvider()
     {
-        $unpaidOrder = factory(Order::class)->create([
+        $unpaidOrder = Order::factory()->create([
             'sw_payment_status_id' => 4,
         ]);
 
-        $paidOrder = factory(Order::class)->create([
+        $paidOrder = Order::factory()->create([
             'sw_payment_status_id' => 8,
         ]);
 

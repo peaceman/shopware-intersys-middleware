@@ -20,11 +20,12 @@ class ExportOrdersTest extends TestCase
         $orderSaleProvider = $this->createMock(OrderSaleProvider::class);
         $orderReturnProvider = $this->createMock(OrderReturnProvider::class);
 
-        $orderXMLExporter->expects(static::at(0))->method('export')
-            ->with(OrderExport::TYPE_SALE, $orderSaleProvider);
-
-        $orderXMLExporter->expects(static::at(1))->method('export')
-            ->with(OrderExport::TYPE_RETURN, $orderReturnProvider);
+        $orderXMLExporter->expects(static::exactly(2))
+            ->method('export')
+            ->withConsecutive(
+                [OrderExport::TYPE_SALE, $orderSaleProvider],
+                [OrderExport::TYPE_RETURN, $orderReturnProvider],
+            );
 
         $exportOrders = $this->app->make(ExportOrders::class, [
             'exporter' => $orderXMLExporter,

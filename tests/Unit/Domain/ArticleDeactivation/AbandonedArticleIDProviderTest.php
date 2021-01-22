@@ -23,9 +23,9 @@ class AbandonedArticleIDProviderTest extends TestCase
     {
         $importFiles = $this->createImportFiles(8, 'base');
         $deltaImportFiles = $this->createImportFiles(8, 'delta');
-        $articles = factory(Article::class, 3)->create();
-        $inActiveArticles = factory(Article::class)->create(['is_active' => false]);
-        $withoutSWArticleId = factory(Article::class)->create(['sw_article_id' => null]);
+        $articles = Article::factory()->count(3)->create();
+        $inActiveArticles = Article::factory()->create(['is_active' => false]);
+        $withoutSWArticleId = Article::factory()->create(['sw_article_id' => null]);
 
         $articles[1]->imports()->create(['import_file_id' => $importFiles[0]->id]);
         $articles[2]->imports()->create(['import_file_id' => $importFiles[7]->id]);

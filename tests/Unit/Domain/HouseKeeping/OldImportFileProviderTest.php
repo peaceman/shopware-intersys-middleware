@@ -27,7 +27,7 @@ class OldImportFileProviderTest extends TestCase
 
     public function testKeepDurationNotExceeded()
     {
-        $importFile = factory(ImportFile::class)->create([
+        $importFile = ImportFile::factory()->create([
             'created_at' => now()->subDays(1),
         ]);
 
@@ -36,7 +36,7 @@ class OldImportFileProviderTest extends TestCase
 
     public function testKeepDurationExceeded()
     {
-        $importFile = factory(ImportFile::class)->create([
+        $importFile = ImportFile::factory()->create([
             'created_at' => now()->subDays(4),
         ]);
 

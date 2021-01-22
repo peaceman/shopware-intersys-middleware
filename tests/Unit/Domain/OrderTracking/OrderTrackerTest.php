@@ -42,7 +42,7 @@ class OrderTrackerTest extends TestCase
             'handler' => $stack,
         ]);
 
-        $orders = factory(Order::class, 2)->create();
+        $orders = Order::factory()->count(2)->create();
         $orderProvider = $this->createOrderProviderFromOrders($orders);
 
         Event::fake();
