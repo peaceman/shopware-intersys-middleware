@@ -7,21 +7,30 @@ namespace App\Domain\Import;
 
 use App\Manufacturer;
 use App\ManufacturerSizeMapping;
+use App\SizeMappingExclusion;
 use Illuminate\Database\Eloquent\Collection;
 
 class SizeMapper
 {
     protected $sizeMappings = [];
 
-    public function mapSize(string $manufacturerName, ?string $fedas, string $sourceSize)
+    public function mapSize(SizeMappingRequest $req)
     {
-        if (empty($fedas)) return $sourceSize;
+        if (empty($req->getFedas()) || $this->isExcluded($req)) return $req->getSize();
 
-        $sizeMappings = $this->fetchSizeMappingsForManufacturer($manufacturerName);
-        $gender = $this->getGenderFromFedas($fedas);
-        if (empty($gender)) return $sourceSize;
+        $sizeMappings = $this->fetchSizeMappingsForManufacturer($req->getManufacturerName());
+        $gender = $this->getGenderFromFedas($req->getFedas());
+        if (empty($gender)) return $req->getSize();
 
-        return data_get($sizeMappings, [$gender, strtolower(trim($sourceSize))], $sourceSize);
+        return data_get($sizeMappings, [$gender, strtolower(trim($req->getSize()))], $req->getSize());
+    }
+
+    protected function isExcluded(SizeMappingRequest $req): bool
+    {
+        return SizeMappingExclusion::query()
+            ->where('article_number', $req->getMainArticleNumber())
+            ->orWhere('article_number', $req->getVariantArticleNumber())
+            ->exists();
     }
 
     protected function fetchSizeMappingsForManufacturer(string $manufacturerName): array

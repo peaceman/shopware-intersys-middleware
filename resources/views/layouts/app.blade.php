@@ -37,6 +37,9 @@
                         <li class="nav-item">
                             <a href="{{ route('manufacturers.index') }}" class="nav-link">{{ __('Manufacturers') }}</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('size-mapping-exclusions.index') }}" class="nav-link">{{ __('SizeMapping Exclusions') }}</a>
+                        </li>
                     </ul>
                     @endauth
 

@@ -17,6 +17,7 @@ use App\Domain\OrderTracking\UnpaidOrderProvider;
 use App\Domain\ShopwareAPI;
 use GuzzleHttp\Client;
 use Illuminate\Database\ConnectionInterface;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use Psr\Log\LoggerInterface;
@@ -31,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        Paginator::useBootstrap();
     }
 
     /**
