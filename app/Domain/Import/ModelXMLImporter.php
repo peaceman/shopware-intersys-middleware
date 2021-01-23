@@ -254,7 +254,7 @@ class ModelXMLImporter
 
                 $eligibleBranch = $eligibleBranches->values()->first();
 
-                $mappedSize = $this->mapSize($modelNode, (string)$sizeXML->Sizedeno);
+                $mappedSize = $this->mapSize($modelNode, $articleNode, $sizeXML);
 
                 $variantData = [
                     'active' => true,
@@ -303,12 +303,20 @@ class ModelXMLImporter
         return $variants;
     }
 
-    protected function mapSize(SimpleXMLElement $modelNode, string $sourceSize): string
-    {
-        $manufacturer = (string)$modelNode->Branddeno;
-        $fedas = (string)$modelNode->Fedas;
+    protected function mapSize(
+        SimpleXMLElement $modelNode,
+        SimpleXMLElement $articleNode,
+        SimpleXMLElement $sizeXML
+    ): string {
+        $req = new SizeMappingRequest(
+            manufacturerName: (string) $modelNode->Branddeno,
+            mainArticleNumber: (string) $modelNode->Modno . (string) $articleNode->Colno,
+            variantArticleNumber: (string) $sizeXML->Itemno,
+            size: (string) $sizeXML->Sizedeno,
+            fedas: (string) $modelNode->Fedas,
+        );
 
-        return $this->sizeMapper->mapSize($manufacturer, $fedas, $sourceSize);
+        return $this->sizeMapper->mapSize($req);
     }
 
     protected function generateAvailabilityAttributeFromNonEligibleBranches(Collection $nonEligibleBranches): Collection
