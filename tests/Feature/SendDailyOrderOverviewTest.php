@@ -23,9 +23,9 @@ class SendDailyOrderOverviewTest extends TestCase
 
         config(['shopware.order.dailyOverviewRecipients' => 'test@example.com']);
 
-        $orders = factory(Order::class, 3)->create();
+        $orders = Order::factory()->count(3)->create();
         collect($orders)->each(function (Order $order) {
-            $orderArticles = factory(OrderArticle::class, 3)->make();
+            $orderArticles = OrderArticle::factory()->count(3)->make();
             $order->orderArticles()->saveMany($orderArticles);
         });
 

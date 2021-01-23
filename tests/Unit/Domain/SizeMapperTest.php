@@ -28,7 +28,7 @@ class SizeMapperTest extends TestCase
     {
         parent::setUp();
 
-        $this->manufacturer = factory(Manufacturer::class)->create();
+        $this->manufacturer = Manufacturer::factory()->create();
 
         ManufacturerSizeMapping::unguarded(function () {
             $this->manufacturer->sizeMappings()->create([

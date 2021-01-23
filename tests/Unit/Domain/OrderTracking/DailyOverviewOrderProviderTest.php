@@ -18,7 +18,7 @@ class DailyOverviewOrderProviderTest extends TestCase
 
     public function testAlreadyNotifiedOrder()
     {
-        $order = factory(Order::class)->create([
+        $order = Order::factory()->create([
             'notified_at' => now(),
         ]);
 
@@ -28,7 +28,7 @@ class DailyOverviewOrderProviderTest extends TestCase
 
     public function testOrderToNotifyAbout()
     {
-        $order = factory(Order::class)->create();
+        $order = Order::factory()->create();
 
         $orders = $this->createOrderProvider()->getOrders();
         static::assertNotEmpty($orders);

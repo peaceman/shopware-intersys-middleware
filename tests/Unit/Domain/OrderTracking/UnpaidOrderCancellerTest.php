@@ -30,8 +30,8 @@ class UnpaidOrderCancellerTest extends TestCase
     public function testOrderCancellation()
     {
         /** @var Order $order */
-        $order = factory(Order::class)->create();
-        $orderArticles = factory(OrderArticle::class, 2)->make();
+        $order = Order::factory()->create();
+        $orderArticles = OrderArticle::factory()->count(2)->make();
         $order->orderArticles()->saveMany($orderArticles);
 
         $container = [];

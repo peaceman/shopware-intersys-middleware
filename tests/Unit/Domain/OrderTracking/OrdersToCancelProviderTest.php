@@ -21,7 +21,7 @@ class OrdersToCancelProviderTest extends TestCase
 
     public function testAlreadyCancelledOrder()
     {
-        $order = factory(Order::class)->create([
+        $order = Order::factory()->create([
             'sw_payment_status_id' => $this->unpaidPaymentStatus,
             'sw_order_time' => now()->subDays(8),
             'sw_payment_id' => $this->prePaymentId,
@@ -34,7 +34,7 @@ class OrdersToCancelProviderTest extends TestCase
 
     public function testWrongPaymentStatus()
     {
-        $order = factory(Order::class)->create([
+        $order = Order::factory()->create([
             'sw_payment_status_id' => 0,
             'sw_order_time' => now()->subDays(8),
             'sw_payment_id' => $this->prePaymentId,
@@ -46,7 +46,7 @@ class OrdersToCancelProviderTest extends TestCase
 
     public function testWrongPaymentID()
     {
-        $order = factory(Order::class)->create([
+        $order = Order::factory()->create([
             'sw_payment_status_id' => $this->unpaidPaymentStatus,
             'sw_order_time' => now()->subDays(8),
             'sw_payment_id' => 1,
@@ -58,7 +58,7 @@ class OrdersToCancelProviderTest extends TestCase
 
     public function testTooLateOrderTime()
     {
-        $order = factory(Order::class)->create([
+        $order = Order::factory()->create([
             'sw_payment_status_id' => $this->unpaidPaymentStatus,
             'sw_order_time' => now()->subDays(4),
             'sw_payment_id' => $this->prePaymentId,
@@ -70,7 +70,7 @@ class OrdersToCancelProviderTest extends TestCase
 
     public function testOrderToCancel()
     {
-        $order = factory(Order::class)->create([
+        $order = Order::factory()->create([
             'sw_payment_status_id' => $this->unpaidPaymentStatus,
             'sw_order_time' => now()->subDays(5),
             'sw_payment_id' => $this->prePaymentId,
@@ -83,7 +83,7 @@ class OrdersToCancelProviderTest extends TestCase
 
     public function testEarlierOrderTime()
     {
-        $order = factory(Order::class)->create([
+        $order = Order::factory()->create([
             'sw_payment_status_id' => $this->unpaidPaymentStatus,
             'sw_order_time' => now()->subDays(7),
             'sw_payment_id' => $this->prePaymentId,

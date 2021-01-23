@@ -40,7 +40,7 @@ class ArticleDeactivatorTest extends TestCase
             'handler' => $stack,
         ]);
 
-        $articles = factory(Article::class, 3)->create();
+        $articles = Article::factory()->count(3)->create();
 
         $shopwareAPI = new ShopwareAPI(new NullLogger(), $client);
         $deactivator = new \App\Domain\ArticleDeactivation\ArticleDeactivator(new NullLogger(), $shopwareAPI);

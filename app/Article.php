@@ -6,6 +6,7 @@
 namespace App;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -25,6 +26,8 @@ class Article extends Model
 {
     const DEFAULTS_WEIGHT = '1KG';
     const DEFAULTS_SHIPPING_TIME = '1-3';
+
+    use HasFactory;
 
     protected $casts = [
         'is_active' => 'boolean',

@@ -40,7 +40,7 @@ class OldImportFileDeleterTest extends TestCase
     public function testDeletesProvidedImportFiles()
     {
         // prepare import files
-        $importFiles = factory(ImportFile::class, 2)->create();
+        $importFiles = ImportFile::factory()->count(2)->create();
         $secondImportFile = $importFiles->last();
 
         $storagePaths = collect($importFiles)->pluck('storage_path');
@@ -50,7 +50,7 @@ class OldImportFileDeleterTest extends TestCase
         }
 
         /** @var Article $article */
-        $article = factory(Article::class)->create();
+        $article = Article::factory()->create();
         $article->imports()->save(new ArticleImport(['import_file_id' => $secondImportFile->id]));
 
         // prepare import file provider

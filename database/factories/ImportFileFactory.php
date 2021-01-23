@@ -1,14 +1,20 @@
 <?php
-/** @var Factory $factory */
+
+namespace Database\Factories;
 
 use App\ImportFile;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(ImportFile::class, function (Faker $faker) {
-    return [
-        'type' => $faker->randomElement([ImportFile::TYPE_BASE, ImportFile::TYPE_DELTA]),
-        'original_filename' => $faker->slug . '.' . $faker->fileExtension,
-        'storage_path' => $faker->md5,
-    ];
-});
+class ImportFileFactory extends Factory
+{
+    protected $model = ImportFile::class;
+
+    public function definition()
+    {
+        return [
+            'type' => $this->faker->randomElement([ImportFile::TYPE_BASE, ImportFile::TYPE_DELTA]),
+            'original_filename' => $this->faker->slug . '.' . $this->faker->fileExtension,
+            'storage_path' => $this->faker->md5,
+        ];
+    }
+}
