@@ -188,12 +188,12 @@ class ModelXMLImporterTest extends TestCase
                             [
                                 'branchNo' => '011',
                                 'stock' => 23,
-                            ]
+                            ],
                         ]),
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'R'],
-                    ]
+                    ],
                 ],
                 [
                     'active' => true,
@@ -211,7 +211,7 @@ class ModelXMLImporterTest extends TestCase
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'S'],
-                    ]
+                    ],
                 ],
                 [
                     'active' => true,
@@ -229,7 +229,7 @@ class ModelXMLImporterTest extends TestCase
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'M'],
-                    ]
+                    ],
                 ],
             ],
         ], $creationBody);
@@ -291,7 +291,7 @@ class ModelXMLImporterTest extends TestCase
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'L'],
-                    ]
+                    ],
                 ],
                 [
                     'active' => true,
@@ -309,7 +309,7 @@ class ModelXMLImporterTest extends TestCase
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'XL'],
-                    ]
+                    ],
                 ],
             ],
         ], $creationBody);
@@ -402,12 +402,12 @@ class ModelXMLImporterTest extends TestCase
                             [
                                 'branchNo' => '011',
                                 'stock' => 23,
-                            ]
+                            ],
                         ]),
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'R'],
-                    ]
+                    ],
                 ],
                 [
                     'active' => true,
@@ -423,7 +423,7 @@ class ModelXMLImporterTest extends TestCase
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'S'],
-                    ]
+                    ],
                 ],
                 [
                     'active' => true,
@@ -439,7 +439,7 @@ class ModelXMLImporterTest extends TestCase
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'M'],
-                    ]
+                    ],
                 ],
             ],
         ], $updateBody);
@@ -482,7 +482,7 @@ class ModelXMLImporterTest extends TestCase
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'L'],
-                    ]
+                    ],
                 ],
                 [
                     'active' => true,
@@ -498,7 +498,7 @@ class ModelXMLImporterTest extends TestCase
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'XL'],
-                    ]
+                    ],
                 ],
             ],
         ], $updateBody);
@@ -549,7 +549,7 @@ class ModelXMLImporterTest extends TestCase
         $importFile = new ImportFile([
             'type' => ImportFile::TYPE_DELTA,
             'original_filename' => '2018-08-21-23-05.xml',
-            'storage_path' => Str::random(40)
+            'storage_path' => Str::random(40),
         ]);
         $importFile->save();
 
@@ -591,12 +591,12 @@ class ModelXMLImporterTest extends TestCase
                             [
                                 'branchNo' => '011',
                                 'stock' => 23,
-                            ]
+                            ],
                         ]),
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'R'],
-                    ]
+                    ],
                 ],
                 [
                     'active' => true,
@@ -612,7 +612,7 @@ class ModelXMLImporterTest extends TestCase
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'S'],
-                    ]
+                    ],
                 ],
                 [
                     'active' => true,
@@ -628,7 +628,7 @@ class ModelXMLImporterTest extends TestCase
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'M'],
-                    ]
+                    ],
                 ],
             ],
         ], $updateBody);
@@ -715,12 +715,12 @@ class ModelXMLImporterTest extends TestCase
                             [
                                 'branchNo' => '011',
                                 'stock' => 23,
-                            ]
+                            ],
                         ]),
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'R'],
-                    ]
+                    ],
                 ],
                 [
                     'active' => true,
@@ -736,7 +736,7 @@ class ModelXMLImporterTest extends TestCase
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'S'],
-                    ]
+                    ],
                 ],
                 [
                     'active' => true,
@@ -752,7 +752,7 @@ class ModelXMLImporterTest extends TestCase
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'M'],
-                    ]
+                    ],
                 ],
             ],
         ], $updateBody);
@@ -801,7 +801,7 @@ class ModelXMLImporterTest extends TestCase
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'L'],
-                    ]
+                    ],
                 ],
                 [
                     'active' => true,
@@ -817,7 +817,7 @@ class ModelXMLImporterTest extends TestCase
                     ],
                     'configuratorOptions' => [
                         ['group' => 'Size', 'option' => 'XL'],
-                    ]
+                    ],
                 ],
             ],
         ], $updateBody);
@@ -914,6 +914,46 @@ class ModelXMLImporterTest extends TestCase
             data_get($updateBody, 'variants.*.prices'),
             static::logicalNot(static::containsOnly('null'))
         );
+    }
+
+    public function testInconsistentLocalStateWillBeDeleted()
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(404),
+            new Response(404),
+        ]);
+
+        $stack = HandlerStack::create($mock);
+        $stack->push($history);
+
+        $client = new Client([
+            'handler' => $stack,
+        ]);
+
+        $this->createSizeMappings();
+
+        $articles = [
+            Article::create(['is_modno' => '10003436H000', 'is_active' => true, 'sw_article_id' => 23]),
+            Article::create(['is_modno' => '10003436H004', 'is_active' => true, 'sw_article_id' => 24]),
+        ];
+
+        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
+        $modelXMLImporter->setBranchesToImport(['006']);
+
+        $importFile = new ImportFile(['type' => 'base', 'original_filename' => 'lel.xml', 'storage_path' => Str::random(40)]);
+        $importFile->save();
+
+        $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
+        $modelXMLImporter->import(new ModelXMLData($importFile, $xmlString));
+
+        static::assertCount(2, $container);
+
+        /** @var Article $article */
+        foreach ($articles as $article) {
+            static::assertNull($article->fresh());
+        }
     }
 
     /**

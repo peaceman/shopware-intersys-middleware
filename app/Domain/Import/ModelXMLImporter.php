@@ -61,7 +61,11 @@ class ModelXMLImporter
 
         $articleNodes = $modelXML->xpath('/Model/Color');
         foreach ($articleNodes as $articleNode) {
-            $this->importArticle($modelXMLData, $modelXML, $articleNode);
+            try {
+                $this->importArticle($modelXMLData, $modelXML, $articleNode);
+            } catch (UnknownArticleInShopwareException $e) {
+                $this->handleUnknownArticleInShopwareException($e);
+            }
         }
     }
 
@@ -144,6 +148,10 @@ class ModelXMLImporter
         $articleNumber = $article->is_modno;
         $swArticleId = $article->sw_article_id;
         $swArticleInfo = $this->shopwareAPI->searchShopwareArticleInfoByArticle($article);
+
+        if (!$swArticleInfo) {
+            throw new UnknownArticleInShopwareException($article);
+        }
 
         $loggingContext = [
             'articleNumber' => $articleNumber,
@@ -381,5 +389,15 @@ class ModelXMLImporter
             ->doesntExist();
     }
 
+    private function handleUnknownArticleInShopwareException(UnknownArticleInShopwareException $e): void
+    {
+        $article = $e->getArticle();
 
+        $this->logger->warning('Article that should exist in shopware could not be found. Deleting local record', [
+            'articleNumber' => $article->is_modno,
+            'swArticleId' => $article->sw_article_id,
+        ]);
+
+        $article->delete();
+    }
 }
