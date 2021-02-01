@@ -216,7 +216,7 @@
           "zenitDataBadgeThirdTooltip": "",
           "viisonCountryOfOrigin": 0,
           "viisonCustomsTariffNumber": "",
-          "availability": "[{\"branchNo\":\"007\",\"stock\":23}]"
+          "availability": "[{\"branchNo\":\"006\",\"stock\":2}, {\"branchNo\":\"007\",\"stock\":23}]"
         },
         "images": [],
         "prices": [

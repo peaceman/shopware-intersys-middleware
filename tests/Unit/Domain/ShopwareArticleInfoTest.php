@@ -43,7 +43,13 @@ class ShopwareArticleInfoTest extends TestCase
         };
 
         // regular valid
-        static::assertEquals([['branchNo' => '007', 'stock' => 23]], $fetchAvailInfo($articleData));
+        static::assertEquals(
+            [
+                ['branchNo' => '006', 'stock' => 2],
+                ['branchNo' => '007', 'stock' => 23],
+            ],
+            $fetchAvailInfo($articleData)
+        );
 
         // non existing
         Arr::forget($articleData, $availabilityKey);

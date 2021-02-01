@@ -257,9 +257,8 @@ class ModelXMLImporter
     {
         $variants = collect($articleNode->xpath('Size'))
             ->map(function (SimpleXMLElement $sizeXML) use ($swArticleInfo, $modelNode, $articleNode) {
-                [$eligibleBranches, $nonEligibleBranches] = collect($sizeXML->xpath('Branch'))
-                    ->partition([$this, 'isBranchEligible']);
-
+                $branches = collect($sizeXML->xpath('Branch'));
+                $eligibleBranches = $branches->filter([$this, 'isBranchEligible']);
                 $eligibleBranch = $eligibleBranches->values()->first();
 
                 $mappedSize = $this->mapSize($modelNode, $articleNode, $sizeXML);
@@ -276,7 +275,7 @@ class ModelXMLImporter
 
                 $availability = $this->mergeAvailabilityInfo(
                     collect($swArticleInfo ? $swArticleInfo->getAvailabilityInfo($variantData['number']) : []),
-                    $this->generateAvailabilityAttributeFromNonEligibleBranches($nonEligibleBranches)
+                    $this->generateAvailabilityAttributeFromBranches($branches)
                 );
 
                 if (!$eligibleBranch) {
@@ -327,9 +326,9 @@ class ModelXMLImporter
         return $this->sizeMapper->mapSize($req);
     }
 
-    protected function generateAvailabilityAttributeFromNonEligibleBranches(Collection $nonEligibleBranches): Collection
+    protected function generateAvailabilityAttributeFromBranches(Collection $branches): Collection
     {
-        return $nonEligibleBranches
+        return $branches
             ->map(function (SimpleXMLElement $branchXML) {
                 return [
                     'branchNo' => (string)$branchXML->Branchno,
