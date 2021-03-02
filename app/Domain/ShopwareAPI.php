@@ -11,6 +11,7 @@ use App\Domain\Import\ShopwareArticleInfo;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use Psr\Log\LoggerInterface;
 
 class ShopwareAPI
@@ -71,9 +72,23 @@ class ShopwareAPI
 
     public function updateShopwareArticle(int $swArticleId, array $articleData): void
     {
-        $response = $this->httpClient->put("/api/articles/{$swArticleId}", [
-            'json' => $articleData
-        ]);
+        try {
+            $this->httpClient->put("/api/articles/{$swArticleId}", [
+                'json' => $articleData
+            ]);
+        } catch (ServerException $e) {
+            $response = $e->getResponse();
+
+            $this->logger->error(__METHOD__ . ' Failed to update article in shopware', [
+                'swArticleId' => $swArticleId,
+                'response' => [
+                    'statusCode' => $response->getStatusCode(),
+                    'body' => (string) $response->getBody(),
+                ],
+            ]);
+
+            throw $e;
+        }
     }
 
     public function createShopwareArticle(array $articleData): int
