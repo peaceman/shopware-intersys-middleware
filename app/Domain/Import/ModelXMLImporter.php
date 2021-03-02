@@ -7,6 +7,7 @@ namespace App\Domain\Import;
 use App\Article;
 use App\Domain\ShopwareAPI;
 use App\ImportFile;
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Psr\Log\LoggerInterface;
@@ -65,6 +66,12 @@ class ModelXMLImporter
                 $this->importArticle($modelXMLData, $modelXML, $articleNode);
             } catch (UnknownArticleInShopwareException $e) {
                 $this->handleUnknownArticleInShopwareException($e);
+            } catch (Exception $e) {
+                $this->logger->warning('Failed to import article', [
+                    'e' => $e->getMessage(),
+                ]);
+
+                report($e);
             }
         }
     }
