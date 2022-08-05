@@ -546,6 +546,205 @@ class ModelXMLImporterTest extends TestCase
         static::assertEquals($articleImport->import_file_id, $importFile->id);
     }
 
+
+    public function testArticleStockWontBeUpdatedFromDelta()
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(200, [], file_get_contents(base_path('docs/fixtures/price-unprotected-article-response.json'))),
+            new Response(201, [], '{"success":true,"data":{"id":23,"location":"https:\/\/www.foobar.de\/api\/articles\/1008"}}'),
+            new Response(200, [], file_get_contents(base_path('docs/fixtures/price-unprotected-article-response.json'))),
+            new Response(201, [], '{"success":true,"data":{"id":24,"location":"https:\/\/www.foobar.de\/api\/articles\/1008"}}'),
+        ]);
+
+        $stack = HandlerStack::create($mock);
+        $stack->push($history);
+
+        $client = new Client([
+            'handler' => $stack,
+        ]);
+
+        $this->createSizeMappings();
+
+        $alreadyImportedFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-19-23-05.xml']);
+        $alreadyImportedFile->save();
+
+        $article = new Article(['is_modno' => '10003436H000', 'is_active' => true, 'sw_article_id' => 23]);
+        $article->save();
+
+        $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
+
+        $article = new Article(['is_modno' => '10003436H004', 'is_active' => true, 'sw_article_id' => 24]);
+        $article->save();
+
+        $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
+
+        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
+        $modelXMLImporter->setBranchesToImport(['006']);
+        $modelXMLImporter->setIgnoreStockUpdatesFromDelta(true);
+
+        $importFile = new ImportFile(['type' => ImportFile::TYPE_DELTA, 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => Str::random(40)]);
+        $importFile->save();
+
+        $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
+        $modelXMLImporter->import(new ModelXMLData($importFile, $xmlString));
+
+        static::assertCount(4, $container);
+
+        // check first article
+        /** @var Request $updateRequest */
+        $updateRequest = $container[1]['request'];
+
+        $updateBody = json_decode((string)$updateRequest->getBody(), true);
+
+        static::assertSame([
+            'mainDetail' => [
+                'prices' => [[
+                    'price' => 35,
+                    'pseudoPrice' => null,
+                ]],
+            ],
+            'variants' => [
+                [
+                    'number' => '10003436HP2900004',
+                    'ean' => '',
+                    'prices' => [[
+                        'price' => 35,
+                        'pseudoPrice' => null,
+                    ]],
+                    'attribute' => [
+                        'availability' => json_encode([
+                            [
+                                'branchNo' => '006',
+                                'stock' => 2,
+                            ],
+                            [
+                                'branchNo' => '009',
+                                'stock' => 8,
+                            ],
+                            [
+                                'branchNo' => '011',
+                                'stock' => 23,
+                            ],
+                        ]),
+                    ],
+                    'configuratorOptions' => [
+                        ['group' => 'Size', 'option' => 'R'],
+                    ],
+                ],
+                [
+                    'active' => true,
+                    'number' => '10003436HP2900005',
+                    'ean' => '',
+                    'prices' => [[
+                        'price' => 35,
+                        'pseudoPrice' => null,
+                    ]],
+                    'attribute' => [
+                        'availability' => json_encode([[
+                            'branchNo' => '006',
+                            'stock' => 1,
+                        ]]),
+                    ],
+                    'configuratorOptions' => [
+                        ['group' => 'Size', 'option' => 'S'],
+                    ],
+                ],
+                [
+                    'active' => true,
+                    'number' => '10003436HP2900009',
+                    'ean' => '',
+                    'prices' => [[
+                        'price' => 35,
+                        'pseudoPrice' => null,
+                    ]],
+                    'attribute' => [
+                        'availability' => json_encode([[
+                            'branchNo' => '006',
+                            'stock' => 2,
+                        ]]),
+                    ],
+                    'configuratorOptions' => [
+                        ['group' => 'Size', 'option' => 'M'],
+                    ],
+                ],
+            ],
+        ], $updateBody);
+
+        /** @var Article $article */
+        $article = Article::query()->where('is_modno', '10003436H000')->first();
+
+        /** @var ArticleImport[] $articleImports */
+        $articleImports = $article->imports;
+        static::assertCount(2, $articleImports);
+
+        [, $articleImport] = $articleImports;
+        static::assertEquals($articleImport->import_file_id, $importFile->id);
+
+        // check second article
+        /** @var Request $updateRequest */
+        $updateRequest = $container[3]['request'];
+
+        $updateBody = json_decode((string)$updateRequest->getBody(), true);
+
+        static::assertSame([
+            'mainDetail' => [
+                'prices' => [[
+                    'price' => 35,
+                    'pseudoPrice' => null,
+                ]],
+            ],
+            'variants' => [
+                [
+                    'active' => true,
+                    'number' => '10003436HP2900413',
+                    'ean' => '',
+                    'prices' => [[
+                        'price' => 35,
+                        'pseudoPrice' => null,
+                    ]],
+                    'attribute' => [
+                        'availability' => json_encode([[
+                            'branchNo' => '006',
+                            'stock' => 0,
+                        ]]),
+                    ],
+                    'configuratorOptions' => [
+                        ['group' => 'Size', 'option' => 'L'],
+                    ],
+                ],
+                [
+                    'active' => true,
+                    'number' => '10003436HP2900417',
+                    'ean' => '',
+                    'prices' => [[
+                        'price' => 35,
+                        'pseudoPrice' => null,
+                    ]],
+                    'attribute' => [
+                        'availability' => json_encode([[
+                            'branchNo' => '006',
+                            'stock' => 0,
+                        ]]),
+                    ],
+                    'configuratorOptions' => [
+                        ['group' => 'Size', 'option' => 'XL'],
+                    ],
+                ],
+            ],
+        ], $updateBody);
+
+        /** @var Article $article */
+        $article = Article::query()->where('is_modno', '10003436H004')->first();
+
+        /** @var ArticleImport[] $articleImports */
+        $articleImports = $article->imports;
+        static::assertCount(2, $articleImports);
+
+        [, $articleImport] = $articleImports;
+        static::assertEquals($articleImport->import_file_id, $importFile->id);
+    }
     public function testNonEligibleBranchAvailabilityWontGetCompletelyOverridenDuringArticleUpdates()
     {
         // prepare guzzle client

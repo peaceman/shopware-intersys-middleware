@@ -35,6 +35,8 @@ class ModelXMLImporter
      */
     protected $branchesToImport = [];
 
+    protected bool $ignoreStockUpdatesFromDelta = false;
+
     /**
      * ModelXMLImporter constructor.
      * @param LoggerInterface $logger
@@ -54,6 +56,13 @@ class ModelXMLImporter
     public function setBranchesToImport(array $branchesToImport)
     {
         $this->branchesToImport = $branchesToImport;
+    }
+
+    public function setIgnoreStockUpdatesFromDelta(bool $ignore): self
+    {
+       $this->ignoreStockUpdatesFromDelta = $ignore;
+
+       return $this;
     }
 
     public function import(ModelXMLData $modelXMLData): void
@@ -173,12 +182,16 @@ class ModelXMLImporter
         $this->logger->info(__METHOD__, $loggingContext);
 
         $variants = $this->generateVariants($modelNode, $articleNode, $swArticleInfo)
-            ->map(function ($variant) use ($swArticleInfo) {
+            ->map(function ($variant) use ($swArticleInfo, $modelXMLData) {
                 $variant['attribute'] = Arr::only($variant['attribute'], ['availability']);
                 unset($variant['lastStock']);
 
                 if ($swArticleInfo->isPriceProtected($variant['number']))
                     unset($variant['prices']);
+
+                if ($this->ignoreStockUpdatesFromDelta
+                    && $modelXMLData->getImportFile()->type === ImportFile::TYPE_DELTA)
+                    unset($variant['inStock']);
 
                 return $variant;
             });
