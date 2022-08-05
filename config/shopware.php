@@ -43,4 +43,5 @@ return [
         'branchNoAccounting' => env('SHOPWARE_BRANCH_ACCOUNTING'),
         'branchNoStock' => env('SHOPWARE_BRANCH_STOCK'),
     ],
+    'ignoreDeltaStockUpdates' => env('SHOPWARE_IGNORE_DELTA_STOCK_UPDATES', false),
 ];

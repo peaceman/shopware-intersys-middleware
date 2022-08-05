@@ -76,6 +76,9 @@ class AppServiceProvider extends ServiceProvider
                 ->toArray();
 
             $modelXMLImporter->setBranchesToImport($branchesToImport);
+            $modelXMLImporter->setIgnoreStockUpdatesFromDelta(
+                boolval(config('shopware.ignoreDeltaStockUpdates', false))
+            );
 
             return $modelXMLImporter;
         });
