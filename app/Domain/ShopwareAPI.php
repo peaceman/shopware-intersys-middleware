@@ -149,6 +149,12 @@ class ShopwareAPI
             $response = $this->httpClient->get('/api/orders', [
                 'query' => [
                     'filter' => $filters,
+                    'sort' => [
+                        [
+                            'property' => 'orderTime',
+                            'direction' => 'DESC',
+                        ],
+                    ],
                 ],
             ]);
 

@@ -63,6 +63,8 @@ class OrderReturnProviderTest extends TestCase
             [
                 'filter[0][property]' => 'status',
                 'filter[0][value]' => '23',
+                'sort[0][property]' => 'orderTime',
+                'sort[0][direction]' => 'DESC',
             ],
             parse_query($requestURI->getQuery())
         );

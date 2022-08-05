@@ -67,6 +67,8 @@ class OrderSaleProviderTest extends TestCase
                 'filter[0][value]' => '23',
                 'filter[1][property]' => 'cleared',
                 'filter[1][value]' => '42',
+                'sort[0][property]' => 'orderTime',
+                'sort[0][direction]' => 'DESC',
             ],
             parse_query($requestURI->getQuery())
         );
@@ -84,6 +86,8 @@ class OrderSaleProviderTest extends TestCase
                 'filter[1][value]' => '8',
                 'filter[2][property]' => 'paymentId',
                 'filter[2][value]' => '15',
+                'sort[0][property]' => 'orderTime',
+                'sort[0][direction]' => 'DESC',
             ],
             parse_query($requestURI->getQuery())
         );
