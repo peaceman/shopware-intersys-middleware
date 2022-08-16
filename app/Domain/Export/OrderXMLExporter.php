@@ -188,7 +188,7 @@ class OrderXMLExporter
             })
             ->sum();
 
-        $voucherPercentage = $voucherFullPriceSum / $nonVoucherFullPriceSum;
+        $voucherPercentage = $nonVoucherFullPriceSum > 0 ? $voucherFullPriceSum / $nonVoucherFullPriceSum : 0;
 
         $articlesToExport = $nonVoucherArticles
             ->filter(function (OrderArticle $orderArticle) use ($type) {
