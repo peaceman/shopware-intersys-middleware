@@ -41,9 +41,10 @@ class ImportFileReader
         ]);
         $startTime = microtime(true);
 
-        $filePath = $this->fs->getDriver()->getAdapter()->getPathPrefix() . '/' . $importFile->storage_path;
-        $xmlReader = new XMLReader();
-        $xmlReader->open($filePath);
+        $xmlReader = XMLReader::XML($this->fs->get($importFile->storage_path));
+        if (!$xmlReader) throw new \RuntimeException('Failed to read ImportFile XML');
+
+        /** @var $xmlReader XMLReader */
 
         // move to the first model node
         while ($xmlReader->read() && $xmlReader->name !== 'Model');

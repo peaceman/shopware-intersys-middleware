@@ -8,6 +8,7 @@ namespace Tests\Unit\Domain;
 use App\Domain\Import\ImportFileReader;
 use App\Domain\Import\ModelXMLData;
 use App\ImportFile;
+use GuzzleHttp\Psr7\Utils;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -15,7 +16,6 @@ use LimitIterator;
 use Mockery;
 use Psr\Log\NullLogger;
 use Tests\TestCase;
-use function GuzzleHttp\Psr7\stream_for;
 
 class ImportFileReaderTest extends TestCase
 {
@@ -32,7 +32,7 @@ class ImportFileReaderTest extends TestCase
 
         Storage::fake('local');
         $localFS = Storage::disk('local');
-        $localFS->put($importFile->storage_path, stream_for(fopen(base_path('docs/fixtures/2018-08-10-03-25.xml'), 'r')));
+        $localFS->put($importFile->storage_path, Utils::streamFor(fopen(base_path('docs/fixtures/2018-08-10-03-25.xml'), 'r')));
 
         $baseXMLReader = new ImportFileReader(new NullLogger(), $localFS);
 
@@ -72,7 +72,10 @@ class ImportFileReaderTest extends TestCase
 
         Storage::fake('local');
         $localFS = Storage::disk('local');
-        $localFS->put($importFile->storage_path, stream_for(fopen(base_path('docs/fixtures/2018-08-10-03-25.xml'), 'r')));
+        $localFS->put(
+            $importFile->storage_path,
+            Utils::streamFor(fopen(base_path('docs/fixtures/2018-08-10-03-25.xml'), 'r')),
+        );
 
         $baseXMLReader = new ImportFileReader(new NullLogger(), $localFS);
         $iter = $baseXMLReader($importFile);

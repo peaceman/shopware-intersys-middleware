@@ -15,6 +15,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Query;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -70,7 +71,7 @@ class OrderSaleProviderTest extends TestCase
                 'sort[0][property]' => 'orderTime',
                 'sort[0][direction]' => 'DESC',
             ],
-            parse_query($requestURI->getQuery())
+            Query::parse($requestURI->getQuery()),
         );
 
         $request = $container[1]['request'];
@@ -89,7 +90,7 @@ class OrderSaleProviderTest extends TestCase
                 'sort[0][property]' => 'orderTime',
                 'sort[0][direction]' => 'DESC',
             ],
-            parse_query($requestURI->getQuery())
+            Query::parse($requestURI->getQuery()),
         );
     }
 

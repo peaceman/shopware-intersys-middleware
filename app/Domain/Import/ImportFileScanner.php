@@ -92,9 +92,6 @@ class ImportFileScanner
         $this->logger->info(__METHOD__ . ' Start scanning', ['folder' => $folder]);
         $startTime = microtime(true);
 
-        // reconnect before using the connection until
-        // https://github.com/thephpleague/flysystem/issues/1128#issuecomment-586855744
-        $this->reconnectRemoteFS($this->remoteFS);
         $files = $this->remoteFS->files($folder);
 
         $importFiles = collect($files)
@@ -147,30 +144,5 @@ class ImportFileScanner
         $importFile->save();
 
         return $importFile;
-    }
-
-    protected function reconnectRemoteFS(Filesystem $filesystem): void
-    {
-        if (!$filesystem instanceof FilesystemAdapter) {
-            return;
-        }
-
-        /** @var FilesystemAdapter $filesystem */
-        $fsDriver = $filesystem->getDriver();
-
-        if (!$fsDriver instanceof \League\Flysystem\Filesystem) {
-            return;
-        }
-
-        /** @var \League\Flysystem\Filesystem $fsDriver */
-        $fsAdapter = $fsDriver->getAdapter();
-
-        if (!$fsAdapter instanceof Ftp) {
-            return;
-        }
-
-        /** @var Ftp $fsAdapter */
-        $fsAdapter->disconnect();
-        $fsAdapter->connect();
     }
 }
