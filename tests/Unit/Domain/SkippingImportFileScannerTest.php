@@ -26,18 +26,17 @@ class SkippingImportFileScannerTest extends TestCase
         $remoteFS = Storage::disk('intersys');
 
         $remoteFS->put('outoforder.xml', 'no');
-        $remoteFS->put('base/lel.xml', 'xml base dinge');
-        $remoteFS->put('base/lel2.xml', 'xml base dinge 2');
-        $remoteFS->put('base/existing.xml', 'xml base existing');
-        $remoteFS->put('delta/lel.xml', 'xml delta dinge');
-        $remoteFS->put('delta/existing.xml', 'xml delta existing');
+        $remoteFS->put('stock/Base-lel.xml', 'xml base dinge');
+        $remoteFS->put('stock/Base-lel2.xml', 'xml base dinge 2');
+        $remoteFS->put('stock/Base-existing.xml', 'xml base existing');
+        $remoteFS->put('stock/Delta-lel.xml', 'xml delta dinge');
+        $remoteFS->put('stock/Delta-existing.xml', 'xml delta existing');
 
-        (new ImportFile(['type' => 'base', 'original_filename' => 'existing.xml', 'storage_path' => 'meh']))->save();
-        (new ImportFile(['type' => 'delta', 'original_filename' => 'existing.xml', 'storage_path' => 'meh']))->save();
+        (new ImportFile(['type' => 'base', 'original_filename' => 'Base-existing.xml', 'storage_path' => 'meh']))->save();
+        (new ImportFile(['type' => 'delta', 'original_filename' => 'Delta-existing.xml', 'storage_path' => 'meh']))->save();
 
         $importFileScanner = new SkippingImportFileScanner(new NullLogger(), $localFS, $remoteFS);
-        $importFileScanner->setBaseFileFolder('base');
-        $importFileScanner->setDeltaFileFolder('delta');
+        $importFileScanner->setFolder('stock');
         $importFiles = $importFileScanner->scan();
 
         static::assertTrue(is_iterable($importFiles), 'The result not iterable');
@@ -47,7 +46,7 @@ class SkippingImportFileScannerTest extends TestCase
         $actualTypes = collect($importFiles)->pluck('type')->sort()->values()->all();
         static::assertEquals($expectedTypes, $actualTypes);
 
-        $expectedOriginalFilenames = ['lel.xml', 'lel.xml', 'lel2.xml'];
+        $expectedOriginalFilenames = ['Base-lel.xml', 'Delta-lel.xml', 'Base-lel2.xml'];
         $actualOriginalFilenames = collect($importFiles)->pluck('original_filename')->all();
         static::assertEquals($expectedOriginalFilenames, $actualOriginalFilenames);
 

@@ -5,7 +5,6 @@
 
 namespace App\Domain\Import;
 
-
 use App\ImportFile;
 
 class SkippingImportFileScanner extends ImportFileScanner
@@ -14,8 +13,7 @@ class SkippingImportFileScanner extends ImportFileScanner
         string $importFileType,
         string $remoteFilePath,
         string $originalFilename
-    ): ImportFile
-    {
+    ): ImportFile {
         $importFile = new ImportFile([
             'type' => $importFileType,
             'original_filename' => $originalFilename,

@@ -93,8 +93,7 @@ class AppServiceProvider extends ServiceProvider
                 Storage::disk('intersys')
             );
 
-            $scanner->setBaseFileFolder(config('intersys.folder.base'));
-            $scanner->setDeltaFileFolder(config('intersys.folder.delta'));
+            $scanner->setFolder(config('intersys.folder.stock'));
 
             return $scanner;
         });
@@ -106,8 +105,7 @@ class AppServiceProvider extends ServiceProvider
                 Storage::disk('intersys')
             );
 
-            $scanner->setBaseFileFolder(config('intersys.folder.base'));
-            $scanner->setDeltaFileFolder(config('intersys.folder.delta'));
+            $scanner->setFolder(config('intersys.folder.stock'));
 
             return $scanner;
         });

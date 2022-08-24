@@ -5,8 +5,7 @@
 
 return [
     'folder' => [
-        'base' => env('INTERSYS_FOLDER_BASE'),
-        'delta' => env('INTERSYS_FOLDER_DELTA'),
+        'stock' => env('INTERSYS_FOLDER_STOCK'),
         'order' => env('INTERSYS_FOLDER_ORDER'),
     ],
     'orderExport' => [

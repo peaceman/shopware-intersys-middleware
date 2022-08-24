@@ -24,19 +24,17 @@ class ImportFileScannerTest extends TestCase
         $localFS = Storage::disk('local');
         $remoteFS = Storage::disk('intersys');
 
-        $remoteFS->put('outoforder.xml', 'no');
-        $remoteFS->put('base/lel.xml', 'xml base dinge');
-        $remoteFS->put('base/lel2.xml', 'xml base dinge 2');
-        $remoteFS->put('base/existing.xml', 'xml base existing');
-        $remoteFS->put('delta/lel.xml', 'xml delta dinge');
-        $remoteFS->put('delta/existing.xml', 'xml delta existing');
-
-        (new ImportFile(['type' => 'base', 'original_filename' => 'existing.xml', 'storage_path' => 'meh']))->save();
-        (new ImportFile(['type' => 'delta', 'original_filename' => 'existing.xml', 'storage_path' => 'meh']))->save();
+        $remoteFS->put('outoforder.csv', 'no');
+        $remoteFS->put('stock/Base-lel.csv', 'xml base dinge');
+        $remoteFS->put('stock/Base-lel2.csv', 'xml base dinge 2');
+        $remoteFS->put('stock/Base-existing.csv', 'xml base existing');
+        $remoteFS->put('stock/Delta-lel.csv', 'xml delta dinge');
+        $remoteFS->put('stock/Delta-existing.csv', 'xml delta existing');
+        (new ImportFile(['type' => 'base', 'original_filename' => 'Base-existing.csv', 'storage_path' => 'meh']))->save();
+        (new ImportFile(['type' => 'delta', 'original_filename' => 'Delta-existing.csv', 'storage_path' => 'meh']))->save();
 
         $importFileScanner = new ImportFileScanner(new NullLogger(), $localFS, $remoteFS);
-        $importFileScanner->setBaseFileFolder('base');
-        $importFileScanner->setDeltaFileFolder('delta');
+        $importFileScanner->setFolder('stock');
         $importFiles = $importFileScanner->scan();
 
         static::assertTrue(is_iterable($importFiles), 'The result not iterable');
@@ -46,7 +44,7 @@ class ImportFileScannerTest extends TestCase
         $actualTypes = collect($importFiles)->pluck('type')->sort()->values()->all();
         static::assertEquals($expectedTypes, $actualTypes);
 
-        $expectedOriginalFilenames = ['lel.xml', 'lel.xml', 'lel2.xml'];
+        $expectedOriginalFilenames = ['Base-lel.csv', 'Delta-lel.csv', 'Base-lel2.csv'];
         $actualOriginalFilenames = collect($importFiles)->pluck('original_filename')->all();
         static::assertEquals($expectedOriginalFilenames, $actualOriginalFilenames);
 
@@ -63,15 +61,14 @@ class ImportFileScannerTest extends TestCase
         $localFS = Storage::disk('local');
         $remoteFS = Storage::disk('intersys');
 
-        $remoteFS->put('outoforder.xml', 'no');
-        $remoteFS->put('base/2018-08-02-03-25.xml', 'xml base dinge');
-        $remoteFS->put('base/2018-08-07-15-15.xml', 'xml base dinge 2');
-        $remoteFS->put('delta/2018-08-02-05-05.xml', 'xml delta dinge');
-        $remoteFS->put('delta/2018-08-07-15-17.xml', 'xml delta existing');
+        $remoteFS->put('outoforder.csv', 'no');
+        $remoteFS->put('stock/Base-100343-20220728145454', 'xml base dinge');
+        $remoteFS->put('stock/Base-100343-20220729145454', 'xml base dinge 2');
+        $remoteFS->put('stock/Delta-100343-20220728175454-1', 'xml delta dinge');
+        $remoteFS->put('stock/Delta-100343-20220729175454-2', 'xml delta existing');
 
         $importFileScanner = new ImportFileScanner(new NullLogger(), $localFS, $remoteFS);
-        $importFileScanner->setBaseFileFolder('base');
-        $importFileScanner->setDeltaFileFolder('delta');
+        $importFileScanner->setFolder('stock');
         $importFiles = $importFileScanner->scan();
 
         static::assertTrue(is_iterable($importFiles), 'The result not iterable');
@@ -82,8 +79,8 @@ class ImportFileScannerTest extends TestCase
         static::assertEquals($expectedTypes, $actualTypes);
 
         $expectedOriginalFilenames = [
-            '2018-08-02-03-25.xml', '2018-08-02-05-05.xml',
-            '2018-08-07-15-15.xml', '2018-08-07-15-17.xml',
+            'Base-100343-20220728145454', 'Delta-100343-20220728175454-1',
+            'Base-100343-20220729145454', 'Delta-100343-20220729175454-2',
         ];
         $actualOriginalFilenames = collect($importFiles)->pluck('original_filename')->all();
         static::assertEquals($expectedOriginalFilenames, $actualOriginalFilenames);
