@@ -13,20 +13,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DRIVER', 'local'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default Cloud Filesystem Disk
-    |--------------------------------------------------------------------------
-    |
-    | Many applications store files both locally and in the cloud. For this
-    | reason, you may specify a default "cloud" driver here. This driver
-    | will be bound as the Cloud disk implementation in the container.
-    |
-    */
-
-    'cloud' => env('FILESYSTEM_CLOUD', 's3'),
+    'default' => env('FILESYSTEM_DISK', 'local'),
 
     /*
     |--------------------------------------------------------------------------
@@ -35,9 +22,9 @@ return [
     |
     | Here you may configure as many filesystem "disks" as you wish, and you
     | may even configure multiple disks of the same driver. Defaults have
-    | been setup for each driver as an example of the required options.
+    | been set up for each driver as an example of the required values.
     |
-    | Supported Drivers: "local", "ftp", "sftp", "s3", "rackspace"
+    | Supported Drivers: "local", "ftp", "sftp", "s3"
     |
     */
 
@@ -46,6 +33,7 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
+            'throw' => true,
         ],
 
         'public' => [
@@ -53,6 +41,7 @@ return [
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
+            'throw' => false,
         ],
 
         's3' => [
@@ -62,6 +51,7 @@ return [
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
+            'throw' => false,
         ],
 
         'intersys' => [
@@ -70,7 +60,8 @@ return [
             'port' => env('INTERSYS_FTP_PORT', 21),
             'username' => env('INTERSYS_FTP_USERNAME'),
             'password' => env('INTERSYS_FTP_PASSWORD'),
-        ]
+            'throw' => true,
+        ],
     ],
 
 ];
