@@ -8,6 +8,8 @@ namespace App\Domain\Import;
 use App\ImportFile;
 use Generator;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Support\Str;
+use League\Csv\Reader;
 use Psr\Log\LoggerInterface;
 use XMLReader;
 
@@ -33,6 +35,17 @@ class ImportFileReader
     {
         if (!$importFile->qualifiesForImport()) return;
 
+        yield from match (true) {
+            Str::endsWith($importFile->original_filename, '.xml') => $this->readXML($importFile),
+            Str::endsWith($importFile->original_filename, '.csv') => $this->readCSV($importFile),
+            default => [],
+        };
+
+        $importFile->update(['processed_at' => now()]);
+    }
+
+    public function readXML(ImportFile $importFile): Generator
+    {
         $this->logger->info(__METHOD__ . ' Open xml file', [
             'importFile' => [
                 'originalFilename' => $importFile->original_filename,
@@ -56,8 +69,6 @@ class ImportFileReader
             $xmlReader->next('Model');
         }
 
-        $importFile->update(['processed_at' => now()]);
-
         $elapsedTime = microtime(true) - $startTime;
         $this->logger->info(__METHOD__ . ' Finished reading xml file', [
             'importFile' => [
@@ -66,5 +77,31 @@ class ImportFileReader
             ],
             'elapsedTime' => $elapsedTime
         ]);
+    }
+
+    public function readCSV(ImportFile $importFile): Generator
+    {
+        $csv = Reader::createFromStream($this->fs->readStream($importFile->storage_path))
+            ->setDelimiter(';')
+            ->setHeaderOffset(0);
+
+        $lastModelNumber = null;
+        $modelRecords = [];
+
+        foreach ($csv as $record) {
+            if (!is_null($lastModelNumber)
+                && $lastModelNumber !== $record['MODELLNR']
+            ) {
+                yield new ModelCSV($importFile, $modelRecords);
+                $modelRecords = [];
+            }
+
+            $lastModelNumber = $record['MODELLNR'];
+            $modelRecords[] = $record;
+        }
+
+        if (!empty($modelRecords)) {
+            yield new ModelCSV($importFile, $modelRecords);
+        }
     }
 }

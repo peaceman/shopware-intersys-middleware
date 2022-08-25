@@ -18,4 +18,16 @@ enum TargetGroupGender: string {
             default => null,
         };
     }
+
+    public static function tryFromWarengruppe(string $warengruppe): ?self
+    {
+        $lastDigit = substr($warengruppe, -1, 1);
+
+        return match (strtolower($lastDigit)) {
+            'h' => TargetGroupGender::Male,
+            'd' => TargetGroupGender::Female,
+            'k' => TargetGroupGender::Child,
+            default => null,
+        };
+    }
 }
