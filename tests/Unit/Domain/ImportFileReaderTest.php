@@ -6,7 +6,7 @@
 namespace Tests\Unit\Domain;
 
 use App\Domain\Import\ImportFileReader;
-use App\Domain\Import\ModelXMLData;
+use App\Domain\Import\ModelXML;
 use App\ImportFile;
 use GuzzleHttp\Psr7\Utils;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -38,7 +38,7 @@ class ImportFileReaderTest extends TestCase
 
         $dataObjects = iterator_to_array(new LimitIterator($baseXMLReader($importFile), 0, 3));
         static::assertCount(3, $dataObjects);
-        static::assertContainsOnlyInstancesOf(ModelXMLData::class, $dataObjects);
+        static::assertContainsOnlyInstancesOf(ModelXML::class, $dataObjects);
         static::assertNull($importFile->processed_at);
     }
 

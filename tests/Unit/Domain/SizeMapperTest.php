@@ -73,7 +73,7 @@ class SizeMapperTest extends TestCase
             mainArticleNumber: 'main',
             variantArticleNumber: 'variant',
             size: '4',
-            fedas: '215653'
+            fedas: '215653',
         )));
         static::assertEquals('8', $this->sizeMapper->mapSize(new SizeMappingRequest(
             $this->manufacturer->name,

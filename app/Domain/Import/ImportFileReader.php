@@ -52,7 +52,7 @@ class ImportFileReader
         while ($xmlReader->name === 'Model') {
             $modelXML = $xmlReader->readOuterXml();
 
-            yield new ModelXMLData($importFile, $modelXML);
+            yield new ModelXML($importFile, $modelXML);
             $xmlReader->next('Model');
         }
 

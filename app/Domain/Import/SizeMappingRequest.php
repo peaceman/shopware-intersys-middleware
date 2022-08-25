@@ -9,7 +9,8 @@ class SizeMappingRequest
         private string $mainArticleNumber,
         private string $variantArticleNumber,
         private string $size,
-        private ?string $fedas,
+        private ?string $fedas = null,
+        private ?TargetGroupGender $targetGroupGender = null,
     ) {}
 
     public function getManufacturerName(): string
@@ -35,5 +36,16 @@ class SizeMappingRequest
     public function getFedas(): ?string
     {
         return $this->fedas;
+    }
+
+    public function getTargetGroupGender(): ?TargetGroupGender
+    {
+        if ($this->targetGroupGender)
+            return $this->targetGroupGender;
+
+        if (!empty($this->fedas))
+            return TargetGroupGender::tryFromFedas($this->fedas);
+
+        return null;
     }
 }

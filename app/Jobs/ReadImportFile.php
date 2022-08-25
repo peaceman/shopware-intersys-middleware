@@ -9,21 +9,18 @@ use App\Domain\Import\ImportFileReader;
 use App\ImportFile;
 use Illuminate\Bus\Dispatcher;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Filesystem\Factory as FsFactory;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Storage;
 use Psr\Log\LoggerInterface;
 
 class ReadImportFile implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * @var ImportFile
-     */
-    protected $importFile;
+    protected ImportFile $importFile;
 
     /**
      * Create a new job instance.
@@ -36,19 +33,14 @@ class ReadImportFile implements ShouldQueue
         $this->importFile = $importFile;
     }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle(LoggerInterface $logger, Dispatcher $dispatcher)
+    public function handle(LoggerInterface $logger, Dispatcher $dispatcher, FsFactory $fsFactory): void
     {
-        $importFileReader = new ImportFileReader($logger, Storage::disk('local'));
+        $importFileReader = new ImportFileReader($logger, $fsFactory->disk('local'));
 
-        $modelXMLDataGenerator = $importFileReader($this->importFile);
+        $modelDataGenerator = $importFileReader($this->importFile);
 
-        foreach ($modelXMLDataGenerator as $modelXMLData) {
-            $dispatcher->dispatch(new ParseModelXML($modelXMLData));
+        foreach ($modelDataGenerator as $modelData) {
+            $dispatcher->dispatch(new ImportModel($modelData));
         }
     }
 }

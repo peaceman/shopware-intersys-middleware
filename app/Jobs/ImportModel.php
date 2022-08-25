@@ -6,41 +6,41 @@
 
 namespace App\Jobs;
 
-use App\Domain\Import\ModelXMLData;
-use App\Domain\Import\ModelXMLImporter;
+use App\Domain\Import\ModelDTO;
+use App\Domain\Import\ModelImporter;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class ParseModelXML implements ShouldQueue
+class ImportModel implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
-     * @var ModelXMLData
+     * @var ModelDTO
      */
-    protected $modelXMLData;
+    protected $modelData;
 
     /**
      * Create a new job instance.
      *
-     * @param ModelXMLData $modelXMLData
+     * @param ModelDTO $modelXMLData
      */
-    public function __construct(ModelXMLData $modelXMLData)
+    public function __construct(ModelDTO $modelXMLData)
     {
-        $this->modelXMLData = $modelXMLData;
+        $this->modelData = $modelXMLData;
     }
 
     /**
      * Execute the job.
      *
-     * @param ModelXMLImporter $importer
+     * @param ModelImporter $importer
      * @return void
      */
-    public function handle(ModelXMLImporter $importer)
+    public function handle(ModelImporter $importer)
     {
-        $importer->import($this->modelXMLData);
+        $importer->import($this->modelData);
     }
 }

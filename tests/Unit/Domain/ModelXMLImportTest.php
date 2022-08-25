@@ -7,8 +7,8 @@ namespace Tests\Unit\Domain;
 
 use App\Article;
 use App\ArticleImport;
-use App\Domain\Import\ModelXMLData;
-use App\Domain\Import\ModelXMLImporter;
+use App\Domain\Import\ModelXML;
+use App\Domain\Import\ModelImporter;
 use App\Domain\Import\SizeMapper;
 use App\Domain\ShopwareAPI;
 use App\ImportFile;
@@ -25,7 +25,7 @@ use Illuminate\Support\Str;
 use Psr\Log\NullLogger;
 use Tests\TestCase;
 
-class ModelXMLImporterTest extends TestCase
+class ModelXMLImportTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -37,11 +37,11 @@ class ModelXMLImporterTest extends TestCase
         $stack->push($history);
         $client = new Client(['handler' => $stack]);
 
-        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
-        $modelXMLImporter->setBranchesToImport(['006']);
+        $modelImporter = $this->createModelImporterWithHTTPClient($client);
+        $modelImporter->setBranchesToImport(['006']);
 
         $xmlString = file_get_contents(base_path('docs/fixtures/model-non-eligible.xml'));
-        $modelXMLImporter->import(new ModelXMLData(new ImportFile(), $xmlString));
+        $modelImporter->import(new ModelXML(new ImportFile(), $xmlString));
 
         static::assertEmpty($container);
     }
@@ -54,8 +54,8 @@ class ModelXMLImporterTest extends TestCase
         $stack->push($history);
         $client = new Client(['handler' => $stack]);
 
-        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
-        $modelXMLImporter->setBranchesToImport(['006']);
+        $modelImporter = $this->createModelImporterWithHTTPClient($client);
+        $modelImporter->setBranchesToImport(['006']);
 
         $alreadyImportedFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-19-23-05.xml']);
         $alreadyImportedFile->save();
@@ -71,7 +71,7 @@ class ModelXMLImporterTest extends TestCase
         $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
         $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
-        $modelXMLImporter->import(new ModelXMLData($alreadyImportedFile, $xmlString));
+        $modelImporter->import(new ModelXML($alreadyImportedFile, $xmlString));
 
         static::assertEmpty($container);
     }
@@ -84,8 +84,8 @@ class ModelXMLImporterTest extends TestCase
         $stack->push($history);
         $client = new Client(['handler' => $stack]);
 
-        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
-        $modelXMLImporter->setBranchesToImport(['006']);
+        $modelImporter = $this->createModelImporterWithHTTPClient($client);
+        $modelImporter->setBranchesToImport(['006']);
 
         $alreadyImportedFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-19-23-05.xml']);
         $alreadyImportedFile->save();
@@ -103,7 +103,7 @@ class ModelXMLImporterTest extends TestCase
         $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
         $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
-        $modelXMLImporter->import(new ModelXMLData($newImportFile, $xmlString));
+        $modelImporter->import(new ModelXML($newImportFile, $xmlString));
 
         static::assertEmpty($container);
     }
@@ -128,14 +128,18 @@ class ModelXMLImporterTest extends TestCase
 
         $this->createSizeMappings();
 
-        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
-        $modelXMLImporter->setBranchesToImport(['006']);
+        $modelImporter = $this->createModelImporterWithHTTPClient($client);
+        $modelImporter->setBranchesToImport(['006']);
 
-        $importFile = new ImportFile(['type' => 'base', 'original_filename' => 'lel.xml', 'storage_path' => Str::random(40)]);
+        $importFile = new ImportFile([
+            'type' => 'base',
+            'original_filename' => 'lel.xml',
+            'storage_path' => Str::random(40),
+        ]);
         $importFile->save();
 
         $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
-        $modelXMLImporter->import(new ModelXMLData($importFile, $xmlString));
+        $modelImporter->import(new ModelXML($importFile, $xmlString));
 
         static::assertCount(4, $container);
 
@@ -150,7 +154,6 @@ class ModelXMLImporterTest extends TestCase
             'name' => 'MLB BASIC NY YANKEES (3436 BLACK/WHITE)',
             'tax' => '19.00',
             'supplier' => 'NEW ERA',
-            'descriptionLong' => '',
             'lastStock' => true,
             'mainDetail' => [
                 'number' => '10003436H000',
@@ -267,7 +270,6 @@ class ModelXMLImporterTest extends TestCase
             'name' => 'MLB BASIC NY YANKEES (3438 GREY/WHITE)',
             'tax' => '19.00',
             'supplier' => 'NEW ERA',
-            'descriptionLong' => '',
             'lastStock' => true,
             'mainDetail' => [
                 'number' => '10003436H004',
@@ -376,14 +378,14 @@ class ModelXMLImporterTest extends TestCase
 
         $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
-        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
-        $modelXMLImporter->setBranchesToImport(['006']);
+        $modelImporter = $this->createModelImporterWithHTTPClient($client);
+        $modelImporter->setBranchesToImport(['006']);
 
         $importFile = new ImportFile(['type' => ImportFile::TYPE_DELTA, 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => Str::random(40)]);
         $importFile->save();
 
         $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
-        $modelXMLImporter->import(new ModelXMLData($importFile, $xmlString));
+        $modelImporter->import(new ModelXML($importFile, $xmlString));
 
         static::assertCount(4, $container);
 
@@ -580,15 +582,15 @@ class ModelXMLImporterTest extends TestCase
 
         $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
-        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
-        $modelXMLImporter->setBranchesToImport(['006']);
-        $modelXMLImporter->setIgnoreStockUpdatesFromDelta(true);
+        $modelImporter = $this->createModelImporterWithHTTPClient($client);
+        $modelImporter->setBranchesToImport(['006']);
+        $modelImporter->setIgnoreStockUpdatesFromDelta(true);
 
         $importFile = new ImportFile(['type' => ImportFile::TYPE_DELTA, 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => Str::random(40)]);
         $importFile->save();
 
         $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
-        $modelXMLImporter->import(new ModelXMLData($importFile, $xmlString));
+        $modelImporter->import(new ModelXML($importFile, $xmlString));
 
         static::assertCount(4, $container);
 
@@ -774,8 +776,8 @@ class ModelXMLImporterTest extends TestCase
         $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
         // import new data
-        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
-        $modelXMLImporter->setBranchesToImport(['006']);
+        $modelImporter = $this->createModelImporterWithHTTPClient($client);
+        $modelImporter->setBranchesToImport(['006']);
 
         $importFile = new ImportFile([
             'type' => ImportFile::TYPE_DELTA,
@@ -785,7 +787,7 @@ class ModelXMLImporterTest extends TestCase
         $importFile->save();
 
         $xmlString = file_get_contents(base_path('docs/fixtures/single-article-eligible.xml'));
-        $modelXMLImporter->import(new ModelXMLData($importFile, $xmlString));
+        $modelImporter->import(new ModelXML($importFile, $xmlString));
 
         // check update data
         /** @var Request $updateRequest */
@@ -908,14 +910,14 @@ class ModelXMLImporterTest extends TestCase
 
         $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
-        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
-        $modelXMLImporter->setBranchesToImport(['006']);
+        $modelImporter = $this->createModelImporterWithHTTPClient($client);
+        $modelImporter->setBranchesToImport(['006']);
 
         $importFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => Str::random(40)]);
         $importFile->save();
 
         $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
-        $modelXMLImporter->import(new ModelXMLData($importFile, $xmlString));
+        $modelImporter->import(new ModelXML($importFile, $xmlString));
 
         static::assertCount(4, $container);
 
@@ -1121,14 +1123,14 @@ class ModelXMLImporterTest extends TestCase
 
         $articleB->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
-        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
-        $modelXMLImporter->setBranchesToImport(['006']);
+        $modelImporter = $this->createModelImporterWithHTTPClient($client);
+        $modelImporter->setBranchesToImport(['006']);
 
         $importFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => Str::random(40)]);
         $importFile->save();
 
         $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
-        $modelXMLImporter->import(new ModelXMLData($importFile, $xmlString));
+        $modelImporter->import(new ModelXML($importFile, $xmlString));
 
         // the complete article is price write protected
         /** @var Request $articleAInfoRequest */
@@ -1196,14 +1198,14 @@ class ModelXMLImporterTest extends TestCase
             Article::create(['is_modno' => '10003436H004', 'is_active' => true, 'sw_article_id' => 24]),
         ];
 
-        $modelXMLImporter = $this->createModelXMLImporterWithHTTPClient($client);
-        $modelXMLImporter->setBranchesToImport(['006']);
+        $modelImporter = $this->createModelImporterWithHTTPClient($client);
+        $modelImporter->setBranchesToImport(['006']);
 
         $importFile = new ImportFile(['type' => 'base', 'original_filename' => 'lel.xml', 'storage_path' => Str::random(40)]);
         $importFile->save();
 
         $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
-        $modelXMLImporter->import(new ModelXMLData($importFile, $xmlString));
+        $modelImporter->import(new ModelXML($importFile, $xmlString));
 
         static::assertCount(2, $container);
 
@@ -1215,11 +1217,15 @@ class ModelXMLImporterTest extends TestCase
 
     /**
      * @param $client
-     * @return ModelXMLImporter
+     * @return ModelImporter
      */
-    protected function createModelXMLImporterWithHTTPClient($client): ModelXMLImporter
+    protected function createModelImporterWithHTTPClient($client): ModelImporter
     {
-        return new ModelXMLImporter(new NullLogger(), new ShopwareAPI(new NullLogger(), $client), new SizeMapper());
+        return new ModelImporter(
+            new NullLogger(),
+            new ShopwareAPI(new NullLogger(), $client),
+            new SizeMapper(),
+        );
     }
 
     protected function createSizeMappings(): void

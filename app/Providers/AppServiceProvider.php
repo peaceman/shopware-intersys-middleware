@@ -9,7 +9,7 @@ use App\Domain\Export\OrderXMLGenerator;
 use App\Domain\HouseKeeping\OldImportFileDeleter;
 use App\Domain\HouseKeeping\OldImportFileProvider;
 use App\Domain\Import\ImportFileScanner;
-use App\Domain\Import\ModelXMLImporter;
+use App\Domain\Import\ModelImporter;
 use App\Domain\Import\SkippingImportFileScanner;
 use App\Domain\OrderTracking\OrdersToCancelProvider;
 use App\Domain\OrderTracking\UnpaidOrderCanceller;
@@ -70,7 +70,7 @@ class AppServiceProvider extends ServiceProvider
 
     protected function registerModelXMLImporter(): void
     {
-        $this->app->extend(ModelXMLImporter::class, function (ModelXMLImporter $modelXMLImporter) {
+        $this->app->extend(ModelImporter::class, function (ModelImporter $modelXMLImporter) {
             $branchesToImport = collect(explode(',', config('shopware.branchesToImport')))
                 ->map(function ($branch) { return trim($branch); })
                 ->toArray();

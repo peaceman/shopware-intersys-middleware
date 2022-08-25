@@ -11,29 +11,19 @@ use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Psr\Log\LoggerInterface;
-use SimpleXMLElement;
 
-class ModelXMLImporter
+class ModelImporter
 {
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    protected LoggerInterface $logger;
 
-    /**
-     * @var ShopwareAPI
-     */
-    protected $shopwareAPI;
+    protected ShopwareAPI $shopwareAPI;
 
-    /**
-     * @var SizeMapper
-     */
-    protected $sizeMapper;
+    protected SizeMapper $sizeMapper;
 
     /**
      * @var string[]
      */
-    protected $branchesToImport = [];
+    protected array $branchesToImport = [];
 
     protected bool $ignoreStockUpdatesFromDelta = false;
 
@@ -43,8 +33,11 @@ class ModelXMLImporter
      * @param ShopwareAPI $shopwareAPI
      * @param SizeMapper $sizeMapper
      */
-    public function __construct(LoggerInterface $logger, ShopwareAPI $shopwareAPI, SizeMapper $sizeMapper)
-    {
+    public function __construct(
+        LoggerInterface $logger,
+        ShopwareAPI $shopwareAPI,
+        SizeMapper $sizeMapper,
+    ) {
         $this->logger = $logger;
         $this->shopwareAPI = $shopwareAPI;
         $this->sizeMapper = $sizeMapper;
@@ -53,9 +46,11 @@ class ModelXMLImporter
     /**
      * @param string[] $branchesToImport
      */
-    public function setBranchesToImport(array $branchesToImport)
+    public function setBranchesToImport(array $branchesToImport): self
     {
         $this->branchesToImport = $branchesToImport;
+
+        return $this;
     }
 
     public function setIgnoreStockUpdatesFromDelta(bool $ignore): self
@@ -65,14 +60,11 @@ class ModelXMLImporter
        return $this;
     }
 
-    public function import(ModelXMLData $modelXMLData): void
+    public function import(ModelDTO $baseModelData): void
     {
-        $modelXML = $modelXMLData->getSimpleXMLElement();
-
-        $articleNodes = $modelXML->xpath('/Model/Color');
-        foreach ($articleNodes as $articleNode) {
+        foreach ($baseModelData->getColorVariations() as $modelData) {
             try {
-                $this->importArticle($modelXMLData, $modelXML, $articleNode);
+                $this->importArticle($modelData);
             } catch (UnknownArticleInShopwareException $e) {
                 $this->handleUnknownArticleInShopwareException($e);
             } catch (Exception $e) {
@@ -85,51 +77,47 @@ class ModelXMLImporter
         }
     }
 
-    protected function importArticle(ModelXMLData $modelXMLData, SimpleXMLElement $modelNode, SimpleXMLElement $articleNode)
+    protected function importArticle(ModelColorDTO $model): void
     {
-        $modNo = (string)$modelNode->Modno;
-        $colNo = (string)$articleNode->Colno;
-
-        if (!$this->isEligibleForImport($articleNode)) {
+        if (!$this->isEligibleForImport($model)) {
             $this->logger->info(__METHOD__ . ' Article is not eligible for import', [
-                'sourceFilename' => $modelXMLData->getImportFile()->original_filename,
-                'modNo' => $modNo,
-                'colNo' => $colNo,
+                'sourceFilename' => $model->getImportFile()->original_filename,
+                'modNo' => $model->getModelNumber(),
+                'colNo' => $model->getColorNumber(),
             ]);
 
             return;
         }
 
-        $articleNumber = $modNo . $colNo;
-        $article = $this->tryToFetchShopwareArticle($articleNumber);
+        $article = $this->tryToFetchShopwareArticle($model->getMainArticleNumber());
 
-        if ($article && !$this->isNewImportFileForArticle($modelXMLData->getImportFile(), $article)) {
+        if ($article && !$this->isNewImportFileForArticle($model->getImportFile(), $article)) {
             $this->logger->info(__METHOD__ . ' Already imported the same or newer data for the article', [
-                'sourceFilename' => $modelXMLData->getImportFile()->original_filename,
-                'modNo' => $modNo,
-                'colNo' => $colNo,
+                'sourceFilename' => $model->getImportFile()->original_filename,
+                'modNo' => $model->getModelNumber(),
+                'colNo' => $model->getColorNumber(),
                 'article.id' => $article->id,
             ]);
         } else {
             $article = $article
-                ? $this->updateArticle($modelXMLData, $article, $modelNode, $articleNode)
-                : $this->createArticle($articleNumber, $modelNode, $articleNode);
+                ? $this->updateArticle($article, $model)
+                : $this->createArticle($model);
         }
 
-        $article->imports()->create(['import_file_id' => $modelXMLData->getImportFile()->id]);
+        $article->imports()->create(['import_file_id' => $model->getImportFile()->id]);
     }
 
-    protected function isEligibleForImport(SimpleXMLElement $articleNode): bool
+    protected function isEligibleForImport(ModelDTO $model): bool
     {
-        $branches = $articleNode->xpath('Size/Branch');
+        $branches = $model->getBranches();
 
-        return collect($branches)
+        return $branches
             ->first([$this, 'isBranchEligible']) !== null;
     }
 
-    public function isBranchEligible(SimpleXMLElement $branchXML): bool
+    public function isBranchEligible(string $branchNumber): bool
     {
-        return in_array($branchXML->Branchno ?? null, $this->branchesToImport);
+        return in_array($branchNumber, $this->branchesToImport);
     }
 
     protected function tryToFetchShopwareArticle(string $articleNumber): ?Article
@@ -155,12 +143,9 @@ class ModelXMLImporter
     }
 
     protected function updateArticle(
-        ModelXMLData $modelXMLData,
         Article $article,
-        SimpleXMLElement $modelNode,
-        SimpleXMLElement $articleNode
-    )
-    {
+        ModelColorDTO $model,
+    ): Article {
         $articleNumber = $article->is_modno;
         $swArticleId = $article->sw_article_id;
         $swArticleInfo = $this->shopwareAPI->searchShopwareArticleInfoByArticle($article);
@@ -174,15 +159,15 @@ class ModelXMLImporter
             'swArticleId' => $swArticleId,
             'foundSWArticleInfo' => !is_null($swArticleInfo),
             'importFile' => [
-                'id' => $modelXMLData->getImportFile()->id,
-                'type' => $modelXMLData->getImportFile()->type,
+                'id' => $model->getImportFile()->id,
+                'type' => $model->getImportFile()->type,
             ],
         ];
 
         $this->logger->info(__METHOD__, $loggingContext);
 
-        $variants = $this->generateVariants($modelNode, $articleNode, $swArticleInfo)
-            ->map(function ($variant) use ($swArticleInfo, $modelXMLData) {
+        $variants = $this->generateVariants($model, $swArticleInfo)
+            ->map(function ($variant) use ($model, $swArticleInfo) {
                 $variant['attribute'] = Arr::only($variant['attribute'], ['availability']);
                 unset($variant['lastStock']);
 
@@ -190,14 +175,14 @@ class ModelXMLImporter
                     unset($variant['prices']);
 
                 if ($this->ignoreStockUpdatesFromDelta
-                    && $modelXMLData->getImportFile()->type === ImportFile::TYPE_DELTA)
+                    && $model->getImportFile()->type === ImportFile::TYPE_DELTA)
                     unset($variant['inStock']);
 
                 return $variant;
             });
 
         $loggingContext['variants'] = $variants->toArray();
-        $firstVariant = $variants->first(function ($variant) { return !is_null($variant['prices'] ?? null); });
+        $firstVariant = $variants->first(fn (array $variant): bool => !is_null($variant['prices'] ?? null));
         $pricesOfTheFirstVariant = $firstVariant['prices'] ?? null;
 
         $mainDetail = [];
@@ -213,7 +198,7 @@ class ModelXMLImporter
             'variants' => $variants,
         ];
 
-        if ($modelXMLData->getImportFile()->type === ImportFile::TYPE_DELTA)
+        if ($model->getImportFile()->type === ImportFile::TYPE_DELTA)
             unset($articleData['configuratorSet']);
 
         $this->shopwareAPI->updateShopwareArticle($swArticleId, $articleData);
@@ -224,29 +209,25 @@ class ModelXMLImporter
     }
 
     protected function createArticle(
-        string $articleNumber,
-        SimpleXMLElement $modelNode,
-        SimpleXMLElement $articleNode
-    ): Article
-    {
+        ModelColorDTO $model,
+    ): Article {
         $loggingContext = [
-            'articleNumber' => $articleNumber,
+            'articleNumber' => $model->getMainArticleNumber(),
         ];
 
         $this->logger->info(__METHOD__, $loggingContext);
 
-        $variants = $this->generateVariants($modelNode, $articleNode);
+        $variants = $this->generateVariants($model);
         $pricesOfTheFirstVariant = data_get($variants, '0.prices');
 
         $articleData = [
             'active' => false,
-            'name' => (string)$modelNode->Moddeno . ' (' . (string)$articleNode->Colordeno . ')',
-            'tax' => (string)$modelNode->Percentvat,
-            'supplier' => (string)$modelNode->Branddeno,
-            'descriptionLong' => (string)$modelNode->Longdescription,
+            'name' => $model->getModelName() . ' (' . $model->getColorName() . ')',
+            'tax' => number_format($model->getVatPercentage(), 2),
+            'supplier' => $model->getManufacturerName(),
             'lastStock' => true,
             'mainDetail' => [
-                'number' => $articleNumber,
+                'number' => $model->getMainArticleNumber(),
                 'prices' => $pricesOfTheFirstVariant,
                 'weight' => Article::DEFAULTS_WEIGHT,
                 'shippingTime' => Article::DEFAULTS_SHIPPING_TIME,
@@ -261,7 +242,7 @@ class ModelXMLImporter
         $swArticleId = $this->shopwareAPI->createShopwareArticle($articleData);
 
         $article = new Article();
-        $article->is_modno = $articleNumber;
+        $article->is_modno = $model->getMainArticleNumber();
         $article->sw_article_id = $swArticleId;
         $article->is_active = true;
         $article->save();
@@ -272,30 +253,32 @@ class ModelXMLImporter
     }
 
     protected function generateVariants(
-        SimpleXMLElement $modelNode, SimpleXMLElement $articleNode, ?ShopwareArticleInfo $swArticleInfo = null
-    ): Collection
-    {
-        $variants = collect($articleNode->xpath('Size'))
-            ->map(function (SimpleXMLElement $sizeXML) use ($swArticleInfo, $modelNode, $articleNode) {
-                $branches = collect($sizeXML->xpath('Branch'));
-                $eligibleBranches = $branches->filter([$this, 'isBranchEligible']);
-                $eligibleBranch = $eligibleBranches->values()->first();
+        ModelColorDTO $model,
+        ?ShopwareArticleInfo $swArticleInfo = null,
+    ): Collection {
+        $variants = $model->getSizeVariations()
+            ->map(function (ModelColorSizeDTO $model) use ($swArticleInfo) {
+                $eligibleBranches = $model->getBranches()->filter([$this, 'isBranchEligible']);
+                $eligibleBranch = $eligibleBranches->first();
 
-                $mappedSize = $this->mapSize($modelNode, $articleNode, $sizeXML);
+                $mappedSize = $this->mapSize($model);
 
                 $variantData = [
                     'active' => true,
-                    'number' => (string)$sizeXML->Itemno,
-                    'ean' => (string)$sizeXML->Ean,
+                    'number' => $model->getVariantArticleNumber(),
+                    'ean' => $model->getEan(),
                     'lastStock' => true,
                 ];
 
                 if ($swArticleInfo && $swArticleInfo->variantExists($variantData['number']))
                     unset($variantData['active']);
 
+                $stockPerBranch = $model->getStockPerBranch();
                 $availability = $this->mergeAvailabilityInfo(
                     collect($swArticleInfo ? $swArticleInfo->getAvailabilityInfo($variantData['number']) : []),
-                    $this->generateAvailabilityAttributeFromBranches($branches)
+                    $stockPerBranch
+                        ->map(fn (int $stock, string $branch): array => ['branchNo' => $branch, 'stock' => $stock])
+                        ->values()
                 );
 
                 if (!$eligibleBranch) {
@@ -305,16 +288,16 @@ class ModelXMLImporter
                 } else {
                     $variantData = array_merge($variantData, [
                         'prices' => [[
-                            'price' => (float)$eligibleBranch->Saleprice,
-                            'pseudoPrice' => $eligibleBranch->Xprice ? (float)$eligibleBranch->Xprice : null,
+                            'price' => $model->getPrice(),
+                            'pseudoPrice' => $model->getPseudoPrice(),
                         ]],
-                        'inStock' => (int)$eligibleBranch->Stockqty,
+                        'inStock' => $stockPerBranch[$eligibleBranch],
                     ]);
                 }
 
                 $variantData = array_merge($variantData, [
                     'attribute' => [
-                        'attr1' => (string)$sizeXML->Itemdeno,
+                        'attr1' => $model->getVariantName(),
                         'availability' => json_encode($availability),
                     ],
                     'configuratorOptions' => [
@@ -331,31 +314,17 @@ class ModelXMLImporter
     }
 
     protected function mapSize(
-        SimpleXMLElement $modelNode,
-        SimpleXMLElement $articleNode,
-        SimpleXMLElement $sizeXML
+        ModelColorSizeDTO $model,
     ): string {
         $req = new SizeMappingRequest(
-            manufacturerName: (string) $modelNode->Branddeno,
-            mainArticleNumber: (string) $modelNode->Modno . (string) $articleNode->Colno,
-            variantArticleNumber: (string) $sizeXML->Itemno,
-            size: (string) $sizeXML->Sizedeno,
-            fedas: (string) $modelNode->Fedas,
+            manufacturerName: $model->getManufacturerName(),
+            mainArticleNumber: $model->getMainArticleNumber(),
+            variantArticleNumber: $model->getVariantArticleNumber(),
+            size: $model->getSize(),
+            targetGroupGender: $model->getTargetGroupGender(),
         );
 
         return $this->sizeMapper->mapSize($req);
-    }
-
-    protected function generateAvailabilityAttributeFromBranches(Collection $branches): Collection
-    {
-        return $branches
-            ->map(function (SimpleXMLElement $branchXML) {
-                return [
-                    'branchNo' => (string)$branchXML->Branchno,
-                    'stock' => (int)$branchXML->Stockqty,
-                ];
-            })
-            ->values();
     }
 
     protected function mergeAvailabilityInfo(Collection $existing, Collection $new): Collection
