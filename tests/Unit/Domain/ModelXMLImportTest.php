@@ -38,7 +38,7 @@ class ModelXMLImportTest extends TestCase
         $client = new Client(['handler' => $stack]);
 
         $modelImporter = $this->createModelImporterWithHTTPClient($client);
-        $modelImporter->setBranchesToImport(['006']);
+        $modelImporter->setGlnToImport('006');
 
         $xmlString = file_get_contents(base_path('docs/fixtures/model-non-eligible.xml'));
         $modelImporter->import(new ModelXML(new ImportFile(), $xmlString));
@@ -55,7 +55,7 @@ class ModelXMLImportTest extends TestCase
         $client = new Client(['handler' => $stack]);
 
         $modelImporter = $this->createModelImporterWithHTTPClient($client);
-        $modelImporter->setBranchesToImport(['006']);
+        $modelImporter->setGlnToImport('006');
 
         $alreadyImportedFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-19-23-05.xml']);
         $alreadyImportedFile->save();
@@ -85,7 +85,7 @@ class ModelXMLImportTest extends TestCase
         $client = new Client(['handler' => $stack]);
 
         $modelImporter = $this->createModelImporterWithHTTPClient($client);
-        $modelImporter->setBranchesToImport(['006']);
+        $modelImporter->setGlnToImport('006');
 
         $alreadyImportedFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-19-23-05.xml']);
         $alreadyImportedFile->save();
@@ -129,7 +129,11 @@ class ModelXMLImportTest extends TestCase
         $this->createSizeMappings();
 
         $modelImporter = $this->createModelImporterWithHTTPClient($client);
-        $modelImporter->setBranchesToImport(['006']);
+        $modelImporter->setGlnToImport('006');
+        $modelImporter->setGlnBranchMapping([
+            '006' => '123',
+            '009' => '124',
+        ]);
 
         $importFile = new ImportFile([
             'type' => 'base',
@@ -185,11 +189,11 @@ class ModelXMLImportTest extends TestCase
                         'attr1' => 'MLB BASIC NY YANKEES 3436 BLACK/WHITE XS',
                         'availability' => json_encode([
                             [
-                                'branchNo' => '006',
+                                'branchNo' => '123',
                                 'stock' => 2,
                             ],
                             [
-                                'branchNo' => '009',
+                                'branchNo' => '124',
                                 'stock' => 8,
                             ],
                             [
@@ -215,7 +219,7 @@ class ModelXMLImportTest extends TestCase
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3436 BLACK/WHITE S',
                         'availability' => json_encode([[
-                            'branchNo' => '006',
+                            'branchNo' => '123',
                             'stock' => 1,
                         ]]),
                     ],
@@ -236,7 +240,7 @@ class ModelXMLImportTest extends TestCase
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3436 BLACK/WHITE M',
                         'availability' => json_encode([[
-                            'branchNo' => '006',
+                            'branchNo' => '123',
                             'stock' => 2,
                         ]]),
                     ],
@@ -300,7 +304,7 @@ class ModelXMLImportTest extends TestCase
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3438 GREY/WHITE L',
                         'availability' => json_encode([[
-                            'branchNo' => '006',
+                            'branchNo' => '123',
                             'stock' => 0,
                         ]]),
                     ],
@@ -321,7 +325,7 @@ class ModelXMLImportTest extends TestCase
                     'attribute' => [
                         'attr1' => 'MLB BASIC NY YANKEES 3438 GREY/WHITE XL',
                         'availability' => json_encode([[
-                            'branchNo' => '006',
+                            'branchNo' => '123',
                             'stock' => 0,
                         ]]),
                     ],
@@ -379,7 +383,7 @@ class ModelXMLImportTest extends TestCase
         $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
         $modelImporter = $this->createModelImporterWithHTTPClient($client);
-        $modelImporter->setBranchesToImport(['006']);
+        $modelImporter->setGlnToImport('006');
 
         $importFile = new ImportFile(['type' => ImportFile::TYPE_DELTA, 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => Str::random(40)]);
         $importFile->save();
@@ -583,7 +587,7 @@ class ModelXMLImportTest extends TestCase
         $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
         $modelImporter = $this->createModelImporterWithHTTPClient($client);
-        $modelImporter->setBranchesToImport(['006']);
+        $modelImporter->setGlnToImport('006');
         $modelImporter->setIgnoreStockUpdatesFromDelta(true);
 
         $importFile = new ImportFile(['type' => ImportFile::TYPE_DELTA, 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => Str::random(40)]);
@@ -777,7 +781,7 @@ class ModelXMLImportTest extends TestCase
 
         // import new data
         $modelImporter = $this->createModelImporterWithHTTPClient($client);
-        $modelImporter->setBranchesToImport(['006']);
+        $modelImporter->setGlnToImport('006');
 
         $importFile = new ImportFile([
             'type' => ImportFile::TYPE_DELTA,
@@ -911,7 +915,7 @@ class ModelXMLImportTest extends TestCase
         $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
         $modelImporter = $this->createModelImporterWithHTTPClient($client);
-        $modelImporter->setBranchesToImport(['006']);
+        $modelImporter->setGlnToImport('006');
 
         $importFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => Str::random(40)]);
         $importFile->save();
@@ -1124,7 +1128,7 @@ class ModelXMLImportTest extends TestCase
         $articleB->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
         $modelImporter = $this->createModelImporterWithHTTPClient($client);
-        $modelImporter->setBranchesToImport(['006']);
+        $modelImporter->setGlnToImport('006');
 
         $importFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => Str::random(40)]);
         $importFile->save();
@@ -1199,7 +1203,7 @@ class ModelXMLImportTest extends TestCase
         ];
 
         $modelImporter = $this->createModelImporterWithHTTPClient($client);
-        $modelImporter->setBranchesToImport(['006']);
+        $modelImporter->setGlnToImport('006');
 
         $importFile = new ImportFile(['type' => 'base', 'original_filename' => 'lel.xml', 'storage_path' => Str::random(40)]);
         $importFile->save();

@@ -71,14 +71,11 @@ class AppServiceProvider extends ServiceProvider
     protected function registerModelXMLImporter(): void
     {
         $this->app->extend(ModelImporter::class, function (ModelImporter $modelXMLImporter) {
-            $branchesToImport = collect(explode(',', config('shopware.branchesToImport')))
-                ->map(function ($branch) { return trim($branch); })
-                ->toArray();
-
-            $modelXMLImporter->setBranchesToImport($branchesToImport);
+            $modelXMLImporter->setGlnToImport(config('shopware.glnToImport'));
             $modelXMLImporter->setIgnoreStockUpdatesFromDelta(
                 boolval(config('shopware.ignoreDeltaStockUpdates', false))
             );
+            $modelXMLImporter->setGlnBranchMapping(config('shopware.glnBranchMapping', []));
 
             return $modelXMLImporter;
         });

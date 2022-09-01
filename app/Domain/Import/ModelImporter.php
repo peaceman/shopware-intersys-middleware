@@ -10,6 +10,7 @@ use App\ImportFile;
 use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Enumerable;
 use Psr\Log\LoggerInterface;
 
 class ModelImporter
@@ -20,10 +21,9 @@ class ModelImporter
 
     protected SizeMapper $sizeMapper;
 
-    /**
-     * @var string[]
-     */
-    protected array $branchesToImport = [];
+    protected ?string $glnToImport = null;
+
+    protected array $glnBranchMapping = [];
 
     protected bool $ignoreStockUpdatesFromDelta = false;
 
@@ -43,12 +43,16 @@ class ModelImporter
         $this->sizeMapper = $sizeMapper;
     }
 
-    /**
-     * @param string[] $branchesToImport
-     */
-    public function setBranchesToImport(array $branchesToImport): self
+    public function setGlnToImport(string $branchToImport): self
     {
-        $this->branchesToImport = $branchesToImport;
+        $this->glnToImport = $branchToImport;
+
+        return $this;
+    }
+
+    public function setGlnBranchMapping(array $glnBranchMapping): self
+    {
+        $this->glnBranchMapping = $glnBranchMapping;
 
         return $this;
     }
@@ -112,12 +116,12 @@ class ModelImporter
         $branches = $model->getBranches();
 
         return $branches
-            ->first([$this, 'isBranchEligible']) !== null;
+            ->first([$this, 'isGlnEligible']) !== null;
     }
 
-    public function isBranchEligible(string $branchNumber): bool
+    public function isGlnEligible(string $gln): bool
     {
-        return in_array($branchNumber, $this->branchesToImport);
+        return $gln === $this->glnToImport;
     }
 
     protected function tryToFetchShopwareArticle(string $articleNumber): ?Article
@@ -258,7 +262,7 @@ class ModelImporter
     ): Collection {
         $variants = $model->getSizeVariations()
             ->map(function (ModelColorSizeDTO $model) use ($swArticleInfo) {
-                $eligibleBranches = $model->getBranches()->filter([$this, 'isBranchEligible']);
+                $eligibleBranches = $model->getBranches()->filter([$this, 'isGlnEligible']);
                 $eligibleBranch = $eligibleBranches->first();
 
                 $mappedSize = $this->mapSize($model);
@@ -277,7 +281,10 @@ class ModelImporter
                 $availability = $this->mergeAvailabilityInfo(
                     collect($swArticleInfo ? $swArticleInfo->getAvailabilityInfo($variantData['number']) : []),
                     $stockPerBranch
-                        ->map(fn (int $stock, string $branch): array => ['branchNo' => $branch, 'stock' => $stock])
+                        ->map(fn (int $stock, string $branch): array => [
+                            'branchNo' => $this->mapGlnToBranchNo($branch),
+                            'stock' => $stock,
+                        ])
                         ->values()
                 );
 
@@ -327,7 +334,7 @@ class ModelImporter
         return $this->sizeMapper->mapSize($req);
     }
 
-    protected function mergeAvailabilityInfo(Collection $existing, Collection $new): Collection
+    protected function mergeAvailabilityInfo(Enumerable $existing, Enumerable $new): Enumerable
     {
         $merged = $existing->keyBy('branchNo')
             ->merge($new->keyBy('branchNo'));
@@ -387,5 +394,10 @@ class ModelImporter
         ]);
 
         $article->delete();
+    }
+
+    private function mapGlnToBranchNo(string $gln): string
+    {
+        return $this->glnBranchMapping[$gln] ?? $gln;
     }
 }
