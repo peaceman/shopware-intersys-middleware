@@ -17,60 +17,18 @@ use Psr\Log\LoggerInterface;
 
 class OrderXMLExporter
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
+    private Filesystem $localFS;
+    private Filesystem $remoteFS;
+    private OrderXMLGenerator $orderXMLGenerator;
+    private ShopwareAPI $shopwareAPI;
 
-    /**
-     * @var Filesystem
-     */
-    private $localFS;
-
-    /**
-     * @var Filesystem
-     */
-    private $remoteFS;
-
-    /**
-     * @var string
-     */
-    private $baseFolder;
-
-    /**
-     * @var OrderXMLGenerator
-     */
-    private $orderXMLGenerator;
-
-    /**
-     * @var ShopwareAPI
-     */
-    private $shopwareAPI;
-
-    /**
-     * @var int
-     */
-    private $afterExportStatusSale;
-
-    /**
-     * @var int
-     */
-    private $afterExportStatusReturn;
-
-    /**
-     * @var int
-     */
-    private $afterExportPositionStatusReturn;
-
-    /**
-     * @var int
-     */
-    private $orderPositionStatusRequirementReturn;
-
-    /**
-     * @var string
-     */
-    private $orderNumberPrefix;
+    private ?string $baseFolder = null;
+    private ?int $afterExportStatusSale = null;
+    private ?int $afterExportStatusReturn = null;
+    private ?int $afterExportPositionStatusReturn = null;
+    private ?int $orderPositionStatusRequirementReturn = null;
+    private ?string $orderNumberPrefix = null;
 
     /**
      * OrderXMLExporter constructor.
@@ -192,9 +150,7 @@ class OrderXMLExporter
 
         $articlesToExport = $nonVoucherArticles
             ->filter(function (OrderArticle $orderArticle) use ($type) {
-                return $type === OrderExport::TYPE_SALE
-                    ? true
-                    : $this->hasRequiredPositionStatusForExport($orderArticle);
+                return $type === OrderExport::TYPE_SALE || $this->hasRequiredPositionStatusForExport($orderArticle);
             })
             ->map(function (OrderArticle $orderArticle) use ($order, $voucherPercentage) {
                 $orderArticle->setVoucherPercentage($voucherPercentage);
@@ -213,46 +169,10 @@ class OrderXMLExporter
 
     private function prepareArticle(Order $order, OrderArticle $article): array
     {
-        $dateOfTrans = $this->determineDateOfTransForArticle($order, $article);
-
         return [
-            'dateOfTrans' => $dateOfTrans,
+            'dateOfTrans' => $order->getOrderTime(),
             'article' => $article,
         ];
-    }
-
-    private function determineDateOfTransForArticle(Order $order, OrderArticle $article): DateTimeImmutable
-    {
-        return $this->determineFreeDateOfTransForArticle($article, $order->getOrderTime());
-    }
-
-    private function determineFreeDateOfTransForArticle(
-        OrderArticle $article,
-        DateTimeImmutable $startTime
-    ): DateTimeImmutable
-    {
-        $time = $startTime;
-
-        while ($this->orderExportWithDateOfTransExists($article, $time)) {
-            $time = $time->add(new DateInterval('PT1M'));
-        }
-
-        return $time;
-    }
-
-    /**
-     * @param OrderArticle $article
-     * @param DateTimeInterface $time
-     * @return bool
-     */
-    private function orderExportWithDateOfTransExists(OrderArticle $article, DateTimeInterface $time): bool
-    {
-        $timeString = $time->format('Y-m-d H:i');
-
-        return OrderExportArticle::query()
-            ->whereRaw('date_of_trans - interval second(date_of_trans) second = cast(? as datetime)', $timeString)
-            ->where('sw_article_number', $article->getArticleNumber())
-            ->exists();
     }
 
     private function storeExportXMLOnRemoteFS(string $type, Order $order, string $exportXML): void
@@ -261,7 +181,7 @@ class OrderXMLExporter
         $this->remoteFS->put("{$this->baseFolder}/$remoteFilename", $exportXML);
     }
 
-    private function generateRemoteFilenameForExportXML(string $type, Order $order)
+    private function generateRemoteFilenameForExportXML(string $type, Order $order): string
     {
         $typePart = $type === OrderExport::TYPE_SALE ? 'S' : 'R';
         $orderTime = $order->getOrderTime()->format('Y-m-d_H-i-s');
@@ -286,8 +206,7 @@ class OrderXMLExporter
         Order $order,
         array $articleInfo,
         string $exportXML
-    ): OrderExport
-    {
+    ): OrderExport {
         $orderExport = $this->createOrderExport($type, $order, $exportXML);
 
         foreach ($articleInfo as $ai) {
