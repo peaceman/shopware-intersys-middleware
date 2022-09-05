@@ -150,7 +150,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(OrderXMLGenerator::class, function () {
             $oxg = new OrderXMLGenerator();
             $oxg->setAccountingBranchNo(config('shopware.order.branchNoAccounting'));
-            $oxg->setStockBranchNo(config('shopware.order.branchNoStock'));
+            $oxg->setStockBranchNo(config('shopware.glnToImport'));
 
             return $oxg;
         });

@@ -42,7 +42,6 @@ return [
             'afterExportPositionStatus' => env('SHOPWARE_ORDER_RETURN_AFTER_EXPORT_POSITION_STATUS', 5), // retoure (exportiert)
         ],
         'branchNoAccounting' => env('SHOPWARE_BRANCH_ACCOUNTING'),
-        'branchNoStock' => env('SHOPWARE_BRANCH_STOCK'),
     ],
     'ignoreDeltaStockUpdates' => env('SHOPWARE_IGNORE_DELTA_STOCK_UPDATES', false),
 ];

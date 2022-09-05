@@ -32,6 +32,7 @@ class OrderXMLGeneratorTest extends TestCase
                     'articleNumber' => 'ABC123',
                     'price' => 23.5,
                     'quantity' => 23,
+                    'ean' => 'is dis ean',
                 ]),
             ],
             [
@@ -40,6 +41,7 @@ class OrderXMLGeneratorTest extends TestCase
                     'articleNumber' => 'ABC127',
                     'price' => 23.5,
                     'quantity' => 23,
+                    'ean' => 'dis is ean',
                 ]))->setVoucherPercentage(0.1),
             ],
         ];

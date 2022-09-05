@@ -95,4 +95,9 @@ class OrderArticle
     {
         return $this->data['articleName'];
     }
+
+    public function getEan(): string
+    {
+        return $this->data['ean'];
+    }
 }

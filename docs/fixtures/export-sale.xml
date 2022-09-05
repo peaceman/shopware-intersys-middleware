@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <Sale Exportdate="20181031T23:05:55" Exporttype="Sale" Branchno="004">
   <Item>
-    <Itemno>ABC123</Itemno>
+    <Itemno>is dis ean</Itemno>
     <Saleqty>23</Saleqty>
     <Cost>540.50</Cost>
     <Dateoftrans>20181031T23:05:55</Dateoftrans>
     <Type>S</Type>
+    <Refno><![CDATA[RE-00023235]]></Refno>
     <Branchno>005</Branchno>
     <Comment><![CDATA[OrderId: 23235]]></Comment>
   </Item>
   <Item>
-    <Itemno>ABC127</Itemno>
+    <Itemno>dis is ean</Itemno>
     <Saleqty>23</Saleqty>
     <Cost>486.45</Cost>
     <Dateoftrans>20181031T23:05:55</Dateoftrans>
     <Type>S</Type>
+    <Refno><![CDATA[RE-00023235]]></Refno>
     <Branchno>005</Branchno>
     <Comment><![CDATA[OrderId: 23235]]></Comment>
   </Item>

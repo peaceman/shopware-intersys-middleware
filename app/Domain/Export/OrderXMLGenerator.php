@@ -6,6 +6,7 @@
 namespace App\Domain\Export;
 
 use App\OrderExport;
+use Illuminate\Support\Str;
 
 class OrderXMLGenerator
 {
@@ -74,11 +75,12 @@ class OrderXMLGenerator
     ): \DOMElement
     {
         $item = $this->xml->createElement('Item');
-        $item->appendChild($this->xml->createElement('Itemno', $orderArticle->getArticleNumber()));
+        $item->appendChild($this->xml->createElement('Itemno', $orderArticle->getEan()));
         $item->appendChild($this->xml->createElement('Saleqty', $orderArticle->getQuantity()));
         $item->appendChild($this->createCostElement($orderArticle));
         $item->appendChild($this->xml->createElement('Dateoftrans', $this->formatDate($dateOfTrans)));
         $item->appendChild($this->xml->createElement('Type', $type === OrderExport::TYPE_RETURN ? 'R' : 'S'));
+        $item->appendChild($this->createRefnoElement($type, $order));
         $item->appendChild($this->xml->createElement('Branchno', $this->stockBranchNo));
 
         $commentEl = $this->xml->createElement('Comment');
@@ -98,5 +100,22 @@ class OrderXMLGenerator
             'Cost',
             number_format($orderArticle->getFullPrice(), 2, '.', '')
         );
+    }
+
+    protected function createRefnoElement(string $type, Order $order): \DOMElement
+    {
+        $refNo = implode('-', [
+            match ($type) {
+                OrderExport::TYPE_RETURN => 'GS',
+                OrderExport::TYPE_SALE => 'RE',
+                default => throw new \InvalidArgumentException("Unknown order type $type"),
+            },
+            Str::padLeft($order->getOrderNumber(), 8, '0'),
+        ]);
+
+        $refNoEl = $this->xml->createElement('Refno');
+        $refNoEl->append($this->xml->createCDATASection($refNo));
+
+        return $refNoEl;
     }
 }
