@@ -57,7 +57,7 @@ return [
         'intersys' => [
             'driver' => 'ftp',
             'host' => env('INTERSYS_FTP_HOST'),
-            'port' => env('INTERSYS_FTP_PORT', 21),
+            'port' => intval(env('INTERSYS_FTP_PORT', 21)),
             'username' => env('INTERSYS_FTP_USERNAME'),
             'password' => env('INTERSYS_FTP_PASSWORD'),
             'throw' => true,
