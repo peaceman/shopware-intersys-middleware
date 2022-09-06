@@ -72,12 +72,12 @@ class ModelColorSizeCSV implements ModelColorSizeDTO
 
     public function getPrice(): float
     {
-        return floatval(str_replace(',', '.', $this->rec['LISTEN-PREIS']));
+        return floatval(str_replace(',', '.', $this->rec['VK-PREIS']));
     }
 
     public function getPseudoPrice(): ?float
     {
-        return floatval(str_replace(',', '.', $this->rec['VK-PREIS']));
+        return null;
     }
 
     /**
