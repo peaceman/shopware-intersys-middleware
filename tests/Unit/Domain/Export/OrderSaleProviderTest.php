@@ -254,7 +254,12 @@ class OrderSaleProviderTest extends TestCase
 
     protected function createOrderSaleProvider(Client $httpClient): OrderSaleProvider
     {
-        $osp = new OrderSaleProvider(new ShopwareAPI(new NullLogger(), $httpClient), $this->app[Dispatcher::class]);
+        $osp = new OrderSaleProvider(
+            new ShopwareAPI(new NullLogger(), $httpClient),
+            $this->app[Dispatcher::class],
+            new NullLogger()
+        );
+
         $osp->setSaleRequirements([
             [
                 'status' => 23,

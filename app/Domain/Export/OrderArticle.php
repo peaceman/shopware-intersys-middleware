@@ -100,4 +100,10 @@ class OrderArticle
     {
         return $this->data['ean'];
     }
+
+    public function isValid(): bool
+    {
+        return $this->isVoucher()
+            || !empty($this->data['ean'] ?? null);
+    }
 }

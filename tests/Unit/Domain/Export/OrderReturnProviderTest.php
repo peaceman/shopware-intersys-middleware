@@ -77,7 +77,12 @@ class OrderReturnProviderTest extends TestCase
      */
     private function createOrderReturnProvider($client): OrderReturnProvider
     {
-        $orp = new OrderReturnProvider(new ShopwareAPI(new NullLogger(), $client), $this->app[Dispatcher::class]);
+        $orp = new OrderReturnProvider(
+            new ShopwareAPI(new NullLogger(), $client),
+            $this->app[Dispatcher::class],
+            new NullLogger(),
+        );
+
         $orp->setReturnRequirements([
             'status' => 23,
             'cleared' => 42,

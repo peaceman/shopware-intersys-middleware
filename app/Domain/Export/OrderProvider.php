@@ -7,23 +7,23 @@ namespace App\Domain\Export;
 
 use App\Domain\ShopwareAPI;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Support\Collection;
+use Psr\Log\LoggerInterface;
 
 class OrderProvider
 {
-    /**
-     * @var ShopwareAPI
-     */
-    private $shopwareAPI;
+    private ShopwareAPI $shopwareAPI;
+    private Dispatcher $eventDispatcher;
+    private LoggerInterface $logger;
 
-    /**
-     * @var Dispatcher
-     */
-    private $eventDispatcher;
-
-    public function __construct(ShopwareAPI $shopwareAPI, Dispatcher $eventDispatcher)
-    {
+    public function __construct(
+        ShopwareAPI $shopwareAPI,
+        Dispatcher $eventDispatcher,
+        LoggerInterface $logger,
+    ) {
         $this->shopwareAPI = $shopwareAPI;
         $this->eventDispatcher = $eventDispatcher;
+        $this->logger = $logger;
     }
 
     public function getOrders(): iterable
@@ -37,7 +37,18 @@ class OrderProvider
 
             foreach ($apiOrders as $apiOrder) {
                 $order = new Order($apiOrder);
-                $order->setArticles($this->fetchOrderArticles($order));
+                $articles = $this->fetchOrderArticles($order);
+
+                if (Collection::make($articles)->contains(fn (OrderArticle $v): bool => !$v->isValid())) {
+                    $this->logger->info(__METHOD__ . ' Ignore order that has invalid positions', [
+                        'orderID' => $order->getID(),
+                        'orderNumber' => $order->getOrderNumber(),
+                    ]);
+
+                    continue;
+                }
+
+                $order->setArticles($articles);
 
                 $this->eventDispatcher->dispatch(new OrderFetched($order));
 
@@ -61,8 +72,9 @@ class OrderProvider
 
         $apiDetails = data_get($jsonResponse, 'data.details', []);
 
-        return array_map(function (array $apiOrderArticle): OrderArticle {
-            return new OrderArticle($apiOrderArticle);
-        }, $apiDetails);
+        return array_map(
+            fn (array $v): OrderArticle  => new OrderArticle($v),
+            $apiDetails,
+        );
     }
 }
