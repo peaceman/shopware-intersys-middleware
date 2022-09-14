@@ -171,10 +171,10 @@ class ImportFileReaderTest extends TestCase
         static::assertEquals(2, $stockPerBranch->get('4399901690509'));
         static::assertEquals(1, $stockPerBranch->get('4399902245876'));
 
-        static::assertEquals('0009955081522382', $sizeVariation->getVariantArticleNumber());
+        static::assertEquals('0009951525082382', $sizeVariation->getVariantArticleNumber());
         static::assertEquals('3468335974835', $sizeVariation->getEan());
-        static::assertEquals(9.58, $sizeVariation->getPrice());
-        static::assertEquals(22.99, $sizeVariation->getPseudoPrice());
+        static::assertEquals(22.99, $sizeVariation->getPrice());
+        static::assertNull($sizeVariation->getPseudoPrice());
         static::assertEquals('B REN SHORT BLACK-PIX BLUE-TURQU 164', $sizeVariation->getVariantName());
     }
 }
