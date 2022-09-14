@@ -39,4 +39,9 @@ class Article extends Model
     {
         return $this->hasMany(ArticleImport::class, 'article_id', 'id');
     }
+
+    public function numberEanMappings(): HasMany
+    {
+        return $this->hasMany(ArticleNumberEanMapping::class, 'article_id', 'id');
+    }
 }

@@ -5,6 +5,7 @@
 namespace App\Domain\Import;
 
 use App\Article;
+use App\ArticleNumberEanMapping;
 use App\Domain\ShopwareAPI;
 use App\ImportFile;
 use Exception;
@@ -218,9 +219,26 @@ class ModelXMLImporter
 
         $this->shopwareAPI->updateShopwareArticle($swArticleId, $articleData);
 
+        $this->updateEanMappings($article, $variants);
+
         $this->logger->info(__METHOD__ . ' Updated Article', $loggingContext);
 
         return $article;
+    }
+
+    protected function updateEanMappings(Article $article, iterable $variants): void
+    {
+        foreach ($variants as $variant) {
+            ArticleNumberEanMapping::query()->firstOrCreate(
+                [
+                    'article_id' => $article->id,
+                    'ean' => $variant['ean'],
+                ],
+                [
+                    'article_number' => $variant['number'],
+                ],
+            );
+        }
     }
 
     protected function createArticle(
@@ -266,9 +284,22 @@ class ModelXMLImporter
         $article->is_active = true;
         $article->save();
 
+        $this->createEanMappings($article, $variants);
+
         $this->logger->info(__METHOD__ . ' Post Articles Response ', $loggingContext);
 
         return $article;
+    }
+
+    protected function createEanMappings(Article $article, iterable $variants): void
+    {
+        $eanMappings = Collection::make($variants)
+            ->map(fn (array $variant): ArticleNumberEanMapping => new ArticleNumberEanMapping([
+                'ean' => $variant['ean'],
+                'article_number' => $variant['number'],
+            ]));
+
+        $article->numberEanMappings()->saveMany($eanMappings);
     }
 
     protected function generateVariants(

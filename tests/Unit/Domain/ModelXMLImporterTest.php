@@ -7,6 +7,7 @@ namespace Tests\Unit\Domain;
 
 use App\Article;
 use App\ArticleImport;
+use App\ArticleNumberEanMapping;
 use App\Domain\Import\ModelXMLData;
 use App\Domain\Import\ModelXMLImporter;
 use App\Domain\Import\SizeMapper;
@@ -171,7 +172,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900004',
-                    'ean' => '',
+                    'ean' => 'ean-1',
                     'lastStock' => true,
                     'prices' => [[
                         'price' => 35,
@@ -202,7 +203,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900005',
-                    'ean' => '',
+                    'ean' => 'ean-2',
                     'lastStock' => true,
                     'prices' => [[
                         'price' => 35,
@@ -223,7 +224,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900009',
-                    'ean' => '',
+                    'ean' => 'ean-3',
                     'lastStock' => true,
                     'prices' => [[
                         'price' => 35,
@@ -248,6 +249,19 @@ class ModelXMLImporterTest extends TestCase
         $article = Article::query()->where('is_modno', '10003436H000')->first();
         static::assertNotNull($article, 'Article was not created');
         static::assertEquals(23, $article->sw_article_id);
+        static::assertEquals(3, $article->numberEanMappings()->count(), 'EAN mappings where not created');
+
+        $mappings = $article->numberEanMappings()->get()
+            ->mapWithKeys(fn (ArticleNumberEanMapping $m): array => [$m->ean => $m->article_number]);
+
+        static::assertEquals(
+            [
+                'ean-1' => '10003436HP2900004',
+                'ean-2' => '10003436HP2900005',
+                'ean-3' => '10003436HP2900009',
+            ],
+            $mappings->all(),
+        );
 
         /** @var ArticleImport[] $articleImports */
         $articleImports = $article->imports;
@@ -288,7 +302,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900413',
-                    'ean' => '',
+                    'ean' => 'ean-4',
                     'lastStock' => true,
                     'prices' => [[
                         'price' => 35,
@@ -309,7 +323,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900417',
-                    'ean' => '',
+                    'ean' => 'ean-5',
                     'lastStock' => true,
                     'prices' => [[
                         'price' => 35,
@@ -334,6 +348,18 @@ class ModelXMLImporterTest extends TestCase
         $article = Article::query()->where('is_modno', '10003436H004')->first();
         static::assertNotNull($article, 'Article was not created');
         static::assertEquals(24, $article->sw_article_id);
+        static::assertEquals(2, $article->numberEanMappings()->count(), 'EAN mappings where not created');
+
+        $mappings = $article->numberEanMappings()->get()
+            ->mapWithKeys(fn (ArticleNumberEanMapping $m): array => [$m->ean => $m->article_number]);
+
+        static::assertEquals(
+            [
+                'ean-4' => '10003436HP2900413',
+                'ean-5' => '10003436HP2900417',
+            ],
+            $mappings->all(),
+        );
 
         /** @var ArticleImport[] $articleImports */
         $articleImports = $article->imports;
@@ -403,7 +429,7 @@ class ModelXMLImporterTest extends TestCase
             'variants' => [
                 [
                     'number' => '10003436HP2900004',
-                    'ean' => '',
+                    'ean' => 'ean-1',
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -432,7 +458,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900005',
-                    'ean' => '',
+                    'ean' => 'ean-2',
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -451,7 +477,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900009',
-                    'ean' => '',
+                    'ean' => 'ean-3',
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -497,7 +523,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900413',
-                    'ean' => '',
+                    'ean' => 'ean-4',
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -516,7 +542,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900417',
-                    'ean' => '',
+                    'ean' => 'ean-5',
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -608,7 +634,7 @@ class ModelXMLImporterTest extends TestCase
             'variants' => [
                 [
                     'number' => '10003436HP2900004',
-                    'ean' => '',
+                    'ean' => 'ean-1',
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -636,7 +662,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900005',
-                    'ean' => '',
+                    'ean' => 'ean-2',
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -654,7 +680,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900009',
-                    'ean' => '',
+                    'ean' => 'ean-3',
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -699,7 +725,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900413',
-                    'ean' => '',
+                    'ean' => 'ean-4',
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -717,7 +743,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900417',
-                    'ean' => '',
+                    'ean' => 'ean-5',
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -903,8 +929,18 @@ class ModelXMLImporterTest extends TestCase
 
         $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
+        // only create partial ean mappings to check if missing mappings are created during the update process
+        $article->numberEanMappings()->saveMany([
+            new ArticleNumberEanMapping(['ean' => 'ean-1', 'article_number' => 'my article number']), // check that existing article number mappings are not updated
+            new ArticleNumberEanMapping(['ean' => 'ean-2', 'article_number' => '10003436HP2900005']),
+        ]);
+
         $article = new Article(['is_modno' => '10003436H004', 'is_active' => true, 'sw_article_id' => 24]);
         $article->save();
+
+        $article->numberEanMappings()->saveMany([
+            new ArticleNumberEanMapping(['ean' => 'ean-4', 'article_number' => '10003436HP2900413']),
+        ]);
 
         $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
@@ -941,7 +977,7 @@ class ModelXMLImporterTest extends TestCase
             'variants' => [
                 [
                     'number' => '10003436HP2900004',
-                    'ean' => '',
+                    'ean' => 'ean-1',
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -970,7 +1006,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900005',
-                    'ean' => '',
+                    'ean' => 'ean-2',
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -989,7 +1025,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900009',
-                    'ean' => '',
+                    'ean' => 'ean-3',
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -1018,6 +1054,20 @@ class ModelXMLImporterTest extends TestCase
         [, $articleImport] = $articleImports;
         static::assertEquals($articleImport->import_file_id, $importFile->id);
 
+        static::assertEquals(3, $article->numberEanMappings()->count(), 'EAN mappings where not created');
+
+        $mappings = $article->numberEanMappings()->get()
+            ->mapWithKeys(fn (ArticleNumberEanMapping $m): array => [$m->ean => $m->article_number]);
+
+        static::assertEquals(
+            [
+                'ean-1' => 'my article number',
+                'ean-2' => '10003436HP2900005',
+                'ean-3' => '10003436HP2900009',
+            ],
+            $mappings->all(),
+        );
+
         // check second article
         /** @var Request $updateRequest */
         $updateRequest = $container[3]['request'];
@@ -1041,7 +1091,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900413',
-                    'ean' => '',
+                    'ean' => 'ean-4',
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -1060,7 +1110,7 @@ class ModelXMLImporterTest extends TestCase
                 [
                     'active' => true,
                     'number' => '10003436HP2900417',
-                    'ean' => '',
+                    'ean' => 'ean-5',
                     'prices' => [[
                         'price' => 35,
                         'pseudoPrice' => null,
@@ -1088,6 +1138,19 @@ class ModelXMLImporterTest extends TestCase
 
         [, $articleImport] = $articleImports;
         static::assertEquals($articleImport->import_file_id, $importFile->id);
+
+        static::assertEquals(2, $article->numberEanMappings()->count(), 'EAN mappings where not created');
+
+        $mappings = $article->numberEanMappings()->get()
+            ->mapWithKeys(fn (ArticleNumberEanMapping $m): array => [$m->ean => $m->article_number]);
+
+        static::assertEquals(
+            [
+                'ean-4' => '10003436HP2900413',
+                'ean-5' => '10003436HP2900417',
+            ],
+            $mappings->all(),
+        );
     }
 
     public function testArticlePriceWontBeUpdatedIfItIsWriteProtected()
