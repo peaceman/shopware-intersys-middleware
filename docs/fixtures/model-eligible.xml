@@ -16,7 +16,7 @@
             <Sizedeno><![CDATA[XS]]></Sizedeno>
             <Itemno>10003436HP2900004</Itemno>
             <Itemdeno><![CDATA[MLB BASIC NY YANKEES 3436 BLACK/WHITE XS]]></Itemdeno>
-            <Ean></Ean>
+            <Ean>ean-1</Ean>
             <Branch>
                 <Branchno>006</Branchno>
                 <Stockqty>2</Stockqty>
@@ -38,7 +38,7 @@
             <Sizedeno><![CDATA[S]]></Sizedeno>
             <Itemno>10003436HP2900005</Itemno>
             <Itemdeno><![CDATA[MLB BASIC NY YANKEES 3436 BLACK/WHITE S]]></Itemdeno>
-            <Ean></Ean>
+            <Ean>ean-2</Ean>
             <Branch>
                 <Branchno>006</Branchno>
                 <Stockqty>1</Stockqty>
@@ -50,7 +50,7 @@
             <Sizedeno><![CDATA[M]]></Sizedeno>
             <Itemno>10003436HP2900009</Itemno>
             <Itemdeno><![CDATA[MLB BASIC NY YANKEES 3436 BLACK/WHITE M]]></Itemdeno>
-            <Ean></Ean>
+            <Ean>ean-3</Ean>
             <Branch>
                 <Branchno>006</Branchno>
                 <Stockqty>2</Stockqty>
@@ -66,7 +66,7 @@
             <Sizedeno><![CDATA[L]]></Sizedeno>
             <Itemno>10003436HP2900413</Itemno>
             <Itemdeno><![CDATA[MLB BASIC NY YANKEES 3438 GREY/WHITE L]]></Itemdeno>
-            <Ean></Ean>
+            <Ean>ean-4</Ean>
             <Branch>
                 <Branchno>006</Branchno>
                 <Stockqty>0</Stockqty>
@@ -78,7 +78,7 @@
             <Sizedeno><![CDATA[XL]]></Sizedeno>
             <Itemno>10003436HP2900417</Itemno>
             <Itemdeno><![CDATA[MLB BASIC NY YANKEES 3438 GREY/WHITE XL]]></Itemdeno>
-            <Ean></Ean>
+            <Ean>ean-5</Ean>
             <Branch>
                 <Branchno>006</Branchno>
                 <Stockqty>0</Stockqty>
