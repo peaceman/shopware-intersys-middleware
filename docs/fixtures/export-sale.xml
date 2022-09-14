@@ -8,7 +8,7 @@
     <Type>S</Type>
     <Refno><![CDATA[RE-00023235]]></Refno>
     <Branchno>005</Branchno>
-    <Comment><![CDATA[OrderId: 23235]]></Comment>
+    <Comment><![CDATA[OrderId: 23235, ArticleNumber: ABC123]]></Comment>
   </Item>
   <Item>
     <Itemno>dis is ean</Itemno>
@@ -18,6 +18,6 @@
     <Type>S</Type>
     <Refno><![CDATA[RE-00023235]]></Refno>
     <Branchno>005</Branchno>
-    <Comment><![CDATA[OrderId: 23235]]></Comment>
+    <Comment><![CDATA[OrderId: 23235, ArticleNumber: ABC127]]></Comment>
   </Item>
 </Sale>

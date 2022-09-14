@@ -84,7 +84,7 @@ class OrderXMLGenerator
         $item->appendChild($this->xml->createElement('Branchno', $this->stockBranchNo));
 
         $commentEl = $this->xml->createElement('Comment');
-        $commentEl->appendChild($this->xml->createCDATASection("OrderId: {$order->getOrderNumber()}"));
+        $commentEl->appendChild($this->xml->createCDATASection("OrderId: {$order->getOrderNumber()}, ArticleNumber: {$orderArticle->getArticleNumber()}"));
         $item->appendChild($commentEl);
 
         return $item;
