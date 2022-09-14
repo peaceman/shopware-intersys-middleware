@@ -229,6 +229,9 @@ class ModelXMLImporter
     protected function updateEanMappings(Article $article, iterable $variants): void
     {
         foreach ($variants as $variant) {
+            if (empty(trim($variant['ean'])))
+                continue;
+
             ArticleNumberEanMapping::query()->firstOrCreate(
                 [
                     'article_id' => $article->id,
@@ -294,6 +297,7 @@ class ModelXMLImporter
     protected function createEanMappings(Article $article, iterable $variants): void
     {
         $eanMappings = Collection::make($variants)
+            ->filter(fn (array $variant): bool => !empty(trim($variant['ean'])))
             ->map(fn (array $variant): ArticleNumberEanMapping => new ArticleNumberEanMapping([
                 'ean' => $variant['ean'],
                 'article_number' => $variant['number'],
