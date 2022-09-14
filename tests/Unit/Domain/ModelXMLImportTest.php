@@ -403,6 +403,11 @@ class ModelXMLImportTest extends TestCase
 
         $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
+        $article->numberEanMappings()->saveMany([
+            new ArticleNumberEanMapping(['ean' => 'ean-1', 'article_number' => 'my article number']),
+            new ArticleNumberEanMapping(['ean' => 'ean-2', 'article_number' => '10003436HP2900005']),
+        ]);
+
         $article = new Article(['is_modno' => '10003436H004', 'is_active' => true, 'sw_article_id' => 24]);
         $article->save();
 
@@ -434,7 +439,7 @@ class ModelXMLImportTest extends TestCase
             ],
             'variants' => [
                 [
-                    'number' => '10003436HP2900004',
+                    'number' => 'my article number',
                     'ean' => 'ean-1',
                     'prices' => [[
                         'price' => 35,
@@ -607,6 +612,12 @@ class ModelXMLImportTest extends TestCase
 
         $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
 
+        // only create partial ean mappings to check if missing mappings are created during the update process
+        $article->numberEanMappings()->saveMany([
+            new ArticleNumberEanMapping(['ean' => 'ean-1', 'article_number' => 'my article number']),
+            new ArticleNumberEanMapping(['ean' => 'ean-2', 'article_number' => '10003436HP2900005']),
+        ]);
+
         $article = new Article(['is_modno' => '10003436H004', 'is_active' => true, 'sw_article_id' => 24]);
         $article->save();
 
@@ -639,7 +650,7 @@ class ModelXMLImportTest extends TestCase
             ],
             'variants' => [
                 [
-                    'number' => '10003436HP2900004',
+                    'number' => 'my article number',
                     'ean' => 'ean-1',
                     'prices' => [[
                         'price' => 35,
@@ -982,7 +993,7 @@ class ModelXMLImportTest extends TestCase
             ],
             'variants' => [
                 [
-                    'number' => '10003436HP2900004',
+                    'number' => 'my article number',
                     'ean' => 'ean-1',
                     'prices' => [[
                         'price' => 35,

@@ -300,11 +300,13 @@ class ModelImporter
                 $eligibleBranches = $model->getBranches()->filter([$this, 'isGlnEligible']);
                 $eligibleBranch = $eligibleBranches->first();
 
-                $mappedSize = $this->mapSize($model);
+                $variantArticleNumber = $this->fetchVariantArticleNumber($model);
+
+                $mappedSize = $this->mapSize($model, $variantArticleNumber);
 
                 $variantData = [
                     'active' => true,
-                    'number' => $model->getVariantArticleNumber(),
+                    'number' => $variantArticleNumber,
                     'ean' => $model->getEan(),
                     'lastStock' => true,
                 ];
@@ -355,13 +357,28 @@ class ModelImporter
         return $variants;
     }
 
+    protected function fetchVariantArticleNumber(ModelColorSizeDTO $model): string
+    {
+        if (empty($ean = $model->getEan())) {
+            return $model->getVariantArticleNumber();
+        }
+
+        /** @var ArticleNumberEanMapping $mapping */
+        $mapping = ArticleNumberEanMapping::query()->where(['ean' => $ean])->first();
+
+        return $mapping
+            ? $mapping->article_number
+            : $model->getVariantArticleNumber();
+    }
+
     protected function mapSize(
         ModelColorSizeDTO $model,
+        string $variantArticleNumber,
     ): string {
         $req = new SizeMappingRequest(
             manufacturerName: $model->getManufacturerName(),
             mainArticleNumber: $model->getMainArticleNumber(),
-            variantArticleNumber: $model->getVariantArticleNumber(),
+            variantArticleNumber: $variantArticleNumber,
             size: $model->getSize(),
             targetGroupGender: $model->getTargetGroupGender(),
         );
