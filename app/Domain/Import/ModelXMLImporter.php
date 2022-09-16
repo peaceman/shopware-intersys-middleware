@@ -187,12 +187,15 @@ class ModelXMLImporter
                 $variant['attribute'] = Arr::only($variant['attribute'], ['availability']);
                 unset($variant['lastStock']);
 
-                if ($swArticleInfo->isPriceProtected($variant['number']))
-                    unset($variant['prices']);
+                // always include prices and stock information if the variant is new
+                if ($swArticleInfo->variantExists($variant['number'])) {
+                    if ($swArticleInfo->isPriceProtected($variant['number']))
+                        unset($variant['prices']);
 
-                if ($this->ignoreStockUpdatesFromDelta
-                    && $modelXMLData->getImportFile()->type === ImportFile::TYPE_DELTA)
-                    unset($variant['inStock']);
+                    if ($this->ignoreStockUpdatesFromDelta
+                        && $modelXMLData->getImportFile()->type === ImportFile::TYPE_DELTA)
+                        unset($variant['inStock']);
+                }
 
                 return $variant;
             });
