@@ -24,7 +24,7 @@ enum TargetGroupGender: string {
         $lastDigit = substr($warengruppe, -1, 1);
 
         return match (strtolower($lastDigit)) {
-            'h' => TargetGroupGender::Male,
+            'u', 'h' => TargetGroupGender::Male,
             'd' => TargetGroupGender::Female,
             'k' => TargetGroupGender::Child,
             default => null,
