@@ -9,6 +9,7 @@ use App\ArticleNumberEanMapping;
 use App\Domain\ShopwareAPI;
 use App\ImportFile;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Enumerable;
@@ -94,7 +95,7 @@ class ModelImporter
             return;
         }
 
-        $article = $this->tryToFetchShopwareArticle($model->getMainArticleNumber());
+        $article = $this->tryToFetchShopwareArticle($model);
 
         if ($article && !$this->isNewImportFileForArticle($model->getImportFile(), $article)) {
             $this->logger->info(__METHOD__ . ' Already imported the same or newer data for the article', [
@@ -125,19 +126,26 @@ class ModelImporter
         return $gln === $this->glnToImport;
     }
 
-    protected function tryToFetchShopwareArticle(string $articleNumber): ?Article
+    protected function tryToFetchShopwareArticle(ModelColorDTO $model): ?Article
     {
-        $loggingContext = ['articleNumber' => $articleNumber];
+        $loggingContext = ['articleNumber' => $model->getMainArticleNumber()];
         $this->logger->info(__METHOD__, $loggingContext);
 
-        $article = Article::query()->where('is_modno', $articleNumber)->first();
+        $article = Article::query()->where('is_modno', $model->getMainArticleNumber())->first();
         if ($article) return $article;
 
-        $swArticleId = $this->shopwareAPI->searchShopwareArticleIdByArticleNumber($articleNumber);
+        $eans = $model->getSizeVariations()->map(fn (ModelColorSizeDTO $model): string => $model->getEan());
+        $article = Article::query()
+            ->whereHas('numberEanMappings', fn (Builder $query) => $query->whereIn('ean', $eans))
+            ->first();
+
+        if ($article) return $article;
+
+        $swArticleId = $this->shopwareAPI->searchShopwareArticleIdByArticleNumber($model->getMainArticleNumber());
         if (!$swArticleId) return null;
 
         $article = new Article([
-            'is_modno' => $articleNumber,
+            'is_modno' => $model->getMainArticleNumber(),
             'sw_article_id' => $swArticleId,
             'is_active' => true,
         ]);

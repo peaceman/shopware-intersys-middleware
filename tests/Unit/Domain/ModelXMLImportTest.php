@@ -922,6 +922,258 @@ class ModelXMLImportTest extends TestCase
         ], $updateBody);
     }
 
+    public function testShopwareArticleIdLookupByEan()
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(200, [], file_get_contents(base_path('docs/fixtures/price-unprotected-article-response.json'))),
+            new Response(201, [], '{"success":true,"data":{"id":23,"location":"https:\/\/www.foobar.de\/api\/articles\/1008"}}'),
+            new Response(200, [], file_get_contents(base_path('docs/fixtures/price-unprotected-article-response.json'))),
+            new Response(201, [], '{"success":true,"data":{"id":24,"location":"https:\/\/www.foobar.de\/api\/articles\/1008"}}'),
+        ]);
+
+        $stack = HandlerStack::create($mock);
+        $stack->push($history);
+
+        $client = new Client([
+            'handler' => $stack,
+        ]);
+
+        $this->createSizeMappings();
+
+        $alreadyImportedFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-19-23-05.xml']);
+        $alreadyImportedFile->save();
+
+        $article = new Article(['is_modno' => 'unknown 1', 'is_active' => true, 'sw_article_id' => 23]);
+        $article->save();
+
+        $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
+
+        // only create partial ean mappings to check if missing mappings are created during the update process
+        $article->numberEanMappings()->saveMany([
+            new ArticleNumberEanMapping(['ean' => 'ean-1', 'article_number' => 'my article number']), // check that existing article number mappings are not updated
+            new ArticleNumberEanMapping(['ean' => 'ean-2', 'article_number' => '10003436HP2900005']),
+        ]);
+
+        $article = new Article(['is_modno' => 'unknown 2', 'is_active' => true, 'sw_article_id' => 24]);
+        $article->save();
+
+        $article->numberEanMappings()->saveMany([
+            new ArticleNumberEanMapping(['ean' => 'ean-4', 'article_number' => '10003436HP2900413']),
+        ]);
+
+        $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
+
+        $modelImporter = $this->createModelImporterWithHTTPClient($client);
+        $modelImporter->setGlnToImport('006');
+
+        $importFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-21-23-05.xml', 'storage_path' => Str::random(40)]);
+        $importFile->save();
+
+        $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
+        $modelImporter->import(new ModelXML($importFile, $xmlString));
+
+        static::assertCount(4, $container);
+
+        // check first article
+        /** @var Request $updateRequest */
+        $updateRequest = $container[1]['request'];
+
+        $updateBody = json_decode((string)$updateRequest->getBody(), true);
+
+        static::assertSame([
+            'mainDetail' => [
+                'prices' => [[
+                    'price' => 35,
+                    'pseudoPrice' => null,
+                ]],
+            ],
+            'configuratorSet' => [
+                'type' => 2,
+                'groups' => [
+                    ['name' => 'Size', 'options' => [['name' => 'R'], ['name' => 'S'], ['name' => 'M']]],
+                ],
+            ],
+            'variants' => [
+                [
+                    'number' => 'my article number',
+                    'ean' => 'ean-1',
+                    'prices' => [[
+                        'price' => 35,
+                        'pseudoPrice' => null,
+                    ]],
+                    'inStock' => 2,
+                    'attribute' => [
+                        'availability' => json_encode([
+                            [
+                                'branchNo' => '006',
+                                'stock' => 2,
+                            ],
+                            [
+                                'branchNo' => '009',
+                                'stock' => 8,
+                            ],
+                            [
+                                'branchNo' => '011',
+                                'stock' => 23,
+                            ],
+                        ]),
+                    ],
+                    'configuratorOptions' => [
+                        ['group' => 'Size', 'option' => 'R'],
+                    ],
+                ],
+                [
+                    'active' => true,
+                    'number' => '10003436HP2900005',
+                    'ean' => 'ean-2',
+                    'prices' => [[
+                        'price' => 35,
+                        'pseudoPrice' => null,
+                    ]],
+                    'inStock' => 1,
+                    'attribute' => [
+                        'availability' => json_encode([[
+                            'branchNo' => '006',
+                            'stock' => 1,
+                        ]]),
+                    ],
+                    'configuratorOptions' => [
+                        ['group' => 'Size', 'option' => 'S'],
+                    ],
+                ],
+                [
+                    'active' => true,
+                    'number' => '10003436HP2900009',
+                    'ean' => 'ean-3',
+                    'prices' => [[
+                        'price' => 35,
+                        'pseudoPrice' => null,
+                    ]],
+                    'inStock' => 2,
+                    'attribute' => [
+                        'availability' => json_encode([[
+                            'branchNo' => '006',
+                            'stock' => 2,
+                        ]]),
+                    ],
+                    'configuratorOptions' => [
+                        ['group' => 'Size', 'option' => 'M'],
+                    ],
+                ],
+            ],
+        ], $updateBody);
+
+        /** @var Article $article */
+        $article = Article::query()->where('is_modno', 'unknown 1')->first();
+
+        /** @var ArticleImport[] $articleImports */
+        $articleImports = $article->imports;
+        static::assertCount(2, $articleImports);
+
+        [, $articleImport] = $articleImports;
+        static::assertEquals($articleImport->import_file_id, $importFile->id);
+
+        static::assertEquals(3, $article->numberEanMappings()->count(), 'EAN mappings where not created');
+
+        $mappings = $article->numberEanMappings()->get()
+            ->mapWithKeys(fn (ArticleNumberEanMapping $m): array => [$m->ean => $m->article_number]);
+
+        static::assertEquals(
+            [
+                'ean-1' => 'my article number',
+                'ean-2' => '10003436HP2900005',
+                'ean-3' => '10003436HP2900009',
+            ],
+            $mappings->all(),
+        );
+
+        // check second article
+        /** @var Request $updateRequest */
+        $updateRequest = $container[3]['request'];
+
+        $updateBody = json_decode((string)$updateRequest->getBody(), true);
+
+        static::assertSame([
+            'mainDetail' => [
+                'prices' => [[
+                    'price' => 35,
+                    'pseudoPrice' => null,
+                ]],
+            ],
+            'configuratorSet' => [
+                'type' => 2,
+                'groups' => [
+                    ['name' => 'Size', 'options' => [['name' => 'L'], ['name' => 'XL']]],
+                ],
+            ],
+            'variants' => [
+                [
+                    'active' => true,
+                    'number' => '10003436HP2900413',
+                    'ean' => 'ean-4',
+                    'prices' => [[
+                        'price' => 35,
+                        'pseudoPrice' => null,
+                    ]],
+                    'inStock' => 0,
+                    'attribute' => [
+                        'availability' => json_encode([[
+                            'branchNo' => '006',
+                            'stock' => 0,
+                        ]]),
+                    ],
+                    'configuratorOptions' => [
+                        ['group' => 'Size', 'option' => 'L'],
+                    ],
+                ],
+                [
+                    'active' => true,
+                    'number' => '10003436HP2900417',
+                    'ean' => 'ean-5',
+                    'prices' => [[
+                        'price' => 35,
+                        'pseudoPrice' => null,
+                    ]],
+                    'inStock' => 0,
+                    'attribute' => [
+                        'availability' => json_encode([[
+                            'branchNo' => '006',
+                            'stock' => 0,
+                        ]]),
+                    ],
+                    'configuratorOptions' => [
+                        ['group' => 'Size', 'option' => 'XL'],
+                    ],
+                ],
+            ],
+        ], $updateBody);
+
+        /** @var Article $article */
+        $article = Article::query()->where('is_modno', 'unknown 2')->first();
+
+        /** @var ArticleImport[] $articleImports */
+        $articleImports = $article->imports;
+        static::assertCount(2, $articleImports);
+
+        [, $articleImport] = $articleImports;
+        static::assertEquals($articleImport->import_file_id, $importFile->id);
+
+        static::assertEquals(2, $article->numberEanMappings()->count(), 'EAN mappings where not created');
+
+        $mappings = $article->numberEanMappings()->get()
+            ->mapWithKeys(fn (ArticleNumberEanMapping $m): array => [$m->ean => $m->article_number]);
+
+        static::assertEquals(
+            [
+                'ean-4' => '10003436HP2900413',
+                'ean-5' => '10003436HP2900417',
+            ],
+            $mappings->all(),
+        );
+    }
+
     public function testKnownArticleWillBeUpdated()
     {
         $container = [];
