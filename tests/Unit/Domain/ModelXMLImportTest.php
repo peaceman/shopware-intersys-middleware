@@ -684,6 +684,7 @@ class ModelXMLImportTest extends TestCase
                         'price' => 35,
                         'pseudoPrice' => null,
                     ]],
+                    'inStock' => 1,
                     'attribute' => [
                         'availability' => json_encode([[
                             'branchNo' => '006',
@@ -702,6 +703,7 @@ class ModelXMLImportTest extends TestCase
                         'price' => 35,
                         'pseudoPrice' => null,
                     ]],
+                    'inStock' => 2,
                     'attribute' => [
                         'availability' => json_encode([[
                             'branchNo' => '006',
@@ -747,6 +749,7 @@ class ModelXMLImportTest extends TestCase
                         'price' => 35,
                         'pseudoPrice' => null,
                     ]],
+                    'inStock' => 0,
                     'attribute' => [
                         'availability' => json_encode([[
                             'branchNo' => '006',
@@ -765,6 +768,7 @@ class ModelXMLImportTest extends TestCase
                         'price' => 35,
                         'pseudoPrice' => null,
                     ]],
+                    'inStock' => 0,
                     'attribute' => [
                         'availability' => json_encode([[
                             'branchNo' => '006',

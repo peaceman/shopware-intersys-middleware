@@ -182,7 +182,7 @@ class ModelImporter
                         unset($variant['prices']);
 
                     if ($this->ignoreStockUpdatesFromDelta
-                    && $model->getImportFile()->type === ImportFile::TYPE_DELTA)
+                        && $model->getImportFile()->type === ImportFile::TYPE_DELTA)
                         unset($variant['inStock']);
                 }
 
