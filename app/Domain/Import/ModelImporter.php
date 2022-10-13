@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Enumerable;
+use Illuminate\Support\Str;
 use Psr\Log\LoggerInterface;
 
 class ModelImporter
@@ -440,11 +441,19 @@ class ModelImporter
     {
         if ($article->imports()->where('import_file_id', $importFile->id)->exists()) return false;
 
-        return $article->imports()
-            ->whereHas('importFile', function ($q) use ($importFile) {
-                $q->where('original_filename', '>=', $importFile->original_filename);
-            })
-            ->doesntExist();
+        $importFilenames = $article->imports()
+            ->join('import_files', 'import_files.id', '=', 'article_imports.import_file_id')
+            ->orderBy('article_imports.created_at')
+            ->limit(5)
+            ->pluck('import_files.original_filename');
+
+        $sanitizeFn = fn (string $v): string => Str::after($v, '-');
+        $importFilenames = $importFilenames->map($sanitizeFn);
+        $testImportFilename = $sanitizeFn($importFile->original_filename);
+
+        $containsNewerImportFiles = $importFilenames->contains(fn (string $v): bool => $v > $testImportFilename);
+
+        return !$containsNewerImportFiles;
     }
 
     private function handleUnknownArticleInShopwareException(UnknownArticleInShopwareException $e): void

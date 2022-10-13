@@ -88,9 +88,9 @@ class ModelXMLImportTest extends TestCase
         $modelImporter = $this->createModelImporterWithHTTPClient($client);
         $modelImporter->setGlnToImport('006');
 
-        $alreadyImportedFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-19-23-05.xml']);
+        $alreadyImportedFile = new ImportFile(['type' => 'base', 'original_filename' => 'Base4WebShop-100343-20221013060913.csv']);
         $alreadyImportedFile->save();
-        $newImportFile = new ImportFile(['type' => 'base', 'original_filename' => '2018-08-16-23-05.xml']);
+        $newImportFile = new ImportFile(['type' => 'base', 'original_filename' => 'Delta4WebShop-100343-20221013021818-53.csv']);
         $newImportFile->save();
 
         $article = new Article(['is_modno' => '10003436H000', 'is_active' => true]);
@@ -107,6 +107,38 @@ class ModelXMLImportTest extends TestCase
         $modelImporter->import(new ModelXML($newImportFile, $xmlString));
 
         static::assertEmpty($container);
+    }
+
+    public function testDoesImportNewData()
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $stack = HandlerStack::create();
+        $stack->push($history);
+        $client = new Client(['handler' => $stack]);
+
+        $modelImporter = $this->createModelImporterWithHTTPClient($client);
+        $modelImporter->setGlnToImport('006');
+
+        $alreadyImportedFile = new ImportFile(['type' => 'base', 'original_filename' => 'Delta4WebShop-100343-20221013021818-53.csv']);
+        $alreadyImportedFile->save();
+        $newImportFile = new ImportFile(['type' => 'base', 'original_filename' => 'Base4WebShop-100343-20221013060913.csv']);
+        $newImportFile->save();
+
+        $article = new Article(['is_modno' => '10003436H000', 'is_active' => true]);
+        $article->save();
+
+        $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
+
+        $article = new Article(['is_modno' => '10003436H004', 'is_active' => true]);
+        $article->save();
+
+        $article->imports()->create(['import_file_id' => $alreadyImportedFile->id]);
+
+        $xmlString = file_get_contents(base_path('docs/fixtures/model-eligible.xml'));
+        $modelImporter->import(new ModelXML($newImportFile, $xmlString));
+
+        static::assertNotEmpty($container);
     }
 
     public function testUnknownArticleWillBeCreated()
