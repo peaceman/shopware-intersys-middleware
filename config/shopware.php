@@ -34,10 +34,22 @@ return [
         ],
         'return' => [
             'requirements' => [
-                'status' => env('SHOPWARE_ORDER_RETURN_REQ_STATUS', 4), // storniert abgelehnt
-                'cleared' => env('SHOPWARE_ORDER_RETURN_REQ_CLEARED', 12), // komplett bezahlt
-                'positionStatus' => env('SHOPWARE_ORDER_RETURN_REQ_POSITION_STATUS', 4), // retoure (export ausstehend)
+                [
+                    'status' => env('SHOPWARE_ORDER_RETURN_REQ_STATUS', 4), // storniert abgelehnt
+                    'cleared' => env('SHOPWARE_ORDER_RETURN_REQ_CLEARED', 12), // komplett bezahlt
+                ],
+                [
+                    'status' => env('SHOPWARE_ORDER_RETURN_REQ_STATUS', 4), // storniert abgelehnt
+                    'cleared' => 17, // offen
+                    'paymentId' => 5, // vorkasse
+                ],
+                [
+                    'status' => env('SHOPWARE_ORDER_RETURN_REQ_STATUS', 4), // storniert abgelehnt
+                    'cleared' => 20, // wiedergutschrift
+                    'paymentId' => 7, // paypal
+                ],
             ],
+            'requiredPositionStatus' => env('SHOPWARE_ORDER_RETURN_REQ_POSITION_STATUS', 4), // retoure (export ausstehend),
             'afterExportStatus' => env('SHOPWARE_ORDER_RETURN_AFTER_EXPORT_STATUS', 22), // retoure an intersys
             'afterExportPositionStatus' => env('SHOPWARE_ORDER_RETURN_AFTER_EXPORT_POSITION_STATUS', 5), // retoure (exportiert)
         ],

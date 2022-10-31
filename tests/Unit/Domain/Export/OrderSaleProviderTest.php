@@ -116,7 +116,7 @@ class OrderSaleProviderTest extends TestCase
         ]);
 
         $orderSaleProvider = $this->createOrderSaleProvider($client);
-        $orderSaleProvider->setSaleRequirements([
+        $orderSaleProvider->setRequirements([
             [
                 'status' => 23,
                 'cleared' => 42,
@@ -149,7 +149,7 @@ class OrderSaleProviderTest extends TestCase
         ]);
 
         $orderSaleProvider = $this->createOrderSaleProvider($client);
-        $orderSaleProvider->setSaleRequirements([
+        $orderSaleProvider->setRequirements([
             [
                 'status' => 23,
                 'cleared' => 42,
@@ -175,7 +175,7 @@ class OrderSaleProviderTest extends TestCase
         ]);
 
         $orderSaleProvider = $this->createOrderSaleProvider($client);
-        $orderSaleProvider->setSaleRequirements([
+        $orderSaleProvider->setRequirements([
             [
                 'status' => 23,
                 'cleared' => 42,
@@ -260,7 +260,7 @@ class OrderSaleProviderTest extends TestCase
             new NullLogger()
         );
 
-        $osp->setSaleRequirements([
+        $osp->setRequirements([
             [
                 'status' => 23,
                 'cleared' => 42,

@@ -66,6 +66,8 @@ class OrderReturnProviderTest extends TestCase
                 'filter[0][value]' => '23',
                 'sort[0][property]' => 'orderTime',
                 'sort[0][direction]' => 'DESC',
+                'filter[1][property]' => 'cleared',
+                'filter[1][value]' => '42',
             ],
             Query::parse($requestURI->getQuery())
         );
@@ -83,11 +85,10 @@ class OrderReturnProviderTest extends TestCase
             new NullLogger(),
         );
 
-        $orp->setReturnRequirements([
+        $orp->setRequirements([[
             'status' => 23,
             'cleared' => 42,
-            'positionStatus' => 24,
-        ]);
+        ]]);
         return $orp;
     }
 

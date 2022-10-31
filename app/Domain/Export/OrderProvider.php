@@ -15,6 +15,7 @@ class OrderProvider
     private ShopwareAPI $shopwareAPI;
     private Dispatcher $eventDispatcher;
     private LoggerInterface $logger;
+    protected array $requirements = [];
 
     public function __construct(
         ShopwareAPI $shopwareAPI,
@@ -59,7 +60,11 @@ class OrderProvider
 
     public function generateFilters(): array
     {
-        return [];
+        return array_map(function (array $reqs): array {
+            return array_map(function ($reqVal, $reqKey): array {
+                return ['property' => $reqKey, 'value' => $reqVal];
+            }, $reqs, array_keys($reqs));
+        }, $this->requirements);
     }
 
     /**
@@ -76,5 +81,10 @@ class OrderProvider
             fn (array $v): OrderArticle  => new OrderArticle($v),
             $apiDetails,
         );
+    }
+
+    public function setRequirements(array $requirements): void
+    {
+        $this->requirements = $requirements;
     }
 }

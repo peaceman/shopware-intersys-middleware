@@ -11,9 +11,6 @@ use App\Domain\HouseKeeping\OldImportFileProvider;
 use App\Domain\Import\ImportFileScanner;
 use App\Domain\Import\ModelImporter;
 use App\Domain\Import\SkippingImportFileScanner;
-use App\Domain\OrderTracking\OrdersToCancelProvider;
-use App\Domain\OrderTracking\UnpaidOrderCanceller;
-use App\Domain\OrderTracking\UnpaidOrderProvider;
 use App\Domain\ShopwareAPI;
 use GuzzleHttp\Client;
 use Illuminate\Database\ConnectionInterface;
@@ -48,9 +45,6 @@ class AppServiceProvider extends ServiceProvider
         $this->registerOrderProvider();
         $this->registerOrderXMLGenerator();
         $this->registerOrderXMLExporter();
-        $this->registerUnpaidOrderProvider();
-        $this->registerOrdersToCancelProvider();
-        $this->registerUnpaidOrderCanceller();
         $this->registerOldImportFileProvider();
         $this->registerOldImportFileDeleter();
     }
@@ -111,13 +105,13 @@ class AppServiceProvider extends ServiceProvider
     protected function registerOrderProvider(): void
     {
         $this->app->extend(OrderSaleProvider::class, function (OrderSaleProvider $osp) {
-            $osp->setSaleRequirements(config('shopware.order.sale.requirements'));
+            $osp->setRequirements(config('shopware.order.sale.requirements'));
 
             return $osp;
         });
 
         $this->app->extend(OrderReturnProvider::class, function (OrderReturnProvider $osp) {
-            $osp->setReturnRequirements(config('shopware.order.return.requirements'));
+            $osp->setRequirements(config('shopware.order.return.requirements'));
 
             return $osp;
         });
@@ -139,7 +133,7 @@ class AppServiceProvider extends ServiceProvider
             $exporter->setAfterExportStatusReturn(config('shopware.order.return.afterExportStatus'));
             $exporter->setAfterExportStatusSale(config('shopware.order.sale.afterExportStatus'));
             $exporter->setAfterExportPositionStatusReturn(config('shopware.order.return.afterExportPositionStatus'));
-            $exporter->setOrderPositionStatusRequirementReturn(config('shopware.order.return.requirements.positionStatus'));
+            $exporter->setOrderPositionStatusRequirementReturn(config('shopware.order.return.requiredPositionStatus'));
 
             return $exporter;
         });
@@ -153,39 +147,6 @@ class AppServiceProvider extends ServiceProvider
             $oxg->setStockBranchNo(config('shopware.glnToImport'));
 
             return $oxg;
-        });
-    }
-
-    protected function registerUnpaidOrderProvider(): void
-    {
-        $this->app->extend(UnpaidOrderProvider::class, function (UnpaidOrderProvider $orderProvider): UnpaidOrderProvider {
-            $orderProvider->setUnpaidPaymentStatusIDs(config('shopware.order.paymentStatus.unpaid'));
-
-            return $orderProvider;
-        });
-    }
-
-    protected function registerOrdersToCancelProvider(): void
-    {
-        $this->app->extend(
-            OrdersToCancelProvider::class,
-            function (OrdersToCancelProvider $orderProvider): OrdersToCancelProvider {
-                $orderProvider->setUnpaidPaymentStatusIDs(config('shopware.order.paymentStatus.unpaid'));
-                $orderProvider->setPrePaymentID(config('shopware.order.prePaymentId'));
-                $orderProvider->setCancelWaitingTimeInDays(config('shopware.order.cancelWaitingTimeInDays'));
-
-                return $orderProvider;
-            }
-        );
-    }
-
-    protected function registerUnpaidOrderCanceller(): void
-    {
-        $this->app->extend(UnpaidOrderCanceller::class, function (UnpaidOrderCanceller $canceller): UnpaidOrderCanceller {
-            $canceller->setReturnOrderStatusRequirement(config('shopware.order.return.requirements.status'));
-            $canceller->setReturnOrderPositionStatusRequirement(config('shopware.order.return.requirements.positionStatus'));
-
-            return $canceller;
         });
     }
 
