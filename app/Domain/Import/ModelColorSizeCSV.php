@@ -49,9 +49,9 @@ class ModelColorSizeCSV implements ModelColorSizeDTO
 
     public function getVariantArticleNumber(): string
     {
-        return $this->rec['MODELLNR']
+        return $this->getModelNumber()
             . $this->rec['MARKENNR']
-            . $this->rec['FARBNR']
+            . $this->getColorNumber()
             . $this->rec['GROESSENNR'];
     }
 

@@ -72,7 +72,7 @@ class ModelCSV implements ModelDTO
     public function getColorVariations(): Enumerable
     {
         return Collection::make($this->records)
-            ->groupBy('FARBNR')
+            ->groupBy(fn (array $record): string => ModelColorCSV::sanitizeColorNumber($record['FARBNR']))
             ->map(fn (Collection $colorRecords): ModelColorCSV => new ModelColorCSV($this, $colorRecords->all()))
             ->values();
     }

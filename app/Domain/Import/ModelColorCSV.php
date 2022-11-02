@@ -26,12 +26,12 @@ class ModelColorCSV implements ModelColorDTO
 
     public function getMainArticleNumber(): string
     {
-        return $this->rec['MODELLNR'] . $this->rec['FARBNR'];
+        return $this->getModelNumber() . $this->getColorNumber();
     }
 
     public function getColorNumber(): string
     {
-        return $this->rec['FARBNR'];
+        return static::sanitizeColorNumber($this->rec['FARBNR']);
     }
 
     public function getColorName(): string
@@ -97,5 +97,10 @@ class ModelColorCSV implements ModelColorDTO
     public function getImportFile(): ImportFile
     {
         return $this->baseModel->getImportFile();
+    }
+
+    public static function sanitizeColorNumber(string $colorNumber): string
+    {
+        return preg_replace('/\s+/', '', $colorNumber);
     }
 }
