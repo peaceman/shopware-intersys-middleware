@@ -183,10 +183,11 @@ class ModelImporter
         $variants = $this->generateVariants($model, $swArticleInfo)
             ->map(function ($variant) use ($model, $swArticleInfo) {
                 $variant['attribute'] = Arr::only($variant['attribute'], ['availability']);
-                unset($variant['lastStock']);
 
                 // always include prices and stock information if the variant is new
                 if ($swArticleInfo->variantExists($variant['number'])) {
+                    unset($variant['lastStock']);
+
                     if ($swArticleInfo->isPriceProtected($variant['number']))
                         unset($variant['prices']);
 
