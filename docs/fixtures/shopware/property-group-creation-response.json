@@ -1,0 +1,32 @@
+{
+    "data": {
+        "extensions": {
+            "foreignKeys": {
+                "extensions": [],
+                "apiAlias": "property_group_foreign_keys_extension"
+            }
+        },
+        "_uniqueIdentifier": "0191bc40896a71b2844af7f66dcfeab2",
+        "versionId": null,
+        "translated": {
+            "name": "new property group",
+            "description": null,
+            "position": 1,
+            "customFields": {}
+        },
+        "createdAt": "2024-09-04T08:57:11.790+00:00",
+        "updatedAt": null,
+        "name": "new property group",
+        "displayType": "text",
+        "sortingType": "alphanumeric",
+        "description": null,
+        "position": 1,
+        "filterable": true,
+        "visibleOnProductDetailPage": true,
+        "options": null,
+        "translations": null,
+        "customFields": null,
+        "id": "0191bc40896a71b2844af7f66dcfeab2",
+        "apiAlias": "property_group"
+    }
+}

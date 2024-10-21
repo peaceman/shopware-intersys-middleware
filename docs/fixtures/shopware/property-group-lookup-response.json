@@ -1,0 +1,440 @@
+{
+    "total": 1,
+    "data": [
+        {
+            "extensions": {
+                "foreignKeys": {
+                    "extensions": [],
+                    "apiAlias": "property_group_foreign_keys_extension"
+                }
+            },
+            "_uniqueIdentifier": "0190da95d021743f84a2b4f84c04be8e",
+            "versionId": null,
+            "translated": {
+                "name": "Größe",
+                "description": null,
+                "position": 1,
+                "customFields": {}
+            },
+            "createdAt": "2024-07-22T13:16:28.063+00:00",
+            "updatedAt": null,
+            "name": "Größe",
+            "displayType": "text",
+            "sortingType": "alphanumeric",
+            "description": null,
+            "position": 1,
+            "filterable": true,
+            "visibleOnProductDetailPage": true,
+            "options": [
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "property_group_option_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "0190da9623897d0cbd1fc0d2720c5635",
+                    "versionId": null,
+                    "translated": {
+                        "name": "XS",
+                        "position": 1,
+                        "customFields": []
+                    },
+                    "createdAt": "2024-07-22T13:16:36.086+00:00",
+                    "updatedAt": "2024-07-22T13:18:23.745+00:00",
+                    "groupId": "0190da95d021743f84a2b4f84c04be8e",
+                    "name": "XS",
+                    "position": 1,
+                    "colorHexCode": null,
+                    "mediaId": null,
+                    "group": null,
+                    "translations": null,
+                    "productConfiguratorSettings": null,
+                    "productProperties": null,
+                    "productOptions": null,
+                    "media": null,
+                    "customFields": null,
+                    "id": "0190da9623897d0cbd1fc0d2720c5635",
+                    "apiAlias": "property_group_option"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "property_group_option_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "0190da9652c97af5b306b014909c8c6d",
+                    "versionId": null,
+                    "translated": {
+                        "name": "S",
+                        "position": 2,
+                        "customFields": []
+                    },
+                    "createdAt": "2024-07-22T13:16:45.846+00:00",
+                    "updatedAt": "2024-07-22T13:21:38.688+00:00",
+                    "groupId": "0190da95d021743f84a2b4f84c04be8e",
+                    "name": "S",
+                    "position": 2,
+                    "colorHexCode": null,
+                    "mediaId": null,
+                    "group": null,
+                    "translations": null,
+                    "productConfiguratorSettings": null,
+                    "productProperties": null,
+                    "productOptions": null,
+                    "media": null,
+                    "customFields": null,
+                    "id": "0190da9652c97af5b306b014909c8c6d",
+                    "apiAlias": "property_group_option"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "property_group_option_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "0190da965e827c70a9e0e0f6e31d43e4",
+                    "versionId": null,
+                    "translated": {
+                        "name": "M",
+                        "position": 3,
+                        "customFields": []
+                    },
+                    "createdAt": "2024-07-22T13:16:50.294+00:00",
+                    "updatedAt": "2024-07-22T13:18:23.739+00:00",
+                    "groupId": "0190da95d021743f84a2b4f84c04be8e",
+                    "name": "M",
+                    "position": 3,
+                    "colorHexCode": null,
+                    "mediaId": null,
+                    "group": null,
+                    "translations": null,
+                    "productConfiguratorSettings": null,
+                    "productProperties": null,
+                    "productOptions": null,
+                    "media": null,
+                    "customFields": null,
+                    "id": "0190da965e827c70a9e0e0f6e31d43e4",
+                    "apiAlias": "property_group_option"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "property_group_option_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "0190da9670a97f42bbf0075a6decbdd6",
+                    "versionId": null,
+                    "translated": {
+                        "name": "L",
+                        "position": 4,
+                        "customFields": []
+                    },
+                    "createdAt": "2024-07-22T13:16:55.045+00:00",
+                    "updatedAt": "2024-07-22T13:18:23.736+00:00",
+                    "groupId": "0190da95d021743f84a2b4f84c04be8e",
+                    "name": "L",
+                    "position": 4,
+                    "colorHexCode": null,
+                    "mediaId": null,
+                    "group": null,
+                    "translations": null,
+                    "productConfiguratorSettings": null,
+                    "productProperties": null,
+                    "productOptions": null,
+                    "media": null,
+                    "customFields": null,
+                    "id": "0190da9670a97f42bbf0075a6decbdd6",
+                    "apiAlias": "property_group_option"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "property_group_option_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "0190da96823d78a8b1a71d1fac37ebe0",
+                    "versionId": null,
+                    "translated": {
+                        "name": "XL",
+                        "position": 5,
+                        "customFields": []
+                    },
+                    "createdAt": "2024-07-22T13:17:00.369+00:00",
+                    "updatedAt": "2024-07-22T13:18:23.743+00:00",
+                    "groupId": "0190da95d021743f84a2b4f84c04be8e",
+                    "name": "XL",
+                    "position": 5,
+                    "colorHexCode": null,
+                    "mediaId": null,
+                    "group": null,
+                    "translations": null,
+                    "productConfiguratorSettings": null,
+                    "productProperties": null,
+                    "productOptions": null,
+                    "media": null,
+                    "customFields": null,
+                    "id": "0190da96823d78a8b1a71d1fac37ebe0",
+                    "apiAlias": "property_group_option"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "property_group_option_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "0190da973cc87a03a4a815f25af8f0f5",
+                    "versionId": null,
+                    "translated": {
+                        "name": "XXL",
+                        "position": 6,
+                        "customFields": []
+                    },
+                    "createdAt": "2024-07-22T13:17:48.082+00:00",
+                    "updatedAt": "2024-07-22T13:18:23.747+00:00",
+                    "groupId": "0190da95d021743f84a2b4f84c04be8e",
+                    "name": "XXL",
+                    "position": 6,
+                    "colorHexCode": null,
+                    "mediaId": null,
+                    "group": null,
+                    "translations": null,
+                    "productConfiguratorSettings": null,
+                    "productProperties": null,
+                    "productOptions": null,
+                    "media": null,
+                    "customFields": null,
+                    "id": "0190da973cc87a03a4a815f25af8f0f5",
+                    "apiAlias": "property_group_option"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "property_group_option_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "0190da9947a7759ea527870848ff4cdc",
+                    "versionId": null,
+                    "translated": {
+                        "name": "12",
+                        "position": 1,
+                        "customFields": []
+                    },
+                    "createdAt": "2024-07-22T13:19:59.092+00:00",
+                    "updatedAt": "2024-07-22T13:21:38.692+00:00",
+                    "groupId": "0190da95d021743f84a2b4f84c04be8e",
+                    "name": "12",
+                    "position": 1,
+                    "colorHexCode": null,
+                    "mediaId": null,
+                    "group": null,
+                    "translations": null,
+                    "productConfiguratorSettings": null,
+                    "productProperties": null,
+                    "productOptions": null,
+                    "media": null,
+                    "customFields": null,
+                    "id": "0190da9947a7759ea527870848ff4cdc",
+                    "apiAlias": "property_group_option"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "property_group_option_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019156c4a5d1717db5a3b4429d397a16",
+                    "versionId": null,
+                    "translated": {
+                        "name": "5",
+                        "position": 1,
+                        "customFields": []
+                    },
+                    "createdAt": "2024-08-15T16:00:13.781+00:00",
+                    "updatedAt": "2024-08-15T16:24:58.324+00:00",
+                    "groupId": "0190da95d021743f84a2b4f84c04be8e",
+                    "name": "5",
+                    "position": 1,
+                    "colorHexCode": null,
+                    "mediaId": null,
+                    "group": null,
+                    "translations": null,
+                    "productConfiguratorSettings": null,
+                    "productProperties": null,
+                    "productOptions": null,
+                    "media": null,
+                    "customFields": null,
+                    "id": "019156c4a5d1717db5a3b4429d397a16",
+                    "apiAlias": "property_group_option"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "property_group_option_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019156c5651172eda46488c331f4de8d",
+                    "versionId": null,
+                    "translated": {
+                        "name": "7",
+                        "position": 1,
+                        "customFields": []
+                    },
+                    "createdAt": "2024-08-15T16:01:02.741+00:00",
+                    "updatedAt": "2024-08-15T16:15:19.699+00:00",
+                    "groupId": "0190da95d021743f84a2b4f84c04be8e",
+                    "name": "7",
+                    "position": 1,
+                    "colorHexCode": null,
+                    "mediaId": null,
+                    "group": null,
+                    "translations": null,
+                    "productConfiguratorSettings": null,
+                    "productProperties": null,
+                    "productOptions": null,
+                    "media": null,
+                    "customFields": null,
+                    "id": "019156c5651172eda46488c331f4de8d",
+                    "apiAlias": "property_group_option"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "property_group_option_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019156c566077352bea87ead7d7effc5",
+                    "versionId": null,
+                    "translated": {
+                        "name": "8",
+                        "position": 1,
+                        "customFields": []
+                    },
+                    "createdAt": "2024-08-15T16:01:02.985+00:00",
+                    "updatedAt": "2024-08-15T16:24:58.327+00:00",
+                    "groupId": "0190da95d021743f84a2b4f84c04be8e",
+                    "name": "8",
+                    "position": 1,
+                    "colorHexCode": null,
+                    "mediaId": null,
+                    "group": null,
+                    "translations": null,
+                    "productConfiguratorSettings": null,
+                    "productProperties": null,
+                    "productOptions": null,
+                    "media": null,
+                    "customFields": null,
+                    "id": "019156c566077352bea87ead7d7effc5",
+                    "apiAlias": "property_group_option"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "property_group_option_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019156c566de72708c8104b5cd79043f",
+                    "versionId": null,
+                    "translated": {
+                        "name": "9",
+                        "position": 1,
+                        "customFields": []
+                    },
+                    "createdAt": "2024-08-15T16:01:03.201+00:00",
+                    "updatedAt": "2024-08-15T16:15:19.702+00:00",
+                    "groupId": "0190da95d021743f84a2b4f84c04be8e",
+                    "name": "9",
+                    "position": 1,
+                    "colorHexCode": null,
+                    "mediaId": null,
+                    "group": null,
+                    "translations": null,
+                    "productConfiguratorSettings": null,
+                    "productProperties": null,
+                    "productOptions": null,
+                    "media": null,
+                    "customFields": null,
+                    "id": "019156c566de72708c8104b5cd79043f",
+                    "apiAlias": "property_group_option"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "property_group_option_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019156c71ea57266a4b07ec917b8aa32",
+                    "versionId": null,
+                    "translated": {
+                        "name": "4",
+                        "position": 1,
+                        "customFields": []
+                    },
+                    "createdAt": "2024-08-15T16:02:55.786+00:00",
+                    "updatedAt": "2024-08-15T16:24:58.322+00:00",
+                    "groupId": "0190da95d021743f84a2b4f84c04be8e",
+                    "name": "4",
+                    "position": 1,
+                    "colorHexCode": null,
+                    "mediaId": null,
+                    "group": null,
+                    "translations": null,
+                    "productConfiguratorSettings": null,
+                    "productProperties": null,
+                    "productOptions": null,
+                    "media": null,
+                    "customFields": null,
+                    "id": "019156c71ea57266a4b07ec917b8aa32",
+                    "apiAlias": "property_group_option"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "property_group_option_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019156c71f9c7195b96a12f059fb854c",
+                    "versionId": null,
+                    "translated": {
+                        "name": "6",
+                        "position": 1,
+                        "customFields": []
+                    },
+                    "createdAt": "2024-08-15T16:02:56.031+00:00",
+                    "updatedAt": "2024-08-15T16:24:58.326+00:00",
+                    "groupId": "0190da95d021743f84a2b4f84c04be8e",
+                    "name": "6",
+                    "position": 1,
+                    "colorHexCode": null,
+                    "mediaId": null,
+                    "group": null,
+                    "translations": null,
+                    "productConfiguratorSettings": null,
+                    "productProperties": null,
+                    "productOptions": null,
+                    "media": null,
+                    "customFields": null,
+                    "id": "019156c71f9c7195b96a12f059fb854c",
+                    "apiAlias": "property_group_option"
+                }
+            ],
+            "translations": null,
+            "customFields": null,
+            "id": "0190da95d021743f84a2b4f84c04be8e",
+            "apiAlias": "property_group"
+        }
+    ],
+    "aggregations": []
+}
