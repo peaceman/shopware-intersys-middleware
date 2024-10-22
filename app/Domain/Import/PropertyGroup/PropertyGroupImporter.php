@@ -2,6 +2,7 @@
 
 namespace App\Domain\Import\PropertyGroup;
 
+use App\Domain\Import\LockNameGenerator;
 use App\Domain\Shopware6API;
 use Illuminate\Contracts\Cache\Lock;
 use Illuminate\Contracts\Cache\LockProvider;
