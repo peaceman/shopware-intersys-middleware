@@ -90,6 +90,9 @@ class Shopware6API
         return $currency['id'] ?? null;
     }
 
+    /**
+     * @deprecated
+     */
     public function searchManufacturerIdByName(string $name): ?string
     {
         $response = $this->httpClient->post('/api/search/product-manufacturer', [
@@ -109,6 +112,25 @@ class Shopware6API
         return $manufacturer['id'] ?? null;
     }
 
+    public function findManufacturerByName(string $name): ?ManufacturerDTO
+    {
+        $response = $this->httpClient->post('/api/search/product-manufacturer', [
+            'json' => [
+                'filter' => [
+                    ['type' => 'equals', 'field' => 'name', 'value' => $name],
+                ],
+            ],
+        ]);
+
+        $responseBody = Utils::jsonDecode($response->getBody(), true);
+        $responseData = $responseBody['data'] ?? [];
+        if (empty($responseData)) return null;
+
+        [$manufacturer] = $responseData;
+
+        return new ManufacturerDTO($manufacturer);
+    }
+
     public function createManufacturer(string $name): ManufacturerDTO
     {
         $response = $this->httpClient->post('/api/product-manufacturer', [
@@ -119,7 +141,6 @@ class Shopware6API
         $responseBody = Utils::jsonDecode($response->getBody(), true);
         $responseData = $responseBody['data'] ?? [];
 
-        // todo implement
         return new ManufacturerDTO($responseData);
     }
 
@@ -212,12 +233,5 @@ class Shopware6API
         $responseData = $responseBody['data'] ?? [];
 
         return $responseData;
-    }
-
-    public function findManufacturerByName(string $name): ?ManufacturerDTO
-    {
-        // todo implement
-
-        return new ManufacturerDTO();
     }
 }
