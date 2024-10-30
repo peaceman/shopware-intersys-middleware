@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Domain\Import;
 
-use App\Domain\Import\PropertyGroup\LockNameGeneratorRaw;
+use App\Domain\Import\LockNameGeneratorRaw;
 use App\Domain\Import\PropertyGroup\PropertyGroupDTO;
 use App\Domain\Import\PropertyGroup\PropertyGroupDTORaw;
 use App\Domain\Import\PropertyGroup\PropertyGroupImporter;

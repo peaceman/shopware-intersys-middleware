@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Domain;
+use App\Domain\Import\Manufacturer\ManufacturerDTO;
 use App\Domain\Import\PropertyGroup\PropertyGroupDTO;
 use App\Domain\Import\PropertyGroup\PropertyGroupDTORaw;
 use App\Domain\Import\PropertyGroup\PropertyGroupOptionDTO;
@@ -108,7 +109,7 @@ class Shopware6API
         return $manufacturer['id'] ?? null;
     }
 
-    public function createManufacturer(string $name): string
+    public function createManufacturer(string $name): ManufacturerDTO
     {
         $response = $this->httpClient->post('/api/product-manufacturer', [
             'json' => ['name' => $name],
@@ -118,19 +119,8 @@ class Shopware6API
         $responseBody = Utils::jsonDecode($response->getBody(), true);
         $responseData = $responseBody['data'] ?? [];
 
-        $id = $responseData['id'] ?? null;
-
-        if (empty($id)) {
-            $errorMessage = 'Failed to retrieve manufacturer id from creation response';
-            $this->logger->error($errorMessage, [
-                'manufacturerName' => $name,
-                'responseBody' => $responseBody,
-            ]);
-
-            throw new \RuntimeException($errorMessage);
-        }
-
-        return $id;
+        // todo implement
+        return new ManufacturerDTO($responseData);
     }
 
     public function searchPropertyGroupByName(string $name): ?array
@@ -210,5 +200,12 @@ class Shopware6API
         $responseData = $responseBody['data'] ?? [];
 
         return $responseData;
+    }
+
+    public function findManufacturerByName(string $name): ?ManufacturerDTO
+    {
+        // todo implement
+
+        return new ManufacturerDTO();
     }
 }
