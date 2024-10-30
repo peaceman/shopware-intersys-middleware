@@ -176,16 +176,28 @@ class Shopware6API
         $responseBody = Utils::jsonDecode($response->getBody(), true);
         $responseData = $responseBody['data'] ?? [];
 
-        // todo implement
-        return new PropertyGroupDTORaw([]);
+        return new PropertyGroupDTORaw($responseData);
     }
 
     public function createPropertyGroupOption(string $propertyGroupId, string $name): PropertyGroupOptionDTO
     {
-        // todo implement
-        return new PropertyGroupOptionDTO([]);
+        $response = $this->httpClient->post('/api/property-group-option', [
+            'json' => [
+                'groupId' => $propertyGroupId,
+                'name' => $name,
+            ],
+            'query' => ['_response' => 'basic'],
+        ]);
+
+        $responseBody = Utils::jsonDecode($response->getBody(), true);
+        $data = $responseBody['data'] ?? [];
+
+        return new PropertyGroupOptionDTO($data);
     }
 
+    /**
+     * @deprecated
+     */
     public function createPropertyGroupOptionRaw(string $propertyGroupId, string $name): array
     {
         $response = $this->httpClient->post('/api/property-group-option', [
