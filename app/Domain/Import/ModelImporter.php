@@ -71,15 +71,7 @@ class ModelImporter
                 $this->importArticle($modelData);
             } catch (UnknownArticleInShopwareException $e) {
                 $this->handleUnknownArticleInShopwareException($e);
-            }/**
-             * TODO die caller sollten das exception handling hier uebernehmen
-             * catch (Exception $e) {
-                $this->logger->warning('Failed to import article', [
-                    'e' => $e->getMessage(),
-                ]);
-
-                report($e);
-            }*/
+            }
         }
     }
 

@@ -8,11 +8,13 @@ namespace App\Jobs;
 
 use App\Domain\Import\ModelDTO;
 use App\Domain\Import\ModelImporter;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Psr\Log\LoggerInterface;
 
 class ImportModel implements ShouldQueue
 {
@@ -36,11 +38,20 @@ class ImportModel implements ShouldQueue
     /**
      * Execute the job.
      *
+     * @param LoggerInterface $logger
      * @param ModelImporter $importer
      * @return void
      */
-    public function handle(ModelImporter $importer)
+    public function handle(LoggerInterface $logger, ModelImporter $importer)
     {
-        $importer->import($this->modelData);
+        try {
+            $importer->import($this->modelData);
+        } catch (Exception $e) {
+            $logger->warning('Failed to import article', [
+                'e' => $e->getMessage(),
+            ]);
+
+            report($e);
+        }
     }
 }
