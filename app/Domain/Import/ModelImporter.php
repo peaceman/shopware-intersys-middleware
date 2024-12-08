@@ -6,56 +6,53 @@ namespace App\Domain\Import;
 
 use App\Article;
 use App\ArticleNumberEanMapping;
-use App\Domain\ShopwareAPI;
+use App\Domain\Import\Manufacturer\ManufacturerImporter;
+use App\Domain\Import\PropertyGroup\PropertyGroupImporter;
+use App\Domain\Import\PropertyGroup\PropertyGroupImporterImpl;
+use App\Domain\Shopware6API;
 use App\ImportFile;
 use Exception;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Enumerable;
 use Illuminate\Support\Str;
 use Psr\Log\LoggerInterface;
 
 class ModelImporter
 {
+    const PROPERTY_GROUP_NAME_SIZE = 'Größe';
+
     protected LoggerInterface $logger;
 
-    protected ShopwareAPI $shopwareAPI;
+    protected Shopware6API $shopwareAPI;
 
     protected SizeMapper $sizeMapper;
 
+    protected ManufacturerImporter $manufacturerImporter;
+
+    protected PropertyGroupImporter $propertyGroupImporter;
+
     protected ?string $glnToImport = null;
 
-    protected array $glnBranchMapping = [];
-
+    // todo check if still needed
     protected bool $ignoreStockUpdatesFromDelta = false;
 
-    /**
-     * ModelXMLImporter constructor.
-     * @param LoggerInterface $logger
-     * @param ShopwareAPI $shopwareAPI
-     * @param SizeMapper $sizeMapper
-     */
     public function __construct(
         LoggerInterface $logger,
-        ShopwareAPI $shopwareAPI,
+        Shopware6API $shopwareAPI,
         SizeMapper $sizeMapper,
+        ManufacturerImporter $manufacturerImporter,
+        PropertyGroupImporter $propertyGroupImporter,
     ) {
         $this->logger = $logger;
         $this->shopwareAPI = $shopwareAPI;
         $this->sizeMapper = $sizeMapper;
+        $this->manufacturerImporter = $manufacturerImporter;
+        $this->propertyGroupImporter = $propertyGroupImporter;
     }
 
     public function setGlnToImport(string $branchToImport): self
     {
         $this->glnToImport = $branchToImport;
-
-        return $this;
-    }
-
-    public function setGlnBranchMapping(array $glnBranchMapping): self
-    {
-        $this->glnBranchMapping = $glnBranchMapping;
 
         return $this;
     }
@@ -74,13 +71,15 @@ class ModelImporter
                 $this->importArticle($modelData);
             } catch (UnknownArticleInShopwareException $e) {
                 $this->handleUnknownArticleInShopwareException($e);
-            } catch (Exception $e) {
+            }/**
+             * TODO die caller sollten das exception handling hier uebernehmen
+             * catch (Exception $e) {
                 $this->logger->warning('Failed to import article', [
                     'e' => $e->getMessage(),
                 ]);
 
                 report($e);
-            }
+            }*/
         }
     }
 
@@ -135,19 +134,12 @@ class ModelImporter
         $article = Article::query()->where('is_modno', $model->getMainArticleNumber())->first();
         if ($article) return $article;
 
-        $eans = $model->getSizeVariations()->map(fn (ModelColorSizeDTO $model): string => $model->getEan());
-        $article = Article::query()
-            ->whereHas('numberEanMappings', fn (Builder $query) => $query->whereIn('ean', $eans))
-            ->first();
-
-        if ($article) return $article;
-
-        $swArticleId = $this->shopwareAPI->searchShopwareArticleIdByArticleNumber($model->getMainArticleNumber());
-        if (!$swArticleId) return null;
+        $swProduct = $this->shopwareAPI->findProductByProductNumber($model->getMainArticleNumber());
+        if (!$swProduct) return null;
 
         $article = new Article([
             'is_modno' => $model->getMainArticleNumber(),
-            'sw_article_id' => $swArticleId,
+            'sw_product_id' => $swProduct->getId(),
             'is_active' => true,
         ]);
 
@@ -161,17 +153,16 @@ class ModelImporter
         ModelColorDTO $model,
     ): Article {
         $articleNumber = $article->is_modno;
-        $swArticleId = $article->sw_article_id;
-        $swArticleInfo = $this->shopwareAPI->searchShopwareArticleInfoByArticle($article);
+        $swProductId = $article->sw_product_id;
+        $swProduct = $this->shopwareAPI->getProductById($swProductId);
 
-        if (!$swArticleInfo) {
+        if (!$swProduct) {
             throw new UnknownArticleInShopwareException($article);
         }
 
         $loggingContext = [
             'articleNumber' => $articleNumber,
-            'swArticleId' => $swArticleId,
-            'foundSWArticleInfo' => !is_null($swArticleInfo),
+            'swProductId' => $swProductId,
             'importFile' => [
                 'id' => $model->getImportFile()->id,
                 'type' => $model->getImportFile()->type,
@@ -180,70 +171,27 @@ class ModelImporter
 
         $this->logger->info(__METHOD__, $loggingContext);
 
-        $variants = $this->generateVariants($model, $swArticleInfo)
-            ->map(function ($variant) use ($model, $swArticleInfo) {
-                $variant['attribute'] = Arr::only($variant['attribute'], ['availability']);
+        $variants = $this->generateVariants($model, $swProduct);
 
-                // always include prices and stock information if the variant is new
-                if ($swArticleInfo->variantExists($variant['number'])) {
-                    unset($variant['lastStock']);
+        $variantOptionIds = collect($variants)->flatMap(fn($v) => collect($v['options'])->pluck('id'));
+        $existingConfiguratorSettingsOptionIds = collect($swProduct->getConfiguratorSettings())->pluck('optionId');
+        $newVariantOptionIds = $variantOptionIds->diff($existingConfiguratorSettingsOptionIds);
 
-                    if ($swArticleInfo->isPriceProtected($variant['number']))
-                        unset($variant['prices']);
-
-                    if ($this->ignoreStockUpdatesFromDelta
-                        && $model->getImportFile()->type === ImportFile::TYPE_DELTA)
-                        unset($variant['inStock']);
-                }
-
-                return $variant;
-            });
-
-        $loggingContext['variants'] = $variants->toArray();
-        $firstVariant = $variants->first(fn (array $variant): bool => !is_null($variant['prices'] ?? null));
-        $pricesOfTheFirstVariant = $firstVariant['prices'] ?? null;
-
-        $mainDetail = [];
-        if (!$swArticleInfo->isPriceProtected($articleNumber) && !is_null($pricesOfTheFirstVariant))
-            $mainDetail['prices'] = $pricesOfTheFirstVariant;
-
-        $articleData = [
-            'mainDetail' => $mainDetail,
-            'configuratorSet' => [
-                'type' => 2,
-                'groups' => $this->createConfiguratorSetGroupsFromVariants($variants),
-            ],
-            'variants' => $variants,
+        $updateData = [
+            'children' => $variants,
+            'configuratorSettings' => $newVariantOptionIds
+                ->map(fn(string $optionId): array => ['optionId' => $optionId])
+                ->toArray(),
         ];
 
-        if ($model->getImportFile()->type === ImportFile::TYPE_DELTA)
-            unset($articleData['configuratorSet']);
+        $loggingContext['updateData'] = $updateData;
 
-        $this->shopwareAPI->updateShopwareArticle($swArticleId, $articleData);
+        $this->logger->info(__METHOD__ . ' Updating article', $loggingContext);
+        $this->shopwareAPI->updateProduct($swProductId, $updateData);
 
-        $this->updateEanMappings($article, $variants);
-
-        $this->logger->info(__METHOD__ . ' Updated Article', $loggingContext);
+        $this->deleteProductVariantOptions($variants, $swProduct, $swProductId);
 
         return $article;
-    }
-
-    protected function updateEanMappings(Article $article, iterable $variants): void
-    {
-        foreach ($variants as $variant) {
-            if (empty(trim($variant['ean'])))
-                continue;
-
-            ArticleNumberEanMapping::query()->firstOrCreate(
-                [
-                    'article_id' => $article->id,
-                    'ean' => $variant['ean'],
-                ],
-                [
-                    'article_number' => $variant['number'],
-                ],
-            );
-        }
     }
 
     protected function createArticle(
@@ -255,112 +203,82 @@ class ModelImporter
 
         $this->logger->info(__METHOD__, $loggingContext);
 
-        $variants = $this->generateVariants($model);
-        $pricesOfTheFirstVariant = data_get($variants, '0.prices');
+        $manufacturer = $this->manufacturerImporter->import($model->getManufacturerName());
 
-        $articleData = [
+        $variants = $this->generateVariants($model);
+
+        /** @var ModelColorSizeDTO $firstVariant */
+        $firstVariant = $model->getSizeVariations()->first();
+
+        $productData = [
             'active' => false,
             'name' => $model->getModelName() . ' (' . $model->getColorName() . ')',
-            'tax' => number_format($model->getVatPercentage(), 2),
-            'supplier' => $model->getManufacturerName(),
-            'lastStock' => true,
-            'mainDetail' => [
-                'number' => $model->getMainArticleNumber(),
-                'prices' => $pricesOfTheFirstVariant,
-                'weight' => Article::DEFAULTS_WEIGHT,
-                'shippingTime' => Article::DEFAULTS_SHIPPING_TIME,
+            'productNumber' => $model->getMainArticleNumber(),
+            'stock' => $firstVariant->getStockPerBranch()->get($this->glnToImport, 0),
+            'taxId' => $this->fetchShopwareTaxIdByVatPercentage($model->getVatPercentage()),
+            'manufacturerId' => $manufacturer->getId(),
+            'price' => [
+                $this->generateShopwareSimplePriceInfo($firstVariant),
             ],
-            'configuratorSet' => [
-                'type' => 2, // variant display type picture
-                'groups' => $this->createConfiguratorSetGroupsFromVariants($variants),
+            'weight' => Article::DEFAULTS_WEIGHT_KG,
+            'children' => $variants,
+            'configuratorSettings' => [
+                ...$variants->flatMap(fn (array $variant): array => Arr::pluck($variant['options'], 'id'))
+                    ->map(fn (string $v): array => ['optionId' => $v]),
             ],
-            'variants' => $variants,
         ];
 
-        $swArticleId = $this->shopwareAPI->createShopwareArticle($articleData);
+        $product = $this->shopwareAPI->createProduct($productData);
 
         $article = new Article();
         $article->is_modno = $model->getMainArticleNumber();
-        $article->sw_article_id = $swArticleId;
+        $article->sw_product_id = $product->getId();
         $article->is_active = true;
         $article->save();
-
-        $this->createEanMappings($article, $variants);
-
-        $this->logger->info(__METHOD__ . ' Post Articles Response ', $loggingContext);
 
         return $article;
     }
 
-    protected function createEanMappings(Article $article, iterable $variants): void
-    {
-        $eanMappings = Collection::make($variants)
-            ->filter(fn (array $variant): bool => !empty(trim($variant['ean'])))
-            ->map(fn (array $variant): ArticleNumberEanMapping => new ArticleNumberEanMapping([
-                'ean' => $variant['ean'],
-                'article_number' => $variant['number'],
-            ]));
-
-        $article->numberEanMappings()->saveMany($eanMappings);
-    }
 
     protected function generateVariants(
         ModelColorDTO $model,
-        ?ShopwareArticleInfo $swArticleInfo = null,
+        ?ProductDTO $productDto = null,
     ): Collection {
+        // todo avoid double size mapping
+        $mappedSizes = $model->getSizeVariations()
+            ->map(fn (ModelColorSizeDTO $model): string => $this->mapSize($model));
+
+        $swPropertyGroup = $this->propertyGroupImporter->import(self::PROPERTY_GROUP_NAME_SIZE, $mappedSizes->toArray());
+
         $variants = $model->getSizeVariations()
-            ->map(function (ModelColorSizeDTO $model) use ($swArticleInfo) {
-                $eligibleBranches = $model->getBranches()->filter([$this, 'isGlnEligible']);
-                $eligibleBranch = $eligibleBranches->first();
+            ->map(function (ModelColorSizeDTO $model) use ($productDto, $swPropertyGroup) {
+                $mappedSize = $this->mapSize($model);
+                $isVariantUpdate = $productDto && ($productChild = $productDto->getChildByEan($model->getEan()));
 
-                $variantArticleNumber = $this->fetchVariantArticleNumber($model);
-
-                $mappedSize = $this->mapSize($model, $variantArticleNumber);
+                $price = !$isVariantUpdate
+                    ? [$this->generateShopwareSimplePriceInfo($model)]
+                    : (
+                        $productDto->isMissingListPrice($model->getEan()) || !$productDto->isPriceProtected($model->getEan())
+                            ? [Arr::only($this->generateShopwareSimplePriceInfo($model), 'listPrice')]
+                            : []
+                    );
 
                 $variantData = [
-                    'active' => true,
-                    'number' => $variantArticleNumber,
+                    'productNumber' => $model->getVariantArticleNumber(),
                     'ean' => $model->getEan(),
-                    'lastStock' => true,
+                    'stock' => $model->getStockPerBranch()->get($this->glnToImport, 0),
+                    'price' => $price,
+                    'options' => [
+                        [
+                            'groupId' => $swPropertyGroup->getId(),
+                            'id' => $swPropertyGroup->getOptionByName($mappedSize)->getId(),
+                        ],
+                    ],
                 ];
 
-                if ($swArticleInfo && $swArticleInfo->variantExists($variantData['number']))
-                    unset($variantData['active']);
-
-                $stockPerBranch = $model->getStockPerBranch();
-                $availability = $this->mergeAvailabilityInfo(
-                    collect($swArticleInfo ? $swArticleInfo->getAvailabilityInfo($variantData['number']) : []),
-                    $stockPerBranch
-                        ->map(fn (int $stock, string $branch): array => [
-                            'branchNo' => $this->mapGlnToBranchNo($branch),
-                            'stock' => $stock,
-                        ])
-                        ->values()
-                );
-
-                if (!$eligibleBranch) {
-                    if (!$swArticleInfo) return null;
-
-                    if (!$swArticleInfo->variantExists($variantData['number'])) return null;
-                } else {
-                    $variantData = array_merge($variantData, [
-                        'prices' => [[
-                            'price' => $model->getPrice(),
-                            'pseudoPrice' => $model->getPseudoPrice(),
-                        ]],
-                        'inStock' => $stockPerBranch[$eligibleBranch],
-                    ]);
+                if ($isVariantUpdate) {
+                    $variantData['id'] = $productChild['id'];
                 }
-
-                $variantData = array_merge($variantData, [
-                    'attribute' => [
-                        'attr1' => $model->getVariantName(),
-                        'availability' => json_encode($availability),
-                    ],
-                    'configuratorOptions' => [
-                        ['group' => 'Size', 'option' => $mappedSize],
-                    ],
-                ]);
 
                 return $variantData;
             })
@@ -370,24 +288,11 @@ class ModelImporter
         return $variants;
     }
 
-    protected function fetchVariantArticleNumber(ModelColorSizeDTO $model): string
-    {
-        if (empty($ean = $model->getEan())) {
-            return $model->getVariantArticleNumber();
-        }
-
-        /** @var ArticleNumberEanMapping $mapping */
-        $mapping = ArticleNumberEanMapping::query()->where(['ean' => $ean])->first();
-
-        return $mapping
-            ? $mapping->article_number
-            : $model->getVariantArticleNumber();
-    }
-
     protected function mapSize(
         ModelColorSizeDTO $model,
-        string $variantArticleNumber,
     ): string {
+        $variantArticleNumber = $model->getVariantArticleNumber();
+
         $req = new SizeMappingRequest(
             manufacturerName: $model->getManufacturerName(),
             mainArticleNumber: $model->getMainArticleNumber(),
@@ -397,45 +302,6 @@ class ModelImporter
         );
 
         return $this->sizeMapper->mapSize($req);
-    }
-
-    protected function mergeAvailabilityInfo(Enumerable $existing, Enumerable $new): Enumerable
-    {
-        $merged = $existing->keyBy('branchNo')
-            ->merge($new->keyBy('branchNo'));
-
-        return $merged->values();
-    }
-
-    /**
-     * @param $variants
-     * @return mixed
-     */
-    protected function createConfiguratorSetGroupsFromVariants($variants)
-    {
-        return $variants->pluck('configuratorOptions')
-            ->reduce(function (Collection $acc, $configuratorOptions) {
-                foreach ($configuratorOptions as $configuratorOption) {
-                    $group = $configuratorOption['group'];
-                    $option = $configuratorOption['option'];
-
-                    if (!$acc->has($group)) $acc->put($group, collect());
-                    $acc->get($group)->push($option);
-                }
-
-                return $acc;
-            }, collect())
-            ->map(function ($groupOptions, $groupName) {
-                return [
-                    'name' => $groupName,
-                    'options' => $groupOptions->unique()
-                        ->map(function ($option) {
-                            return ['name' => $option];
-                        })
-                        ->values()
-                ];
-            })
-            ->values();
     }
 
     protected function isNewImportFileForArticle(ImportFile $importFile, Article $article): bool
@@ -469,8 +335,56 @@ class ModelImporter
         $article->delete();
     }
 
-    private function mapGlnToBranchNo(string $gln): string
+    private function fetchShopwareCurrencyIdByIsoCode(string $isoCode): string
     {
-        return $this->glnBranchMapping[$gln] ?? $gln;
+        // todo caching
+        if (!($currencyId = $this->shopwareAPI->searchCurrencyIdByIsoCode($isoCode))) {
+            throw new MissingShopwareEntityException('currency', 'isoCode', $isoCode);
+        }
+
+        return $currencyId;
+    }
+
+    private function fetchShopwareTaxIdByVatPercentage(float $vatPercentage): string
+    {
+        // todo caching
+        if (!($taxId = $this->shopwareAPI->searchTaxIdByVatPercentage($vatPercentage))) {
+            throw new MissingShopwareEntityException('tax', 'taxRate', $vatPercentage);
+        }
+
+        return $taxId;
+    }
+
+    private function generateShopwareSimplePriceInfo(ModelColorSizeDTO $model): array
+    {
+        $netPrice = $model->getPrice() / (1 + $model->getVatPercentage() / 100);
+
+        return [
+            'gross' => $model->getPrice(),
+            'net' => $netPrice,
+            'linked' => false,
+            'currencyId' => $this->fetchShopwareCurrencyIdByIsoCode($model->getCurrencyIsoCode()),
+            'listPrice' => [
+                'gross' => $model->getPrice(),
+                'net' => $netPrice,
+            ],
+        ];
+    }
+
+    private function deleteProductVariantOptions(Collection $variants, ProductDTO $swProduct, string $swProductId): void
+    {
+        foreach ($variants as $variant) {
+            $oldVariant = $swProduct->getChildByEan($variant['ean']);
+            if (!$oldVariant) continue;
+
+            $oldOptionIds = Arr::pluck($oldVariant['options'] ?? [], 'id');
+            $newOptionIds = Arr::pluck($variant['options'], 'id');
+
+            $optionIdsToDelete = array_diff($oldOptionIds, $newOptionIds);
+
+            foreach ($optionIdsToDelete as $optionId) {
+                $this->shopwareAPI->deleteProductVariantOption($swProductId, $variant['id'], $optionId);
+            }
+        }
     }
 }

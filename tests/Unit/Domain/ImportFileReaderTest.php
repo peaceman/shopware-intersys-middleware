@@ -176,5 +176,6 @@ class ImportFileReaderTest extends TestCase
         static::assertEquals(22.99, $sizeVariation->getPrice());
         static::assertNull($sizeVariation->getPseudoPrice());
         static::assertEquals('B REN SHORT BLACK-PIX BLUE-TURQU 164', $sizeVariation->getVariantName());
+        static::assertEquals('EUR', $sizeVariation->getCurrencyIsoCode());
     }
 }

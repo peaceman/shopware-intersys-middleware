@@ -6,11 +6,10 @@
 return [
     'baseUri' => env('SHOPWARE_BASE_URI'),
     'auth' => [
-        'username' => env('SHOPWARE_AUTH_USERNAME'),
-        'apiKey' => env('SHOPWARE_AUTH_APIKEY'),
+        'clientId' => env('SHOPWARE_AUTH_CLIENT_ID'),
+        'clientSecret' => env('SHOPWARE_AUTH_CLIENT_SECRET'),
     ],
     'glnToImport' => env('SHOPWARE_GLN_TO_IMPORT'),
-    'glnBranchMapping' => [],
     'order' => [
         'dailyOverviewRecipients' => env('SHOPWARE_ORDER_DAILY_OVERVIEW_RECIPIENTS', ''),
         'prePaymentId' => env('SHOPWARE_ORDER_PRE_PAYMENT_ID', 5),

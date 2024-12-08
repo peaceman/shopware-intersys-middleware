@@ -2,7 +2,6 @@
 
 namespace App\Domain\Import\PropertyGroup;
 
-use Illuminate\Support\Collection;
 use Illuminate\Support\Enumerable;
 
 class PropertyGroupDTORaw implements PropertyGroupDTO
@@ -28,5 +27,11 @@ class PropertyGroupDTORaw implements PropertyGroupDTO
     {
         return collect($this->data['options'] ?? [])
             ->map(fn (array $data): PropertyGroupOptionDTO => new PropertyGroupOptionDTO($data));
+    }
+
+    public function getOptionByName(string $name): ?PropertyGroupOptionDTO
+    {
+        return $this->getOptions()
+            ->first(fn (PropertyGroupOptionDTO $option): bool => $option->getName() === $name);
     }
 }

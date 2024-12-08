@@ -5,7 +5,7 @@ namespace Tests\Unit\Domain\Import;
 use App\Domain\Import\LockNameGeneratorRaw;
 use App\Domain\Import\PropertyGroup\PropertyGroupDTO;
 use App\Domain\Import\PropertyGroup\PropertyGroupDTORaw;
-use App\Domain\Import\PropertyGroup\PropertyGroupImporter;
+use App\Domain\Import\PropertyGroup\PropertyGroupImporterImpl;
 use App\Domain\Import\PropertyGroup\PropertyGroupOptionDTO;
 use App\Domain\Shopware6API;
 use Illuminate\Cache\ArrayStore;
@@ -21,7 +21,7 @@ class PropertyGroupImporterTest extends TestCase
 {
     public function testImporterThrowsLockWaitExceptionWhenThereIsAnotherImportRunning(): void
     {
-        $importer = new PropertyGroupImporter(
+        $importer = new PropertyGroupImporterImpl(
             new NullLogger(),
             $swApiMock = $this->createMock(Shopware6API::class),
             $lockProvider = new ArrayStore(),
@@ -53,7 +53,7 @@ class PropertyGroupImporterTest extends TestCase
 
     public function testImporterRefreshesPropertyGroupDataWhileLockedDuringTheCreateOrUpdatePhase(): void
     {
-        $importer = new PropertyGroupImporter(
+        $importer = new PropertyGroupImporterImpl(
             new NullLogger(),
             $swApiMock = $this->createMock(Shopware6API::class),
             new ArrayStore(),
@@ -94,7 +94,7 @@ class PropertyGroupImporterTest extends TestCase
 
     public function testImporterLocksForNewPropertyGroup(): void
     {
-        $importer = new PropertyGroupImporter(
+        $importer = new PropertyGroupImporterImpl(
             new NullLogger(),
             $swApiMock = $this->createMock(Shopware6API::class),
             $lockProviderMock = $this->createMock(LockProvider::class),
@@ -134,7 +134,7 @@ class PropertyGroupImporterTest extends TestCase
 
     public function testImporterDoesntLockForKnownPropertyGroupAndOptions(): void
     {
-        $importer = new PropertyGroupImporter(
+        $importer = new PropertyGroupImporterImpl(
             new NullLogger(),
             $swApiMock = $this->createMock(Shopware6API::class),
             $lockMock = $this->createMock(LockProvider::class),
@@ -159,7 +159,7 @@ class PropertyGroupImporterTest extends TestCase
 
     public function testPropertyGroupImportWithoutNewOptions(): void
     {
-        $importer = new PropertyGroupImporter(
+        $importer = new PropertyGroupImporterImpl(
             new NullLogger(),
             $swApiMock = $this->createMock(Shopware6API::class),
             $this->createMock(LockProvider::class),
@@ -198,7 +198,7 @@ class PropertyGroupImporterTest extends TestCase
 
     public function testPropertyGroupUpdateWithNewOptions(): void
     {
-        $importer = new PropertyGroupImporter(
+        $importer = new PropertyGroupImporterImpl(
             new NullLogger(),
             $swApiMock = $this->createMock(Shopware6API::class),
             new ArrayStore(),
@@ -242,7 +242,7 @@ class PropertyGroupImporterTest extends TestCase
 
     public function testPropertyGroupCreation(): void
     {
-        $importer = new PropertyGroupImporter(
+        $importer = new PropertyGroupImporterImpl(
             new NullLogger(),
             $swApiMock = $this->createMock(Shopware6API::class),
             new ArrayStore(),

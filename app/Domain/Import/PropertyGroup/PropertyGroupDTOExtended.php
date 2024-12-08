@@ -29,4 +29,10 @@ class PropertyGroupDTOExtended implements PropertyGroupDTO
     {
         return $this->base->getOptions()->concat($this->newOptions);
     }
+
+    public function getOptionByName(string $name): ?PropertyGroupOptionDTO
+    {
+        return $this->getOptions()
+            ->first(fn (PropertyGroupOptionDTO $option): bool => $option->getName() === $name);
+    }
 }

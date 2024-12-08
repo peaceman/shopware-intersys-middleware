@@ -81,4 +81,9 @@ class ModelCSV implements ModelDTO
     {
         return $this->importFile;
     }
+
+    public function getCurrencyIsoCode(): string
+    {
+        return $this->rec['WAEHRUNG'];
+    }
 }

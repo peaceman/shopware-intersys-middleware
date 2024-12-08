@@ -3,25 +3,26 @@
 namespace App\Domain\Import;
 
 use App\ImportFile;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Enumerable;
+use Illuminate\Support\Str;
 
-class ModelColorSizeCSV implements ModelColorSizeDTO
+class ModelColorSizeTest implements ModelColorSizeDTO
 {
-    private ModelColorCSV $baseModel;
-    private array $records;
-    private array $rec;
+    protected ModelColorDTO $baseModel;
+    protected array $data;
 
-    public function __construct(
-        ModelColorCSV $baseModel,
-        array $records,
-    ) {
-        if (empty($records))
-            throw new \InvalidArgumentException("ModelColorSizeCSV records can not be empty");
-
+    public function __construct(ModelColorDTO $baseModel, array $data)
+    {
         $this->baseModel = $baseModel;
-        $this->records = $records;
-        [$this->rec] = $records;
+        $this->data = array_merge(
+            [
+                'price' => 23.5,
+                'ean' => Str::random(14),
+                'articleNumber' => implode('-', [$baseModel->getMainArticleNumber(), Str::random(4)]),
+                'stock' => 0,
+            ],
+            $data,
+        );
     }
 
     public function getMainArticleNumber(): string
@@ -39,9 +40,6 @@ class ModelColorSizeCSV implements ModelColorSizeDTO
         return $this->baseModel->getColorName();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getSizeVariations(): Enumerable
     {
         return $this->baseModel->getSizeVariations();
@@ -49,30 +47,32 @@ class ModelColorSizeCSV implements ModelColorSizeDTO
 
     public function getVariantArticleNumber(): string
     {
-        return $this->getModelNumber()
-            . $this->rec['MARKENNR']
-            . $this->getColorNumber()
-            . $this->rec['GROESSENNR'];
+        return $this->data['articleNumber'];
     }
 
     public function getSize(): string
     {
-        return $this->rec['GROESSE'];
+        return $this->data['size'];
     }
 
     public function getEan(): string
     {
-        return $this->rec['GTIN'];
+        return $this->data['ean'];
     }
 
     public function getVariantName(): string
     {
-        return implode(' ', [$this->rec['MODELLBEZ'], $this->rec['FARBBEZ'], $this->rec['GROESSE']]);
+        return $this->data['name'] ?? 'dis is name';
     }
 
     public function getPrice(): float
     {
-        return floatval(str_replace(',', '.', $this->rec['VK-PREIS']));
+        return $this->data['price'];
+    }
+
+    public function getNetPrice(): float
+    {
+        return $this->data['price'] / (1 + ($this->getVatPercentage() / 100));
     }
 
     public function getPseudoPrice(): ?float
@@ -80,13 +80,9 @@ class ModelColorSizeCSV implements ModelColorSizeDTO
         return null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getStockPerBranch(): Enumerable
     {
-        return Collection::make($this->records)
-            ->mapWithKeys(fn (array $r): array => [$r['GLN'] => intval($r['VERFUEGBESTAND'])]);
+        return collect([$this->getBranches()->first() => $this->data['stock']]);
     }
 
     public function getModelName(): string
@@ -114,20 +110,11 @@ class ModelColorSizeCSV implements ModelColorSizeDTO
         return $this->baseModel->getTargetGroupGender();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getBranches(): Enumerable
     {
-        return Collection::make($this->records)
-            ->pluck('GLN')
-            ->unique()
-            ->values();
+        return $this->baseModel->getBranches();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getColorVariations(): Enumerable
     {
         return $this->baseModel->getColorVariations();
@@ -135,7 +122,7 @@ class ModelColorSizeCSV implements ModelColorSizeDTO
 
     public function getImportFile(): ImportFile
     {
-        return $this->baseModel->getImportFile();
+        return $this->getImportFile();
     }
 
     public function getCurrencyIsoCode(): string

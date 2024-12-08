@@ -7,6 +7,7 @@ namespace Database\Factories;
 
 use App\Article;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class ArticleFactory extends Factory
 {
@@ -17,7 +18,7 @@ class ArticleFactory extends Factory
         return [
             'is_modno' => $this->faker->ean13,
             'is_active' => true,
-            'sw_article_id' => $this->faker->unique()->randomNumber(),
+            'sw_product_id' => (string) Str::uuid()->getHex(),
         ];
     }
 }

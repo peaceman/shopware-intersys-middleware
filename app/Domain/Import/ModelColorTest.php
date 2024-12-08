@@ -3,25 +3,18 @@
 namespace App\Domain\Import;
 
 use App\ImportFile;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Enumerable;
 
-class ModelColorCSV implements ModelColorDTO
+class ModelColorTest implements ModelColorDTO
 {
-    private ModelCSV $baseModel;
-    private array $records;
-    private array $rec;
+    protected ModelDTO $baseModel;
+    protected array $data;
+    protected ?array $sizeVariations = null;
 
-    public function __construct(
-        ModelCSV $baseModel,
-        array $records,
-    ) {
-        if (empty($records))
-            throw new \InvalidArgumentException("ModelColorCSV records can not be empty");
-
+    public function __construct(ModelDTO $baseModel, array $data)
+    {
         $this->baseModel = $baseModel;
-        $this->records = $records;
-        [$this->rec] = $records;
+        $this->data = $data;
     }
 
     public function getMainArticleNumber(): string
@@ -31,23 +24,24 @@ class ModelColorCSV implements ModelColorDTO
 
     public function getColorNumber(): string
     {
-        return static::sanitizeColorNumber($this->rec['FARBNR']);
+        return $this->data['colorNumber'];
     }
 
     public function getColorName(): string
     {
-        return $this->rec['FARBBEZ'];
+        return $this->data['colorName'];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getSizeVariations(): Enumerable
     {
-        return Collection::make($this->records)
-            ->groupBy('GROESSENNR')
-            ->map(fn (Collection $sizeRecords): ModelColorSizeCSV => new ModelColorSizeCSV($this, $sizeRecords->all()))
-            ->values();
+        if (!$this->sizeVariations) {
+            $this->sizeVariations = collect($this->data['sizeVariations'])
+                ->map(fn(array $sizeVariation): ModelColorSizeTest => new ModelColorSizeTest($this, $sizeVariation))
+                ->values()
+                ->toArray();
+        }
+
+        return collect($this->sizeVariations);
     }
 
     public function getModelName(): string
@@ -75,20 +69,11 @@ class ModelColorCSV implements ModelColorDTO
         return $this->baseModel->getTargetGroupGender();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getBranches(): Enumerable
     {
-        return Collection::make($this->records)
-            ->pluck('GLN')
-            ->unique()
-            ->values();
+        return $this->baseModel->getBranches();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getColorVariations(): Enumerable
     {
         return $this->baseModel->getColorVariations();
@@ -97,11 +82,6 @@ class ModelColorCSV implements ModelColorDTO
     public function getImportFile(): ImportFile
     {
         return $this->baseModel->getImportFile();
-    }
-
-    public static function sanitizeColorNumber(string $colorNumber): string
-    {
-        return preg_replace('/\s+/', '', $colorNumber);
     }
 
     public function getCurrencyIsoCode(): string

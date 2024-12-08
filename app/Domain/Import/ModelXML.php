@@ -91,4 +91,9 @@ class ModelXML implements ModelDTO
             ->map(fn (\SimpleXMLElement $e): ModelColorDTO => new ModelColorXML($this, $e))
             ->values();
     }
+
+    public function getCurrencyIsoCode(): string
+    {
+        return 'EUR';
+    }
 }

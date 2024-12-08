@@ -24,4 +24,5 @@ interface ModelDTO
     public function getColorVariations(): Enumerable;
 
     public function getImportFile(): ImportFile;
+    public function getCurrencyIsoCode(): string;
 }

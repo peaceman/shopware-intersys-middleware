@@ -5,7 +5,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^8.0.2",
+        "php": "^8.1",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-json": "*",
@@ -20,7 +20,10 @@
         "laravel/ui": "^4.0",
         "league/csv": "^9.8",
         "league/flysystem-ftp": "^3.0",
-        "sentry/sentry-laravel": "^2.11.0"
+        "league/oauth2-client": "^2.7",
+        "sentry/sentry-laravel": "^2.11.0",
+        "softonic/guzzle-oauth2-middleware": "^2.1",
+        "symfony/cache": "^6.4"
     },
     "require-dev": {
         "spatie/laravel-ignition": "^1.0",
@@ -40,7 +43,10 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "files": [
+            "tests/helpers.php"
+        ]
     },
     "extra": {
         "laravel": {
@@ -65,7 +71,8 @@
         "sort-packages": true,
         "optimize-autoloader": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
         }
     },
     "minimum-stability": "dev",

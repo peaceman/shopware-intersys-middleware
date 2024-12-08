@@ -11,7 +11,7 @@ interface ModelColorDTO extends ModelDTO
     public function getColorName(): string;
 
     /**
-     * @return Enumerable<array-key, ModelColorDTO>
+     * @return Enumerable<array-key, ModelColorSizeDTO>
      */
     public function getSizeVariations(): Enumerable;
 }

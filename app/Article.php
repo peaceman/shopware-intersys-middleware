@@ -18,13 +18,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $is_modno
  * @property bool $is_active
  * @property int|null $sw_article_id
+ * @property string $sw_product_id
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
+// todo remove sw_article_id
 class Article extends Model
 {
     const DEFAULTS_WEIGHT = '1KG';
+    const DEFAULTS_WEIGHT_KG = 1;
+
     const DEFAULTS_SHIPPING_TIME = '1-3';
 
     use HasFactory;

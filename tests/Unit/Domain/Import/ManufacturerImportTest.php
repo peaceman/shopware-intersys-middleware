@@ -4,7 +4,7 @@ namespace Tests\Unit\Domain\Import;
 
 use App\Domain\Import\LockNameGeneratorRaw;
 use App\Domain\Import\Manufacturer\ManufacturerDTO;
-use App\Domain\Import\Manufacturer\ManufacturerImporter;
+use App\Domain\Import\Manufacturer\ManufacturerImporterImpl;
 use App\Domain\Shopware6API;
 use Illuminate\Cache\ArrayStore;
 use Illuminate\Contracts\Cache\LockTimeoutException;
@@ -16,7 +16,7 @@ class ManufacturerImportTest extends TestCase
 {
     public function testImporterThrowsLockWaitExceptionWhenThereIsAnotherImportRunning(): void
     {
-        $importer = new ManufacturerImporter(
+        $importer = new ManufacturerImporterImpl(
             new NullLogger(),
             $swApiMock = $this->createMock(Shopware6API::class),
             $lockProvider = new ArrayStore(),
@@ -47,7 +47,7 @@ class ManufacturerImportTest extends TestCase
 
     public function testManufacturerCreation(): void
     {
-        $importer = new ManufacturerImporter(
+        $importer = new ManufacturerImporterImpl(
             new NullLogger(),
             $swApiMock = $this->createMock(Shopware6API::class),
             new ArrayStore(),
@@ -75,7 +75,7 @@ class ManufacturerImportTest extends TestCase
 
     public function testAlreadyExistingManufacturersWontBeDuplicated(): void
     {
-        $importer = new ManufacturerImporter(
+        $importer = new ManufacturerImporterImpl(
             new NullLogger(),
             $swApiMock = $this->createMock(Shopware6API::class),
             new ArrayStore(),
@@ -99,7 +99,7 @@ class ManufacturerImportTest extends TestCase
 
     public function testImporterRechecksManufacturerExistenceDuringLock(): void
     {
-        $importer = new ManufacturerImporter(
+        $importer = new ManufacturerImporterImpl(
             new NullLogger(),
             $swApiMock = $this->createMock(Shopware6API::class),
             $lockProvider = new ArrayStore(),

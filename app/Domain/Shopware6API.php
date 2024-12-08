@@ -2,10 +2,12 @@
 
 namespace App\Domain;
 use App\Domain\Import\Manufacturer\ManufacturerDTO;
+use App\Domain\Import\ProductDTO;
 use App\Domain\Import\PropertyGroup\PropertyGroupDTO;
 use App\Domain\Import\PropertyGroup\PropertyGroupDTORaw;
 use App\Domain\Import\PropertyGroup\PropertyGroupOptionDTO;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Utils;
 use Psr\Log\LoggerInterface;
 
@@ -27,7 +29,7 @@ class Shopware6API
         dd($data);
     }
 
-    public function createProduct(array $productData): string
+    public function createProduct(array $productData): ProductDTO
     {
         $response = $this->httpClient->post('/api/product', [
             'json' => $productData,
@@ -37,18 +39,20 @@ class Shopware6API
         $responseBody = Utils::jsonDecode($response->getBody(), true);
         $responseData = $responseBody['data'] ?? [];
 
-        $id = $responseData['id'] ?? null;
+        return new ProductDTO($responseData);
+    }
 
-        if (empty($id)) {
-            $errorMessage = 'Failed to retrieve product id from creation response';
-            $this->logger->error($errorMessage, [
-                'responseBody' => $responseBody,
-            ]);
+    public function updateProduct(string $id, array $productData): ProductDTO
+    {
+        $response = $this->httpClient->patch("/api/product/{$id}", [
+            'json' => $productData,
+            'query' => ['_response' => 'basic'],
+        ]);
 
-            throw new \RuntimeException($errorMessage);
-        }
+        $responseBody = Utils::jsonDecode($response->getBody(), true);
+        $responseData = $responseBody['data'] ?? [];
 
-        return $id;
+        return new ProductDTO($responseData);
     }
 
     public function searchCurrencyIdByIsoCode(string $isoCode): ?string
@@ -90,28 +94,6 @@ class Shopware6API
         return $currency['id'] ?? null;
     }
 
-    /**
-     * @deprecated
-     */
-    public function searchManufacturerIdByName(string $name): ?string
-    {
-        $response = $this->httpClient->post('/api/search/product-manufacturer', [
-            'json' => [
-                'filter' => [
-                    ['type' => 'equals', 'field' => 'name', 'value' => $name],
-                ],
-            ],
-        ]);
-
-        $responseBody = Utils::jsonDecode($response->getBody(), true);
-        $responseData = $responseBody['data'] ?? [];
-        if (empty($responseData)) return null;
-
-        [$manufacturer] = $responseData;
-
-        return $manufacturer['id'] ?? null;
-    }
-
     public function findManufacturerByName(string $name): ?ManufacturerDTO
     {
         $response = $this->httpClient->post('/api/search/product-manufacturer', [
@@ -142,27 +124,6 @@ class Shopware6API
         $responseData = $responseBody['data'] ?? [];
 
         return new ManufacturerDTO($responseData);
-    }
-
-    public function searchPropertyGroupByName(string $name): ?array
-    {
-        $response = $this->httpClient->post('/api/search/property-group', [
-            'json' => [
-                'filter' => [
-                    ['type' => 'equals', 'field' => 'name', 'value' => $name],
-                ],
-                'associations' => ['options' => []],
-            ],
-//            'query' => ['_response' => 'detail'],
-        ]);
-
-        $responseBody = Utils::jsonDecode($response->getBody(), true);
-        $responseData = $responseBody['data'] ?? [];
-        if (empty($responseData)) return null;
-
-        [$propertyGroup] = $responseData;
-
-        return $propertyGroup;
     }
 
     public function findPropertyGroupByName(string $name): ?PropertyGroupDTO
@@ -216,22 +177,74 @@ class Shopware6API
         return new PropertyGroupOptionDTO($data);
     }
 
-    /**
-     * @deprecated
-     */
-    public function createPropertyGroupOptionRaw(string $propertyGroupId, string $name): array
+    public function findProductByProductNumber(string $productNumber): ?ProductDTO
     {
-        $response = $this->httpClient->post('/api/property-group-option', [
+        $response = $this->httpClient->post('/api/search/product', [
             'json' => [
-                'groupId' => $propertyGroupId,
-                'name' => $name,
+                'filter' => [
+                    ['type' => 'equals', 'field' => 'productNumber', 'value' => $productNumber],
+                ],
+                'limit' => 1,
             ],
-            'query' => ['_response' => 'basic'],
         ]);
 
         $responseBody = Utils::jsonDecode($response->getBody(), true);
         $responseData = $responseBody['data'] ?? [];
+        if (empty($responseData)) return null;
 
-        return $responseData;
+        [$product] = $responseData;
+
+        return new ProductDTO($product);
+    }
+
+    public function findProductById(string $id): ?ProductDTO
+    {
+        $response = $this->httpClient->post('/api/search/product', [
+            'json' => [
+                'filter' => [
+                    ['type' => 'equals', 'field' => 'id', 'value' => $id],
+                ],
+                'limit' => 1,
+            ],
+        ]);
+
+        $responseBody = Utils::jsonDecode($response->getBody(), true);
+        $responseData = $responseBody['data'] ?? [];
+        if (empty($responseData)) return null;
+
+        [$product] = $responseData;
+
+        return new ProductDTO($product);
+    }
+
+    public function getProductById(string $id): ?ProductDTO
+    {
+        $response = $this->httpClient->post('/api/search/product', [
+            'json' => [
+                'filter' => [
+                    ['type' => 'equals', 'field' => 'id', 'value' => $id],
+                ],
+                'associations' => [
+                    'children' => ['associations' => ['options' => []]],
+                    'configuratorSettings' => [],
+                ],
+                'limit' => 1,
+            ],
+        ]);
+
+        $responseBody = Utils::jsonDecode($response->getBody(), true);
+        $responseData = $responseBody['data'] ?? [];
+        if (empty($responseData)) return null;
+
+        return new ProductDTO($responseData);
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    public function deleteProductVariantOption(string $productId, string $variantId, string $optionId): void
+    {
+        $this->httpClient
+            ->delete("/api/product/{$productId}/children/{$variantId}/options/{$optionId}");
     }
 }
