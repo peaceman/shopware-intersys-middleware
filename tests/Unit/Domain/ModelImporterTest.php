@@ -449,6 +449,7 @@ class ModelImporterTest extends TestCase
                     'listPrice' => [
                         'gross' => $sizeVariationModelBeta->getPrice(),
                         'net' => $sizeVariationModelBeta->getPrice() / (1 + ($sizeVariationModelBeta->getVatPercentage() / 100)),
+                        'linked' => false,
                     ],
                 ],
             ],
@@ -737,6 +738,7 @@ class ModelImporterTest extends TestCase
             'listPrice' => [
                 'gross' => $newSizeVariation->getPrice(),
                 'net' => $newSizeVariation->getNetPrice(),
+                'linked' => false,
             ],
         ], current($childA['price']));
 
@@ -746,7 +748,7 @@ class ModelImporterTest extends TestCase
         // check list price is updated
         $newSizeVariation = $newColorVariation->getSizeVariations()->firstWhere(fn ($v) => $v->getSize() === 'XXL');
         static::assertEquals(
-            ['listPrice' => ['gross' => $newSizeVariation->getPrice(), 'net' => $newSizeVariation->getNetPrice()]],
+            ['listPrice' => ['gross' => $newSizeVariation->getPrice(), 'net' => $newSizeVariation->getNetPrice(), 'linked' => false]],
             current($childC['price']),
         );
 
