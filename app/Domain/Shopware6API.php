@@ -9,6 +9,7 @@ use App\Domain\Import\PropertyGroup\PropertyGroupDTO;
 use App\Domain\Import\PropertyGroup\PropertyGroupDTORaw;
 use App\Domain\Import\PropertyGroup\PropertyGroupOptionDTO;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Utils;
 use Psr\Log\LoggerInterface;
@@ -33,28 +34,46 @@ class Shopware6API
 
     public function createProduct(array $productData): ProductDTO
     {
-        $response = $this->httpClient->post('/api/product', [
-            'json' => $productData,
-            'query' => ['_response' => 'basic'],
-        ]);
+        try {
+            $response = $this->httpClient->post('/api/product', [
+                'json' => $productData,
+                'query' => ['_response' => 'basic'],
+            ]);
 
-        $responseBody = Utils::jsonDecode($response->getBody(), true);
-        $responseData = $responseBody['data'] ?? [];
+            $responseBody = Utils::jsonDecode($response->getBody(), true);
+            $responseData = $responseBody['data'] ?? [];
 
-        return new ProductDTO($responseData);
+            return new ProductDTO($responseData);
+        } catch (BadResponseException $e) {
+            $this->logger->error(__METHOD__ . ' ' . $e->getMessage(), [
+                'request' => (string)$e->getRequest()->getBody(),
+                'response' => (string)$e->getResponse()->getBody(),
+            ]);
+
+            throw $e;
+        }
     }
 
     public function updateProduct(string $id, array $productData): ProductDTO
     {
-        $response = $this->httpClient->patch("/api/product/{$id}", [
-            'json' => $productData,
-            'query' => ['_response' => 'basic'],
-        ]);
+        try {
+            $response = $this->httpClient->patch("/api/product/{$id}", [
+                'json' => $productData,
+                'query' => ['_response' => 'basic'],
+            ]);
 
-        $responseBody = Utils::jsonDecode($response->getBody(), true);
-        $responseData = $responseBody['data'] ?? [];
+            $responseBody = Utils::jsonDecode($response->getBody(), true);
+            $responseData = $responseBody['data'] ?? [];
 
-        return new ProductDTO($responseData);
+            return new ProductDTO($responseData);
+        } catch (BadResponseException $e) {
+            $this->logger->error(__METHOD__ . ' ' . $e->getMessage(), [
+                'request' => (string)$e->getRequest()->getBody(),
+                'response' => (string)$e->getResponse()->getBody(),
+            ]);
+
+            throw $e;
+        }
     }
 
     public function searchCurrencyIdByIsoCode(string $isoCode): ?string
