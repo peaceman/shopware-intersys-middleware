@@ -393,6 +393,11 @@ class ModelImporterTest extends TestCase
             ->with($article->sw_product_id, static::callback($updateProductArgRecorder = new ArgRecorder()))
             ->willReturn(new ProductDTO([]));
 
+        $shopwareApi->expects(static::once())
+            ->method('createProduct')
+            ->with(static::callback($createProductArgRecorder = new ArgRecorder()))
+            ->willReturn(new ProductDTO([]));
+
         // execution
 
         $modelImporter->import($importModel);
@@ -400,37 +405,39 @@ class ModelImporterTest extends TestCase
         // assertions
         $updateProductData = $updateProductArgRecorder->latest();
         static::assertIsArray($updateProductData);
-        static::assertCount(2, $updateProductData['children']);
+        static::assertCount(1, $updateProductData['children']);
 
         [$updateProductChildData] = $updateProductData['children'];
-        $importSizeVariationModel = $importModel->getColorVariations()->first()->getSizeVariations()->first();
 
         // check that the missing list price was added
         static::assertEquals(
             [
-                'net' => $importSizeVariationModel->getPrice() / (1 + ($importSizeVariationModel->getVatPercentage() / 100)),
-                'gross' => $importSizeVariationModel->getPrice(),
+                'net' => $sizeVariationModelAlpha->getPrice() / (1 + ($sizeVariationModelAlpha->getVatPercentage() / 100)),
+                'gross' => $sizeVariationModelAlpha->getPrice(),
             ],
-            current($updateProductChildData['price'])['listPrice'],
+            Arr::only(current($updateProductChildData['price'])['listPrice'], ['net', 'gross']),
         );
 
         // check that the stock was updated in the correct variant
         $swVariantId = collect($productDto->getChildren())
-            ->firstWhere('ean', $importSizeVariationModel->getEan())['id'];
+            ->firstWhere('ean', $sizeVariationModelAlpha->getEan())['id'];
 
         $updateStockProductChildData = collect($updateProductData['children'] ?? [])
             ->firstWhere('id', $swVariantId);
 
         static::assertNotNull($updateStockProductChildData, 'failed to find variant that should be updated');
-        static::assertEquals($importSizeVariationModel->getStockPerBranch()->first(), $updateStockProductChildData['stock']);
+        static::assertEquals($sizeVariationModelAlpha->getStockPerBranch()->first(), $updateStockProductChildData['stock']);
 
         // check that a new size variant will be added
         $updateNewVariantProductChildData = collect($updateProductData['children'] ?? [])
             ->firstWhere('ean', $sizeVariationModelBeta->getEan());
 
-        static::assertNotNull($updateNewVariantProductChildData, 'failed to find variant that is new');
-        static::assertFalse(isset($updateNewVariantProductChildData['id']));
+        static::assertNull($updateNewVariantProductChildData, 'new variant cant be in the parent products update data');
+
+        $createProductData = $createProductArgRecorder->latest();
         static::assertEquals([
+            'parentId' => $article->sw_product_id,
+            'active' => null,
             'stock' => $sizeVariationModelBeta->getStockPerBranch()[$glnToImport],
             'ean' => $sizeVariationModelBeta->getEan(),
             'price' => [
@@ -452,7 +459,7 @@ class ModelImporterTest extends TestCase
                     'id' => $propertyGroup->getOptionByName($sizeVariationModelBeta->getSize())->getId(),
                 ],
             ],
-        ], $updateNewVariantProductChildData);
+        ], $createProductData);
     }
 
     public function testVariantAdditionWithNewConfiguratorSetting()
@@ -746,7 +753,7 @@ class ModelImporterTest extends TestCase
         // check active state in variants is always explicitly set to null to retain inheritance
         foreach ($updateProductData['children'] as $child) {
             static::assertArrayHasKey('active', $child);
-            static::assertNulL($child['active']);
+            static::assertNull($child['active']);
         }
     }
 
