@@ -172,6 +172,7 @@ class ModelImporterTest extends TestCase
         static::assertNotNull($productData['name'] ?? null, 'missing product name');
         static::assertNotNull($productData['stock'] ?? null, 'missing product stock'); // shopware 6 requires stock for the main product
         static::assertEquals($taxId, $productData['taxId'] ?? null);
+        static::assertTrue($productData['isCloseout'], 'missing is closeout');
 
         [$price] = $productData['price'];
         static::assertNotNull($price);
@@ -405,6 +406,7 @@ class ModelImporterTest extends TestCase
         // assertions
         $updateProductData = $updateProductArgRecorder->latest();
         static::assertIsArray($updateProductData);
+        static::assertTrue($updateProductData['isCloseout'], 'missing is closeout');
         static::assertCount(1, $updateProductData['children']);
 
         [$updateProductChildData] = $updateProductData['children'];

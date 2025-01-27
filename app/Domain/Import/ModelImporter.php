@@ -172,6 +172,7 @@ class ModelImporter
 
         $updateData = [
             'id' => $swProductId,
+            'isCloseout' => true,
             // only already existing variants can be included in the update request of the parent article (sw api restriction)
             'children' => $existingVariants->toArray(),
             'configuratorSettings' => $newVariantOptionIds
@@ -213,6 +214,7 @@ class ModelImporter
 
         $productData = [
             'active' => false,
+            'isCloseout' => true,
             'name' => $model->getModelName() . ' (' . $model->getColorName() . ')',
             'productNumber' => $model->getMainArticleNumber(),
             'stock' => $firstVariant->getStockPerBranch()->get($this->glnToImport, 0),
