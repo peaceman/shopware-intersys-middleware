@@ -190,7 +190,7 @@ class ModelImporterTest extends TestCase
             static::assertEquals($price['gross'], $price['listPrice']['gross']);
             static::assertEquals($price['net'], $price['listPrice']['net']);
             static::assertNull($price['listPrice']['currencyId'] ?? null, 'currency id was supplied in list price');
-            static::assertArrayNotHasKey('active', $productVariant, 'variants must not have an active state to keep inheritance of the field');
+            static::assertNull($productVariant['active'], 'variants must not have an active state to keep inheritance of the field');
 
             static::assertCount(1, $productVariant['options'], 'variant should contain a single option that defines the size');
             [$option] = $productVariant['options'];
@@ -742,6 +742,12 @@ class ModelImporterTest extends TestCase
             ['listPrice' => ['gross' => $newSizeVariation->getPrice(), 'net' => $newSizeVariation->getNetPrice()]],
             current($childC['price']),
         );
+
+        // check active state in variants is always explicitly set to null to retain inheritance
+        foreach ($updateProductData['children'] as $child) {
+            static::assertArrayHasKey('active', $child);
+            static::assertNulL($child['active']);
+        }
     }
 
     public function testVariantUpdateSizeChange()
