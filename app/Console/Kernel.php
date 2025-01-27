@@ -33,7 +33,6 @@ class Kernel extends ConsoleKernel
         $schedule->job(new ScanImportFiles())->everyMinute();
 //        $schedule->job(DeactivateArticlesJob::class)->dailyAt('06:33');
 //        $schedule->job(ExportOrdersJob::class)->everyMinute();
-//        $schedule->job(SendDailyOrderOverviewJob::class)->dailyAt('04:23');
         $schedule->command(DeleteOldImportFiles::class)->weekly();
     }
 
