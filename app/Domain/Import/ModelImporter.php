@@ -164,15 +164,16 @@ class ModelImporter
         $this->logger->info(__METHOD__, $loggingContext);
 
         $variants = $this->generateVariants($model, $swProduct);
+        [$existingVariants, $newVariants] = $variants->partition('id', '!=', null);
 
-        $variantOptionIds = collect($variants)->flatMap(fn($v) => collect($v['options'])->pluck('id'));
+        $variantOptionIds = $variants->flatMap(fn($v) => collect($v['options'])->pluck('id'));
         $existingConfiguratorSettingsOptionIds = collect($swProduct->getConfiguratorSettings())->pluck('optionId');
         $newVariantOptionIds = $variantOptionIds->diff($existingConfiguratorSettingsOptionIds);
 
         $updateData = [
             'id' => $swProductId,
             // only already existing variants can be included in the update request of the parent article (sw api restriction)
-            'children' => $variants->filter(fn ($v) => isset($v['id']))->toArray(),
+            'children' => $existingVariants->toArray(),
             'configuratorSettings' => $newVariantOptionIds
                 ->map(fn(string $optionId): array => ['optionId' => $optionId])
                 ->toArray(),
@@ -181,7 +182,7 @@ class ModelImporter
         $this->logger->info(__METHOD__ . ' Updating article', [...$loggingContext, 'updateData' => $updateData]);
         $this->shopwareAPI->updateProduct($swProductId, $updateData);
 
-        foreach ($variants->filter(fn ($v) => !isset($v['id'])) as $newVariant) {
+        foreach ($newVariants as $newVariant) {
             $this->logger->info(__METHOD__ . ' Creating new variant', [...$loggingContext, 'newVariant' => $newVariant]);
             $this->shopwareAPI->createProduct([
                 ...$newVariant,
