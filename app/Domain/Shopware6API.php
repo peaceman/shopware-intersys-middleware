@@ -257,7 +257,9 @@ class Shopware6API
         $responseData = $responseBody['data'] ?? [];
         if (empty($responseData)) return null;
 
-        return new ProductDTO($responseData);
+        [$product] = $responseData;
+
+        return new ProductDTO($product);
     }
 
     /**
