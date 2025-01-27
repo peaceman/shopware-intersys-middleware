@@ -5,12 +5,10 @@
 
 namespace App\Domain\Export;
 
-use App\OrderExport;
 use Illuminate\Support\Str;
 
 class OrderXMLGenerator
 {
-    protected $accountingBranchNo;
     protected $stockBranchNo;
 
     /**
@@ -18,29 +16,35 @@ class OrderXMLGenerator
      */
     protected $xml;
 
-    public function setAccountingBranchNo(string $accountingBranchNo): void
-    {
-        $this->accountingBranchNo = $accountingBranchNo;
-    }
 
     public function setStockBranchNo(string $stockBranchNo): void
     {
         $this->stockBranchNo = $stockBranchNo;
     }
 
-    public function generate(string $type, \DateTimeImmutable $exportDate, Order $order, array $orderArticles): string
-    {
+    /**
+     * @param OrderExportType $type
+     * @param \DateTimeImmutable $exportDate
+     * @param OrderDTO $order
+     * @param OrderLineItemDTO[] $lineItems
+     * @return string
+     */
+    public function generate(
+        OrderExportType $type,
+        \DateTimeImmutable $exportDate,
+        OrderDTO $order,
+        array $lineItems
+    ): string {
         try {
             $this->xml = new \DOMDocument('1.0', 'ISO-8859-1');
             $this->xml->formatOutput = true;
             $this->xml->appendChild($saleRoot = $this->createSaleRootElement($exportDate));
 
-            foreach ($orderArticles as $orderArticle) {
+            foreach ($lineItems as $lineItem) {
                 $itemElement = $this->createItemElement(
                     $type,
-                    $orderArticle['dateOfTrans'],
                     $order,
-                    $orderArticle['article']
+                    $lineItem
                 );
 
                 $saleRoot->appendChild($itemElement);
@@ -57,7 +61,7 @@ class OrderXMLGenerator
         $sale = $this->xml->createElement('Sale');
         $sale->setAttribute('Exportdate', $this->formatDate($exportDate));
         $sale->setAttribute('Exporttype', 'Sale');
-        $sale->setAttribute('Branchno', $this->accountingBranchNo);
+        $sale->setAttribute('Branchno', 'WEB');
 
         return $sale;
     }
@@ -68,47 +72,43 @@ class OrderXMLGenerator
     }
 
     protected function createItemElement(
-        string $type,
-        \DateTimeInterface $dateOfTrans,
-        Order $order,
-        OrderArticle $orderArticle
-    ): \DOMElement
-    {
+        OrderExportType $type,
+        OrderDTO $order,
+        OrderLineItemDTO $lineItem
+    ): \DOMElement {
         $item = $this->xml->createElement('Item');
-        $item->appendChild($this->xml->createElement('Itemno', $orderArticle->getEan()));
-        $item->appendChild($this->xml->createElement('Saleqty', $orderArticle->getQuantity()));
-        $item->appendChild($this->createCostElement($orderArticle));
-        $item->appendChild($this->xml->createElement('Dateoftrans', $this->formatDate($dateOfTrans)));
-        $item->appendChild($this->xml->createElement('Type', $type === OrderExport::TYPE_RETURN ? 'R' : 'S'));
+        $item->appendChild($this->xml->createElement('Itemno', $lineItem->getEan()));
+        $item->appendChild($this->xml->createElement('Saleqty', $lineItem->getQuantity()));
+        $item->appendChild($this->createCostElement($lineItem));
+        $item->appendChild($this->xml->createElement('Dateoftrans', $this->formatDate($order->getOrderTime())));
+        $item->appendChild($this->xml->createElement('Type', match ($type) {
+            OrderExportType::Sale => 'S',
+            OrderExportType::Return => 'R',
+        }));
         $item->appendChild($this->createRefnoElement($type, $order));
         $item->appendChild($this->xml->createElement('Branchno', $this->stockBranchNo));
 
         $commentEl = $this->xml->createElement('Comment');
-        $commentEl->appendChild($this->xml->createCDATASection("OrderId: {$order->getOrderNumber()}, ArticleNumber: {$orderArticle->getArticleNumber()}"));
+        $commentEl->appendChild($this->xml->createCDATASection("OrderNumber: {$order->getOrderNumber()}, ProductNumber: {$lineItem->getProductNumber()}"));
         $item->appendChild($commentEl);
 
         return $item;
     }
 
-    /**
-     * @param OrderArticle $orderArticle
-     * @return \DOMElement
-     */
-    protected function createCostElement(OrderArticle $orderArticle): \DOMElement
+    protected function createCostElement(OrderLineItemDTO $lineItem): \DOMElement
     {
         return $this->xml->createElement(
             'Cost',
-            number_format($orderArticle->getFullPrice(), 2, '.', '')
+            number_format($lineItem->getPrice(), 2, '.', '')
         );
     }
 
-    protected function createRefnoElement(string $type, Order $order): \DOMElement
+    protected function createRefnoElement(OrderExportType $type, OrderDTO $order): \DOMElement
     {
         $refNo = implode('-', [
             match ($type) {
-                OrderExport::TYPE_RETURN => 'GS',
-                OrderExport::TYPE_SALE => 'RE',
-                default => throw new \InvalidArgumentException("Unknown order type $type"),
+                OrderExportType::Return => 'GS',
+                OrderExportType::Sale => 'RE',
             },
             Str::padLeft($order->getOrderNumber(), 8, '0'),
         ]);

@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Domain\Export\OrderFetched;
-use App\Listeners\PersistOrder;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -20,7 +19,6 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         OrderFetched::class => [
-            PersistOrder::class,
         ],
     ];
 

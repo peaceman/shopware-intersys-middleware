@@ -7,6 +7,7 @@ namespace Tests\Unit\Domain\Export;
 
 use App\Domain\Export\Order;
 use App\Domain\Export\OrderArticle;
+use App\Domain\Export\OrderExportType;
 use App\Domain\Export\OrderXMLGenerator;
 use App\OrderExport;
 use Tests\TestCase;
@@ -16,39 +17,29 @@ class OrderXMLGeneratorTest extends TestCase
     public function testSaleXMLGeneration()
     {
         $orderXMLGenerator = new OrderXMLGenerator();
-        $orderXMLGenerator->setAccountingBranchNo('004');
         $orderXMLGenerator->setStockBranchNo('005');
 
         $order = new Order([
-            'number' => '23235',
-            'orderTime' => '2018-10-31T20:12:42+0100',
+            'orderNumber' => '23235',
+            'orderDateTime' => '2018-10-31T20:12:42+0100',
+            'lineItems' => [
+                [
+                    'quantity' => 23,
+                    'product' => ['productNumber' => 'ABC123', 'ean' => 'is dis ean'],
+                    'price' => ['totalPrice' => 23 * 23.5],
+                ],
+                [
+                    'quantity' => 23,
+                    'product' => ['productNumber' => 'ABC127', 'ean' => 'dis is ean'],
+                    'price' => ['totalPrice' => 23 * 23.5],
+                ]
+            ],
         ]);
 
         $testDate = \DateTimeImmutable::createFromFormat('Ymd-His', '20181031-230555');
-        $orderArticles = [
-            [
-                'dateOfTrans' => $testDate,
-                'article' => new OrderArticle([
-                    'articleNumber' => 'ABC123',
-                    'price' => 23.5,
-                    'quantity' => 23,
-                    'ean' => 'is dis ean',
-                ]),
-            ],
-            [
-                'dateOfTrans' => $testDate,
-                'article' => (new OrderArticle([
-                    'articleNumber' => 'ABC127',
-                    'price' => 23.5,
-                    'quantity' => 23,
-                    'ean' => 'dis is ean',
-                ]))->setVoucherPercentage(0.1),
-            ],
-        ];
-
         $exportDate = $testDate;
 
-        $saleXMLContent = $orderXMLGenerator->generate(OrderExport::TYPE_SALE, $exportDate, $order, $orderArticles);
+        $saleXMLContent = $orderXMLGenerator->generate(OrderExportType::Sale, $exportDate, $order, $order->getLineItems());
         static::assertEquals(
             file_get_contents(base_path('docs/fixtures/export-sale.xml')),
             $saleXMLContent

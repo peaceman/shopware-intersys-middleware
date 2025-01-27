@@ -5,59 +5,32 @@
 
 namespace App\Domain\Export;
 
-class Order
+class Order implements OrderDTO
 {
     protected $data;
-    protected $articles = [];
 
     public function __construct(array $data)
     {
         $this->data = $data;
     }
 
-    public function getID(): int
+    public function getId(): string
     {
         return $this->data['id'];
     }
 
     public function getOrderTime(): \DateTimeImmutable
     {
-        return \DateTimeImmutable::createFromFormat(\DateTime::ATOM, $this->data['orderTime']);
+        return new \DateTimeImmutable($this->data['orderDateTime']);
     }
 
     public function getOrderNumber(): string
     {
-        return $this->data['number'];
+        return $this->data['orderNumber'];
     }
 
-    /**
-     * @param OrderArticle[] $articles
-     */
-    public function setArticles(array $articles): void
+    public function getLineItems(): array
     {
-        $this->articles = $articles;
-    }
-
-    /**
-     * @return OrderArticle[]
-     */
-    public function getArticles(): array
-    {
-        return $this->articles;
-    }
-
-    public function getOrderStatusID(): int
-    {
-        return $this->data['orderStatusId'];
-    }
-
-    public function getPaymentStatusID(): int
-    {
-        return $this->data['paymentStatusId'];
-    }
-
-    public function getPaymentID(): int
-    {
-        return $this->data['paymentId'];
+        return array_map(fn (array $v): OrderLineItem => new OrderLineItem($v), $this->data['lineItems'] ?? []);
     }
 }

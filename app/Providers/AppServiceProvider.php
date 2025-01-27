@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Domain\Export\OrderReturnProvider;
-use App\Domain\Export\OrderSaleProvider;
+use App\Domain\Export\ShopwareOrderReturnProvider;
+use App\Domain\Export\ShopwareOrderSaleProvider;
 use App\Domain\Export\OrderXMLExporter;
 use App\Domain\Export\OrderXMLGenerator;
 use App\Domain\HouseKeeping\OldImportFileDeleter;
@@ -183,7 +183,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(OrderXMLGenerator::class, function () {
             $oxg = new OrderXMLGenerator();
-            $oxg->setAccountingBranchNo(config('shopware.order.branchNoAccounting'));
             $oxg->setStockBranchNo(config('shopware.glnToImport'));
 
             return $oxg;

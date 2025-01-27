@@ -21,17 +21,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
- * @property-read OrderExportArticle[] $orderExportArticles
  */
 class OrderExport extends Model
 {
-    public const TYPE_RETURN = 'return';
-    public const TYPE_SALE = 'sale';
     protected $table = 'order_exports';
-
-    public function orderExportArticles(): HasMany
-    {
-        return $this->hasMany(OrderExportArticle::class, 'order_export_id', 'id');
-    }
 }

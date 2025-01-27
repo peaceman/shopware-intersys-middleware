@@ -52,7 +52,6 @@ return [
             'afterExportStatus' => env('SHOPWARE_ORDER_RETURN_AFTER_EXPORT_STATUS', 22), // retoure an intersys
             'afterExportPositionStatus' => env('SHOPWARE_ORDER_RETURN_AFTER_EXPORT_POSITION_STATUS', 5), // retoure (exportiert)
         ],
-        'branchNoAccounting' => env('SHOPWARE_BRANCH_ACCOUNTING'),
     ],
     'ignoreDeltaStockUpdates' => env('SHOPWARE_IGNORE_DELTA_STOCK_UPDATES', false),
 ];

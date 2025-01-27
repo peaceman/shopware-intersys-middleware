@@ -8,7 +8,8 @@ namespace Tests\Unit\Domain\Export;
 use App\Domain\Export\Order;
 use App\Domain\Export\OrderArticle;
 use App\Domain\Export\OrderFetched;
-use App\Domain\Export\OrderSaleProvider;
+use App\Domain\Export\ShopwareOrderSaleProvider;
+use App\Domain\Shopware6API;
 use App\Domain\ShopwareAPI;
 use DateTime;
 use GuzzleHttp\Client;
@@ -19,6 +20,7 @@ use GuzzleHttp\Psr7\Query;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Events\NullDispatcher;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;
 use Psr\Log\NullLogger;
@@ -34,157 +36,53 @@ class OrderSaleProviderTest extends TestCase
         Event::fake();
     }
 
-    public function testRequestFilters()
+    public function testOrderFetching(): void
     {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
-            new Response(200, [], json_encode(['data' => []])),
-            new Response(200, [], json_encode(['data' => []])),
-        ]);
+        // mocks
+        $shopwareApi = $this->createMock(Shopware6API::class);
 
-        $stack = HandlerStack::create($mock);
-        $stack->push($history);
+        $shopwareApi->expects(static::once())
+            ->method('listOrders')
+            ->with([
+                'filter' => [
+                    ['type' => 'equals', 'field' => 'stateMachineState.technicalName', 'value' => 'open'],
+                    ['type' => 'multi', 'operator' => 'or', 'queries' => [
+                        ['type' => 'multi', 'operator' => 'and', 'queries' => [
+                            ['type' => 'not', 'queries' => [
+                                ['type' => 'equals', 'field' => 'transactions.paymentMethod.technicalName', 'value' => 'payment_prepayment'],
+                            ]],
+                            ['type' => 'equals', 'field' => 'transactions.stateMachineState.technicalName', 'value' => 'paid'],
+                        ]],
+                        ['type' => 'equals', 'field' => 'transactions.paymentMethod.technicalName', 'value' => 'payment_prepayment'],
+                    ]],
+                ],
+                'includes' => [
+                    'order' => ['id', 'orderNumber', 'lineItems'],
+                    'order_line_items' => ['type', 'quantity', 'price', 'product'],
+                    'calculated_price' => ['unitPrice', 'totalPrice'],
+                    'product' => ['ean'],
+                ],
+                'associations' => [
+                    'lineItems' => [
+                        'associations' => [
+                            'product' => [],
+                        ],
+                    ],
+                ],
+            ])
+            ->willReturn([new Order([])]);
 
-        $client = new Client([
-            'handler' => $stack,
-        ]);
-
-        $orderSaleProvider = $this->createOrderSaleProvider($client);
-        $orders = $orderSaleProvider->getOrders();
-
-        static::assertEquals(0, iterator_count($orders));
-        static::assertCount(2, $container);
-
-        /** @var Request $request */
-        $request = $container[0]['request'];
-
-        $requestURI = $request->getUri();
-        static::assertEquals('/api/orders', $requestURI->getPath());
-        static::assertEquals('GET', $request->getMethod());
-        static::assertEquals(
-            [
-                'filter[0][property]' => 'status',
-                'filter[0][value]' => '23',
-                'filter[1][property]' => 'cleared',
-                'filter[1][value]' => '42',
-                'sort[0][property]' => 'orderTime',
-                'sort[0][direction]' => 'DESC',
-            ],
-            Query::parse($requestURI->getQuery()),
+        // execution
+        $orderSaleProvider = new ShopwareOrderSaleProvider(
+            $shopwareApi,
+            $this->app[Dispatcher::class],
+            new NullLogger(),
         );
 
-        $request = $container[1]['request'];
+        $orders = [...$orderSaleProvider->getOrders()];
 
-        $requestURI = $request->getUri();
-        static::assertEquals('/api/orders', $requestURI->getPath());
-        static::assertEquals('GET', $request->getMethod());
-        static::assertEquals(
-            [
-                'filter[0][property]' => 'status',
-                'filter[0][value]' => '4',
-                'filter[1][property]' => 'cleared',
-                'filter[1][value]' => '8',
-                'filter[2][property]' => 'paymentId',
-                'filter[2][value]' => '15',
-                'sort[0][property]' => 'orderTime',
-                'sort[0][direction]' => 'DESC',
-            ],
-            Query::parse($requestURI->getQuery()),
-        );
-    }
-
-    public function testOrderArticleRequests()
-    {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
-            new Response(200, [], file_get_contents(base_path('docs/fixtures/shopware-api-orders-response.json'))),
-            new Response(200, [], json_encode(['data' => []])),
-            new Response(200, [], json_encode(['data' => []])),
-            new Response(200, [], json_encode(['data' => []])),
-            new Response(200, [], file_get_contents(base_path('docs/fixtures/shopware-api-order-details-response-55.json'))),
-            new Response(200, [], file_get_contents(base_path('docs/fixtures/shopware-api-order-details-response-59.json'))),
-            new Response(200, [], file_get_contents(base_path('docs/fixtures/shopware-api-order-details-response-61.json'))),
-        ]);
-
-        $stack = HandlerStack::create($mock);
-        $stack->push($history);
-
-        $client = new Client([
-            'handler' => $stack,
-        ]);
-
-        $orderSaleProvider = $this->createOrderSaleProvider($client);
-        $orderSaleProvider->setRequirements([
-            [
-                'status' => 23,
-                'cleared' => 42,
-            ],
-        ]);
-        $orders = $orderSaleProvider->getOrders();
-
-        static::assertEquals(3, iterator_count($orders));
-        static::assertCount(4, $container);
-
-        $requests = Arr::pluck($container, 'request');
-        array_shift($requests);
-
-        $requestURIPaths = array_map(function (Request $request) { return $request->getUri()->getPath(); }, $requests);
-        static::assertEquals([
-            '/api/orders/55',
-            '/api/orders/59',
-            '/api/orders/61',
-        ], $requestURIPaths);
-    }
-
-    public function testErrorResponse()
-    {
-        $mock = new MockHandler([
-            new Response(500, []),
-        ]);
-
-        $client = new Client([
-            'handler' => HandlerStack::create($mock),
-        ]);
-
-        $orderSaleProvider = $this->createOrderSaleProvider($client);
-        $orderSaleProvider->setRequirements([
-            [
-                'status' => 23,
-                'cleared' => 42,
-            ],
-        ]);
-
-        /** @var Order[] $orders */
-        $orders = iterator_to_array($orderSaleProvider->getOrders());
-        static::assertCount(0, $orders);
-    }
-
-    public function testOrderData()
-    {
-        $mock = new MockHandler([
-            new Response(200, [], file_get_contents(base_path('docs/fixtures/shopware-api-orders-response.json'))),
-            new Response(200, [], file_get_contents(base_path('docs/fixtures/shopware-api-order-details-response-55.json'))),
-            new Response(200, [], file_get_contents(base_path('docs/fixtures/shopware-api-order-details-response-59.json'))),
-            new Response(200, [], file_get_contents(base_path('docs/fixtures/shopware-api-order-details-response-61.json'))),
-        ]);
-
-        $client = new Client([
-            'handler' => HandlerStack::create($mock),
-        ]);
-
-        $orderSaleProvider = $this->createOrderSaleProvider($client);
-        $orderSaleProvider->setRequirements([
-            [
-                'status' => 23,
-                'cleared' => 42,
-            ],
-        ]);
-
-        /** @var Order[] $orders */
-        $orders = iterator_to_array($orderSaleProvider->getOrders());
-        static::assertCount(3, $orders);
+        // assertions
+        static::assertNotEmpty($orders);
 
         foreach ($orders as $order) {
             Event::assertDispatched(OrderFetched::class, function (OrderFetched $e) use ($order) {
@@ -192,86 +90,6 @@ class OrderSaleProviderTest extends TestCase
             });
         }
 
-        Event::assertDispatched(OrderFetched::class, 3);
-
-        // check order 55
-        $order = array_shift($orders);
-        static::assertEquals('20002', $order->getOrderNumber());
-        static::assertEquals('2018-10-31T20:12:42+0100', $order->getOrderTime()->format(DateTime::ISO8601));
-
-        /** @var OrderArticle[] $articles */
-        $articles = $order->getArticles();
-        static::assertCount(1, $articles);
-
-        $article = array_shift($articles);
-        static::assertEquals('90389615640349', $article->getArticleNumber());
-        static::assertEquals(1, $article->getQuantity());
-        static::assertEquals(90, $article->getPrice());
-
-        // check order 59
-        $order = array_shift($orders);
-        static::assertEquals('20003', $order->getOrderNumber());
-        static::assertEquals('2018-10-31T21:36:23+0100', $order->getOrderTime()->format(DateTime::ISO8601));
-
-        /** @var OrderArticle[] $articles */
-        $articles = $order->getArticles();
-        static::assertCount(3, $articles);
-
-        $article = array_shift($articles);
-        static::assertEquals('90389615640343', $article->getArticleNumber());
-        static::assertEquals(1, $article->getQuantity());
-        static::assertEquals(90, $article->getPrice());
-
-        $article = array_shift($articles);
-        static::assertEquals('639802-50H43001747', $article->getArticleNumber());
-        static::assertEquals(1, $article->getQuantity());
-        static::assertEquals(110, $article->getPrice());
-
-        $article = array_shift($articles);
-        static::assertEquals('test', $article->getArticleNumber());
-        static::assertEquals(1, $article->getQuantity());
-        static::assertEquals(-40, $article->getPrice());
-
-        // check order 61
-        $order = array_shift($orders);
-        static::assertEquals('20004', $order->getOrderNumber());
-        static::assertEquals('2018-11-01T11:55:16+0100', $order->getOrderTime()->format(DateTime::ISO8601));
-
-        /** @var OrderArticle[] $articles */
-        $articles = $order->getArticles();
-        static::assertCount(2, $articles);
-
-        $article = array_shift($articles);
-        static::assertEquals('90389615640348', $article->getArticleNumber());
-        static::assertEquals(3, $article->getQuantity());
-        static::assertEquals(90, $article->getPrice());
-
-        $article = array_shift($articles);
-        static::assertEquals('B3747003000050', $article->getArticleNumber());
-        static::assertEquals(1, $article->getQuantity());
-        static::assertEquals(140, $article->getPrice());
-    }
-
-    protected function createOrderSaleProvider(Client $httpClient): OrderSaleProvider
-    {
-        $osp = new OrderSaleProvider(
-            new ShopwareAPI(new NullLogger(), $httpClient),
-            $this->app[Dispatcher::class],
-            new NullLogger()
-        );
-
-        $osp->setRequirements([
-            [
-                'status' => 23,
-                'cleared' => 42,
-            ],
-            [
-                'status' => 4,
-                'cleared' => 8,
-                'paymentId' => 15,
-            ],
-        ]);
-
-        return $osp;
+        Event::assertDispatched(OrderFetched::class, count($orders));
     }
 }

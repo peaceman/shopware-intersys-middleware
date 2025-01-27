@@ -1,90 +1,11 @@
 <?php
-/**
- * lel since 01.11.18
- */
 
 namespace App\Domain\Export;
 
-use App\Domain\ShopwareAPI;
-use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Support\Collection;
-use Psr\Log\LoggerInterface;
-
-class OrderProvider
+interface OrderProvider
 {
-    private ShopwareAPI $shopwareAPI;
-    private Dispatcher $eventDispatcher;
-    private LoggerInterface $logger;
-    protected array $requirements = [];
-
-    public function __construct(
-        ShopwareAPI $shopwareAPI,
-        Dispatcher $eventDispatcher,
-        LoggerInterface $logger,
-    ) {
-        $this->shopwareAPI = $shopwareAPI;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->logger = $logger;
-    }
-
-    public function getOrders(): iterable
-    {
-        $filters = $this->generateFilters();
-
-        foreach ($filters as $subFilter) {
-            $jsonResponse = $this->shopwareAPI->fetchOrders($subFilter);
-
-            $apiOrders = data_get($jsonResponse, 'data', []);
-
-            foreach ($apiOrders as $apiOrder) {
-                $order = new Order($apiOrder);
-                $articles = $this->fetchOrderArticles($order);
-
-                if (Collection::make($articles)->contains(fn (OrderArticle $v): bool => !$v->isValid())) {
-                    $this->logger->info(__METHOD__ . ' Ignore order that has invalid positions', [
-                        'orderID' => $order->getID(),
-                        'orderNumber' => $order->getOrderNumber(),
-                    ]);
-
-                    continue;
-                }
-
-                $order->setArticles($articles);
-
-                $this->eventDispatcher->dispatch(new OrderFetched($order));
-
-                yield $order;
-            }
-        }
-    }
-
-    public function generateFilters(): array
-    {
-        return array_map(function (array $reqs): array {
-            return array_map(function ($reqVal, $reqKey): array {
-                return ['property' => $reqKey, 'value' => $reqVal];
-            }, $reqs, array_keys($reqs));
-        }, $this->requirements);
-    }
-
     /**
-     * @param Order $order
-     * @return array|OrderArticle[]
+     * @return iterable<OrderDTO>
      */
-    protected function fetchOrderArticles(Order $order): array
-    {
-        $jsonResponse = $this->shopwareAPI->fetchOrderDetails($order->getID());
-
-        $apiDetails = data_get($jsonResponse, 'data.details', []);
-
-        return array_map(
-            fn (array $v): OrderArticle  => new OrderArticle($v),
-            $apiDetails,
-        );
-    }
-
-    public function setRequirements(array $requirements): void
-    {
-        $this->requirements = $requirements;
-    }
+    public function getOrders(): iterable;
 }

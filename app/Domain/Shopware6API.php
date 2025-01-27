@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Domain;
+use App\Domain\Export\Order;
+use App\Domain\Export\OrderDTO;
 use App\Domain\Import\Manufacturer\ManufacturerDTO;
 use App\Domain\Import\ProductDTO;
 use App\Domain\Import\PropertyGroup\PropertyGroupDTO;
@@ -246,5 +248,26 @@ class Shopware6API
     {
         $this->httpClient
             ->delete("/api/product/{$productId}/children/{$variantId}/options/{$optionId}");
+    }
+
+    public function updateOrderState(string $orderId, string $stateTransition): void
+    {
+        $this->httpClient
+            ->post("/api/_action/order/{$orderId}/state/{$stateTransition}");
+    }
+
+    public function listOrders(array $criteria = []): array
+    {
+        $response = $this->httpClient->post('/api/search/order', [
+            'json' => $criteria,
+        ]);
+
+        $responseBody = Utils::jsonDecode($response->getBody(), true);
+        $responseData = $responseBody['data'] ?? [];
+
+        return array_map(
+            fn (array $v): OrderDTO => new Order($v),
+            $responseData,
+        );
     }
 }

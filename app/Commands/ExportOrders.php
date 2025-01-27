@@ -5,32 +5,24 @@
 
 namespace App\Commands;
 
-use App\Domain\Export\OrderReturnProvider;
-use App\Domain\Export\OrderSaleProvider;
+use App\Domain\Export\OrderExportType;
+use App\Domain\Export\OrderProvider;
+use App\Domain\Export\ShopwareOrderReturnProvider;
+use App\Domain\Export\ShopwareOrderSaleProvider;
 use App\Domain\Export\OrderXMLExporter;
-use App\OrderExport;
 
 class ExportOrders
 {
-    /**
-     * @var OrderXMLExporter
-     */
-    private $exporter;
+    private OrderXMLExporter $exporter;
 
-    /**
-     * @var OrderSaleProvider
-     */
-    private $orderSaleProvider;
+    private OrderProvider $orderSaleProvider;
 
-    /**
-     * @var OrderReturnProvider
-     */
-    private $orderReturnProvider;
+    private OrderProvider $orderReturnProvider;
 
     public function __construct(
         OrderXMLExporter $exporter,
-        OrderSaleProvider $orderSaleProvider,
-        OrderReturnProvider $orderReturnProvider
+        ShopwareOrderSaleProvider $orderSaleProvider,
+        ShopwareOrderReturnProvider $orderReturnProvider
     ) {
         $this->exporter = $exporter;
         $this->orderSaleProvider = $orderSaleProvider;
@@ -39,7 +31,7 @@ class ExportOrders
 
     public function __invoke(): void
     {
-        $this->exporter->export(OrderExport::TYPE_SALE, $this->orderSaleProvider);
-        $this->exporter->export(OrderExport::TYPE_RETURN, $this->orderReturnProvider);
+        $this->exporter->export(OrderExportType::Sale, $this->orderSaleProvider);
+        $this->exporter->export(OrderExportType::Return, $this->orderReturnProvider);
     }
 }

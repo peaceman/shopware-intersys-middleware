@@ -6,8 +6,9 @@
 namespace Tests\Unit\Commands;
 
 use App\Commands\ExportOrders;
-use App\Domain\Export\OrderReturnProvider;
-use App\Domain\Export\OrderSaleProvider;
+use App\Domain\Export\OrderExportType;
+use App\Domain\Export\ShopwareOrderReturnProvider;
+use App\Domain\Export\ShopwareOrderSaleProvider;
 use App\Domain\Export\OrderXMLExporter;
 use App\OrderExport;
 use Tests\TestCase;
@@ -17,14 +18,14 @@ class ExportOrdersTest extends TestCase
     public function testExecution(): void
     {
         $orderXMLExporter = $this->createMock(OrderXMLExporter::class);
-        $orderSaleProvider = $this->createMock(OrderSaleProvider::class);
-        $orderReturnProvider = $this->createMock(OrderReturnProvider::class);
+        $orderSaleProvider = $this->createMock(ShopwareOrderSaleProvider::class);
+        $orderReturnProvider = $this->createMock(ShopwareOrderReturnProvider::class);
 
         $orderXMLExporter->expects(static::exactly(2))
             ->method('export')
             ->withConsecutive(
-                [OrderExport::TYPE_SALE, $orderSaleProvider],
-                [OrderExport::TYPE_RETURN, $orderReturnProvider],
+                [OrderExportType::Sale, $orderSaleProvider],
+                [OrderExportType::Return, $orderReturnProvider],
             );
 
         $exportOrders = $this->app->make(ExportOrders::class, [
