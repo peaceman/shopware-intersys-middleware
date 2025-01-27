@@ -337,22 +337,30 @@ class ModelImporter
 
     private function fetchShopwareCurrencyIdByIsoCode(string $isoCode): string
     {
-        // todo caching
-        if (!($currencyId = $this->shopwareAPI->searchCurrencyIdByIsoCode($isoCode))) {
-            throw new MissingShopwareEntityException('currency', 'isoCode', $isoCode);
+        if ($currencyId = cache()->get("sw-currency-id:{$isoCode}"))
+            return $currencyId;
+
+        if ($currencyId = $this->shopwareAPI->searchCurrencyIdByIsoCode($isoCode)) {
+            cache()->set("sw-currency-id:{$isoCode}", $currencyId);
+
+            return $currencyId;
         }
 
-        return $currencyId;
+        throw new MissingShopwareEntityException('currency', 'isoCode', $isoCode);
     }
 
     private function fetchShopwareTaxIdByVatPercentage(float $vatPercentage): string
     {
-        // todo caching
-        if (!($taxId = $this->shopwareAPI->searchTaxIdByVatPercentage($vatPercentage))) {
-            throw new MissingShopwareEntityException('tax', 'taxRate', $vatPercentage);
+        if ($taxId = cache()->get("sw-tax-id:{$vatPercentage}"))
+            return $taxId;
+
+        if ($taxId = $this->shopwareAPI->searchTaxIdByVatPercentage($vatPercentage)) {
+            cache()->set("sw-tax-id:{$vatPercentage}", $taxId);
+
+            return $taxId;
         }
 
-        return $taxId;
+        throw new MissingShopwareEntityException('tax', 'taxRate', $vatPercentage);
     }
 
     private function generateShopwareSimplePriceInfo(ModelColorSizeDTO $model): array
