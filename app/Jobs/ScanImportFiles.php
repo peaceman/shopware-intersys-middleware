@@ -39,6 +39,7 @@ class ScanImportFiles implements ShouldQueue
         Redis::funnel('scan-import-files')
             ->limit(1)
             ->releaseAfter($this->timeout)
+            ->block(0)
             ->then(function () use ($importFileScanner) {
                 $importFiles = $importFileScanner->scan();
                 if ($importFiles->isEmpty()) return;
