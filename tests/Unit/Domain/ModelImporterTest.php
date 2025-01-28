@@ -762,6 +762,153 @@ class ModelImporterTest extends TestCase
         }
     }
 
+    public function testVariantUpdateFromDeltaIgnoresStock()
+    {
+        $oldImportFile = tap(
+            new ImportFile(['original_filename' => '1.csv', 'type' => ImportFile::TYPE_BASE]),
+            fn($v) => $v->save(),
+        );
+
+        $oldModel = new ModelTest($oldImportFile, [
+            'name' => 'name of kek/alpha-23',
+            'number' => 'kek/alpha-23',
+            'gln' => $glnToImport = Str::random(13),
+            'colorVariations' => [
+                [
+                    'colorName' => 'black',
+                    'colorNumber' => '0x00',
+                    'sizeVariations' => [
+                        ['size' => 'L', 'price' => 100],
+                    ],
+                ],
+            ],
+        ]);
+
+        /** @var ModelColorDTO $oldColorVariation */
+        $oldColorVariation = $oldModel->getColorVariations()->first();
+
+        $article = tap(new Article([
+            'is_modno' => $oldColorVariation->getMainArticleNumber(),
+            'is_active' => true,
+            'sw_product_id' => (string) Str::uuid()->getHex(),
+        ]), fn($v) => $v->save());
+
+        $newImportFile = tap(
+            new ImportFile(['original_filename' => '2.csv', 'type' => ImportFile::TYPE_DELTA]),
+            fn($v) => $v->save(),
+        );
+
+        $newModel = new ModelTest($newImportFile, [
+            'name' => $oldModel->getModelName(),
+            'number' => $oldModel->getModelNumber(),
+            'gln' => $oldModel->getBranches()->first(),
+            'colorVariations' => [
+                [
+                    'colorName' => $oldColorVariation->getColorName(),
+                    'colorNumber' => $oldColorVariation->getColorNumber(),
+                    'sizeVariations' => $oldColorVariation->getSizeVariations()
+                        ->map(function (ModelColorSizeDTO $colorSizeDto) use ($glnToImport) {
+                            return [
+                                'ean' => $colorSizeDto->getEan(),
+                                'size' => $colorSizeDto->getSize(),
+                                'price' => $colorSizeDto->getPrice() + 5,
+                                'stock' => $colorSizeDto->getStockPerBranch()->get($glnToImport) + 10,
+                            ];
+                        })
+                        ->toArray(),
+                ],
+            ],
+        ]);
+
+        /** @var ModelColorDTO $newColorVariation */
+        $newColorVariation = $newModel->getColorVariations()->first();
+        /** @var ModelColorSizeDTO $newSizeVariation */
+        $newSizeVariation = $newColorVariation->getSizeVariations()->first();
+
+        $productDto = new ProductDTO([
+            'id' => $article->sw_product_id,
+            'children' => $oldColorVariation->getSizeVariations()
+                ->map(function (ModelColorSizeTest $colorSizeDto) use ($glnToImport): array {
+                    $netPrice = $colorSizeDto->getPrice() / (1 + ($colorSizeDto->getVatPercentage() / 100));
+
+                    $data = [
+                        'id' => (string) Str::uuid()->getHex(),
+                        'ean' => $colorSizeDto->getEan(),
+                        'stock' => $colorSizeDto->getStockPerBranch()->get($glnToImport),
+                        'price' => [
+                            [
+                                'net' => $netPrice,
+                                'gross' => $colorSizeDto->getPrice(),
+                                'listPrice' => ['net' => $colorSizeDto->getNetPrice(), 'gross' => $colorSizeDto->getPrice()],
+                            ],
+                        ],
+                        'customFields' => [
+                            'sim_protected_price' => true,
+                        ],
+                    ];
+
+                    if ($colorSizeDto->getSize() === 'L')
+                        Arr::forget($data, 'price.0.listPrice');
+
+                    if ($colorSizeDto->getSize() === 'XXL')
+                        Arr::forget($data, 'customFields');
+
+                    return $data;
+                })
+                ->toArray(),
+            'configuratorSettings' => $oldColorVariation
+                ->getSizeVariations()
+                ->map(function (ModelColorSizeDTO $colorSizeDto): array {
+                    $optionId = (string) Str::uuid()->getHex();
+
+                    return [
+                        'id' => (string) Str::uuid()->getHex(),
+                        'optionId' => $optionId,
+                        'option' => [
+                            'id' => $optionId,
+                            'name' => $colorSizeDto->getSize(),
+                        ]
+                    ];
+                })
+                ->toArray(),
+        ]);
+
+        // mocks
+        $shopwareApi = $this->createMock(Shopware6API::class);
+        $shopwareApi->expects(static::atLeastOnce())
+            ->method('searchCurrencyIdByIsoCode')
+            ->with('EUR')
+            ->willReturn($currencyId = Str::random(32));
+
+        $shopwareApi->expects(static::once())
+            ->method('getProductById')
+            ->with($article->sw_product_id)
+            ->willReturn($productDto);
+
+        $shopwareApi->expects(static::once())
+            ->method('updateProduct')
+            ->with($article->sw_product_id, static::callback($updateProductArgRecorder = new ArgRecorder()));
+
+        $propertyGroupImporter = new PropertyGroupImporterFake();
+
+        // execution
+        $modelImporter = $this->createModelImporterWithApi($shopwareApi, propertyGroupImporter: $propertyGroupImporter);
+        $modelImporter->setGlnToImport($glnToImport);
+
+        $modelImporter->import($newModel);
+
+        // assertions
+        $updateProductData = $updateProductArgRecorder->latest();
+        static::assertIsArray($updateProductData);
+        static::assertContainsOnly('string', Arr::pluck($updateProductData['children'], 'id'));
+
+        // check that the list price is set if it is not existing, even if price protection is enabled
+        [$childA] = $updateProductData['children'];
+        static::assertNotNull($childA);
+        static::assertArrayNotHasKey('stock', $childA);
+    }
+
+
     public function testVariantUpdateSizeChange()
     {
         $oldImportFile = tap(

@@ -122,7 +122,7 @@ class ModelColorSizeTest implements ModelColorSizeDTO
 
     public function getImportFile(): ImportFile
     {
-        return $this->getImportFile();
+        return $this->baseModel->getImportFile();
     }
 
     public function getCurrencyIsoCode(): string

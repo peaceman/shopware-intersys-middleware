@@ -57,13 +57,6 @@ class ModelImporter
         return $this;
     }
 
-    public function setIgnoreStockUpdatesFromDelta(bool $ignore): self
-    {
-       $this->ignoreStockUpdatesFromDelta = $ignore;
-
-       return $this;
-    }
-
     public function import(ModelDTO $baseModelData): void
     {
         foreach ($baseModelData->getColorVariations() as $modelData) {
@@ -280,6 +273,9 @@ class ModelImporter
 
                 if ($isVariantUpdate) {
                     $variantData['id'] = $productChild['id'];
+
+                    if ($model->getImportFile()->isDelta())
+                        unset($variantData['stock']);
                 }
 
                 return $variantData;

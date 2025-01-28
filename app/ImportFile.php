@@ -60,4 +60,9 @@ class ImportFile extends Model
     {
         return $this->only(['id', 'type', 'original_filename', 'storage_path', 'processed_at']);
     }
+
+    public function isDelta(): bool
+    {
+        return $this->type === static::TYPE_DELTA;
+    }
 }

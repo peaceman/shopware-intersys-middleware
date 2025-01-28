@@ -52,5 +52,4 @@ return [
             'afterExportPositionStatus' => env('SHOPWARE_ORDER_RETURN_AFTER_EXPORT_POSITION_STATUS', 5), // retoure (exportiert)
         ],
     ],
-    'ignoreDeltaStockUpdates' => env('SHOPWARE_IGNORE_DELTA_STOCK_UPDATES', false),
 ];
