@@ -261,7 +261,7 @@ class ModelImporter
                 $price = !$isVariantUpdate
                     ? $this->generateShopwareSimplePriceInfo($model)
                     : ($productDto->isMissingListPrice($model->getEan()) || !$productDto->isPriceProtected($model->getEan())
-                        ? Arr::only($this->generateShopwareSimplePriceInfo($model), 'listPrice')
+                        ? Arr::only($this->generateShopwareSimplePriceInfo($model), ['linked', 'listPrice'])
                         : null);
 
                 $variantData = [
