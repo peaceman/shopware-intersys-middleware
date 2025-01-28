@@ -3,6 +3,7 @@
 namespace Tests\Unit\Domain\Import;
 
 use App\Domain\Import\LockNameGeneratorRaw;
+use App\Domain\Import\PropertyGroup\OptionPositionAdvisorFixed;
 use App\Domain\Import\PropertyGroup\PropertyGroupDTO;
 use App\Domain\Import\PropertyGroup\PropertyGroupDTORaw;
 use App\Domain\Import\PropertyGroup\PropertyGroupImporterImpl;
@@ -16,6 +17,7 @@ use Illuminate\Support\Enumerable;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
+use Tests\Utils\ArgRecorder;
 
 class PropertyGroupImporterTest extends TestCase
 {
@@ -75,18 +77,22 @@ class PropertyGroupImporterTest extends TestCase
                 new PropertyGroupDTORaw($propertyGroupLookupResponse['data'][0]),
                 // sneak in a new option
                 new PropertyGroupDTORaw(array_merge_recursive($propertyGroupLookupResponse['data'][0], [
-                    'options' => [['id' => Str::random(40), 'name' => 'not so new option name']],
+                    'options' => [['id' => Str::random(40), 'name' => 'not so new option name', 'position' => 1]],
                 ])),
             );
 
         $swApiMock->expects(static::once())
             ->method('createPropertyGroupOption')
-            ->with(static::anything(), 'new for real')
-            ->willReturnCallback(fn (string $groupId, string $optionName) => new PropertyGroupOptionDTO([
+            ->with(static::anything(), ['name' => 'new for real', 'position' => 1])
+            ->willReturnCallback(fn (string $groupId, array $optionData) => new PropertyGroupOptionDTO([
                 'groupId' => $groupId,
                 'id' => Str::random(40),
-                'name' => $optionName,
+                'name' => $optionData['name'],
             ]));
+
+        $swApiMock->expects(static::never())
+            ->method('updatePropertyGroup')
+            ->with(static::anything());
 
         // call implementation
         $importer->import($propertyGroupName, $optionNames);
@@ -114,6 +120,10 @@ class PropertyGroupImporterTest extends TestCase
             ->method('createPropertyGroup')
             ->with($propertyGroupName)
             ->willReturn(new PropertyGroupDTORaw(['id' => Str::random(40), 'name' => $propertyGroupName]));
+
+        $swApiMock->expects(static::never())
+            ->method('updatePropertyGroup')
+            ->with(static::anything());
 
         $lockProviderMock->expects(static::once())
             ->method('lock')
@@ -149,6 +159,10 @@ class PropertyGroupImporterTest extends TestCase
             ->with($propertyGroupName)
             ->willReturn(new PropertyGroupDTORaw($propertyGroupLookupResponse['data'][0]));
 
+        $swApiMock->expects(static::never())
+            ->method('updatePropertyGroup')
+            ->with(static::anything());
+
         $lockMock->expects(static::never())
             ->method('lock')
             ->withAnyParameters();
@@ -182,6 +196,10 @@ class PropertyGroupImporterTest extends TestCase
             ->method('findPropertyGroupByName')
             ->with($propertyGroupName)
             ->willReturn(new PropertyGroupDTORaw($propertyGroupLookupResponse['data'][0]));
+
+        $swApiMock->expects(static::never())
+            ->method('updatePropertyGroup')
+            ->with(static::anything());
 
         // call the implementation
         $propertyGroup = $importer->import($propertyGroupName, [$existingPropertyGroupOptionName]);
@@ -222,7 +240,7 @@ class PropertyGroupImporterTest extends TestCase
 
         $swApiMock->expects(static::once())
             ->method('createPropertyGroupOption')
-            ->with($propertyGroupId, $newPropertyGroupOptionName)
+            ->with($propertyGroupId, ['name' => $newPropertyGroupOptionName, 'position' => 1])
             ->willReturn(new PropertyGroupOptionDTO([
                 'groupId' => $propertyGroupId,
                 'id' => Str::random(40),
@@ -246,6 +264,8 @@ class PropertyGroupImporterTest extends TestCase
             new NullLogger(),
             $swApiMock = $this->createMock(Shopware6API::class),
             new ArrayStore(),
+            null,
+            new OptionPositionAdvisorFixed(23),
         );
 
         $propertyGroupId = Str::random(40);
@@ -261,8 +281,13 @@ class PropertyGroupImporterTest extends TestCase
         $swApiMock->expects(static::exactly(count($propertyGroupOptionNames)))
             ->method('createPropertyGroupOption')
             ->with($propertyGroupId, static::anything())
-            ->willReturnCallback(function (string $groupId, string $optionName): PropertyGroupOptionDTO {
-                return new PropertyGroupOptionDTO(['groupId' => $groupId, 'id' => Str::random(40), 'name' => $optionName]);
+            ->willReturnCallback(function (string $groupId, array $optionData): PropertyGroupOptionDTO {
+                return new PropertyGroupOptionDTO([
+                    'groupId' => $groupId,
+                    'id' => Str::random(40),
+                    'name' => $optionData['name'],
+                    'position' => $optionData['position'],
+                ]);
             });
 
         // call the implementation
@@ -286,6 +311,67 @@ class PropertyGroupImporterTest extends TestCase
 
             static::assertNotNull($propertyGroupOption);
             static::assertNotNull($propertyGroupOption->getId());
+            static::assertEquals(23, $propertyGroupOption->getPosition());
         }
+    }
+
+    public function testPropertyGroupUpdateWithNewOptionPositions(): void
+    {
+        $importer = new PropertyGroupImporterImpl(
+            new NullLogger(),
+            $swApiMock = $this->createMock(Shopware6API::class),
+            new ArrayStore(),
+            null,
+            new OptionPositionAdvisorFixed(23),
+        );
+
+        $propertyGroupDTO = new PropertyGroupDTORaw([
+            'id' => Str::random(40),
+            'name' => 'Size',
+            'options' => [
+                ['id' => Str::random(40), 'name' => 'X', 'position' => 1],
+                ['id' => Str::random(40), 'name' => 'XL', 'position' => 1],
+            ],
+        ]);
+
+        // define api mocks
+        $swApiMock->expects(static::atLeastOnce())
+            ->method('findPropertyGroupByName')
+            ->with($propertyGroupDTO->getName())
+            ->willReturn($propertyGroupDTO);
+
+        $swApiMock->expects(static::never())
+            ->method('createPropertyGroup')
+            ->with($propertyGroupDTO->getName());
+
+        $swApiMock->expects(static::never())
+            ->method('createPropertyGroupOption')
+            ->withAnyParameters();
+
+        $swApiMock->expects(static::any())
+            ->method('updatePropertyGroup')
+            ->with($propertyGroupDTO->getId(), static::callback($updatePropertyGroupRecorder = new ArgRecorder()));
+
+        // call the implementation
+        $importer->import(
+            $propertyGroupDTO->getName(),
+            $propertyGroupDTO->getOptions()
+                ->map(fn (PropertyGroupOptionDTO $option): string => $option->getName())
+                ->toArray()
+        );
+
+        // assertions
+        static::assertCount(1, $updatePropertyGroupRecorder->args);
+
+        $updatePropertyGroupData = $updatePropertyGroupRecorder->latest();
+        $updateOptionsData = $updatePropertyGroupData['options'] ?? [];
+
+        static::assertSameSize($propertyGroupDTO->getOptions(), $updateOptionsData);
+        static::assertEquals(
+            $propertyGroupDTO->getOptions()
+                ->map(fn (PropertyGroupOptionDTO $option): array => ['id' => $option->getId(), 'position' => 23])
+                ->toArray(),
+            $updateOptionsData,
+        );
     }
 }

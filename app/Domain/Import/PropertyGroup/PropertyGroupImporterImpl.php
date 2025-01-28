@@ -17,17 +17,20 @@ class PropertyGroupImporterImpl implements PropertyGroupImporter
     protected LockNameGenerator $lockNameGenerator;
     protected int $lockTtlSeconds = 30;
     protected int $lockWaitSeconds = 5;
+    protected OptionPositionAdvisor $optionPositionAdvisor;
 
     public function __construct(
         LoggerInterface $logger,
         Shopware6API $shopware6API,
         LockProvider $lockProvider,
         ?LockNameGenerator $lockNameGenerator = null,
+        ?OptionPositionAdvisor $optionPositionAdvisor = null,
     ) {
         $this->logger = $logger;
         $this->shopwareApi = $shopware6API;
         $this->lockProvider = $lockProvider;
         $this->lockNameGenerator = $lockNameGenerator ?? new LockNameGeneratorAsciiGroupName();
+        $this->optionPositionAdvisor = $optionPositionAdvisor ?? new OptionPositionAdvisorFixed(1);
     }
 
     public function import(string $groupName, array $optionNames): PropertyGroupDTO
@@ -82,8 +85,17 @@ class PropertyGroupImporterImpl implements PropertyGroupImporter
 
         $newOptions = $newOptionNames
             ->map(function (string $optionName) use ($propertyGroup): PropertyGroupOptionDTO {
-                return $this->shopwareApi->createPropertyGroupOption($propertyGroup->getId(), $optionName);
+                return $this->shopwareApi->createPropertyGroupOption($propertyGroup->getId(), [
+                    'name' => $optionName,
+                    'position' => ($this->optionPositionAdvisor)($optionName),
+                ]);
             });
+
+        // check for and update changed options
+        $changedOptions = $this->determineChangedOptions($propertyGroup, []);
+
+        if (!$changedOptions->isEmpty())
+            $this->shopwareApi->updatePropertyGroup($propertyGroup->getId(), ['options' => $changedOptions->toArray()]);
 
         return new PropertyGroupDTOExtended($propertyGroup, $newOptions);
     }
@@ -91,8 +103,9 @@ class PropertyGroupImporterImpl implements PropertyGroupImporter
     protected function propertyGroupHasAllOptions(PropertyGroupDTO $propertyGroup, array $optionNames): bool
     {
         $newOptionNames = $this->determineNewOptionNames($propertyGroup, $optionNames);
+        $changedOptions = $this->determineChangedOptions($propertyGroup, $optionNames);
 
-        return $newOptionNames->isEmpty();
+        return $newOptionNames->isEmpty() && $changedOptions->isEmpty();
     }
 
     protected function determineNewOptionNames(PropertyGroupDTO $propertyGroup, array $optionNames): Collection
@@ -101,6 +114,30 @@ class PropertyGroupImporterImpl implements PropertyGroupImporter
             ->map(fn(PropertyGroupOptionDTO $option) => $option->getName());
 
         return collect($optionNames)->diff($existingOptionNames);
+    }
+
+    protected function determineChangedOptions(PropertyGroupDTO $propertyGroup, array $optionNames): Collection
+    {
+        $optionsWithPositions = collect($optionNames)
+            ->merge($propertyGroup->getOptions()->map(fn (PropertyGroupOptionDTO $option): string => $option->getName()))
+            ->unique()
+            ->map(fn(string $name): array => ['name' => $name, 'position' => ($this->optionPositionAdvisor)($name)]);
+
+        $changedOptions = $optionsWithPositions
+            ->filter(function (array $optionData) use ($propertyGroup): bool {
+                if (!($oldOption = $propertyGroup->getOptionByName($optionData['name'])))
+                    return false;
+
+                return $oldOption->getPosition() !== $optionData['position'];
+            })
+            ->map(function (array $optionData) use ($propertyGroup): array {
+                return [
+                    'id' => $propertyGroup->getOptionByName($optionData['name'])->getId(),
+                    'position' => $optionData['position'],
+                ];
+            });
+
+        return $changedOptions;
     }
 
     protected function getLock(string $groupName): Lock

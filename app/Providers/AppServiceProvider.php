@@ -12,6 +12,7 @@ use App\Domain\Import\ImportFileScanner;
 use App\Domain\Import\Manufacturer\ManufacturerImporter;
 use App\Domain\Import\Manufacturer\ManufacturerImporterImpl;
 use App\Domain\Import\ModelImporter;
+use App\Domain\Import\PropertyGroup\OptionPositionAdvisorSize;
 use App\Domain\Import\PropertyGroup\PropertyGroupImporter;
 use App\Domain\Import\PropertyGroup\PropertyGroupImporterImpl;
 use App\Domain\Import\SkippingImportFileScanner;
@@ -225,6 +226,7 @@ class AppServiceProvider extends ServiceProvider
                 $this->app[LoggerInterface::class],
                 $this->app[Shopware6API::class],
                 $this->app->get('cache')->driver()->getStore(),
+                optionPositionAdvisor: new OptionPositionAdvisorSize(),
             );
         });
     }

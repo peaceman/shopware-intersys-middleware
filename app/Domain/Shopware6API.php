@@ -182,12 +182,12 @@ class Shopware6API
         return new PropertyGroupDTORaw($responseData);
     }
 
-    public function createPropertyGroupOption(string $propertyGroupId, string $name): PropertyGroupOptionDTO
+    public function createPropertyGroupOption(string $propertyGroupId, array $optionData): PropertyGroupOptionDTO
     {
         $response = $this->httpClient->post('/api/property-group-option', [
             'json' => [
                 'groupId' => $propertyGroupId,
-                'name' => $name,
+                ...$optionData,
             ],
             'query' => ['_response' => 'basic'],
         ]);
@@ -196,6 +196,22 @@ class Shopware6API
         $data = $responseBody['data'] ?? [];
 
         return new PropertyGroupOptionDTO($data);
+    }
+
+    public function updatePropertyGroup(string $propertyGroupId, array $data): PropertyGroupDTO
+    {
+        $response = $this->httpClient->patch("/api/property-group/{$propertyGroupId}", [
+            'json' => [
+                ...$data,
+                'id' => $propertyGroupId,
+            ],
+            'query' => ['_response' => 'basic'],
+        ]);
+
+        $responseBody = Utils::jsonDecode($response->getBody(), true);
+        $responseData = $responseBody['data'] ?? [];
+
+        return new PropertyGroupDTORaw($responseData);
     }
 
     public function findProductByProductNumber(string $productNumber): ?ProductDTO

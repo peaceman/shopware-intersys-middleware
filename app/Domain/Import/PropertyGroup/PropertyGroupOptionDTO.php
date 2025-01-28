@@ -20,4 +20,9 @@ class PropertyGroupOptionDTO
     {
         return $this->data['id'];
     }
+
+    public function getPosition(): int
+    {
+        return $this->data['position'];
+    }
 }
