@@ -253,15 +253,18 @@ class ModelImporter
 
                 $price = !$isVariantUpdate
                     ? $this->generateShopwareSimplePriceInfo($model)
-                    : ($productDto->isMissingListPrice($model->getEan()) || !$productDto->isPriceProtected($model->getEan())
-                        ? Arr::only($this->generateShopwareSimplePriceInfo($model), ['linked', 'listPrice'])
-                        : null);
+                    : array_replace_recursive(
+                        $productChild['price'][0],
+                        $productDto->isMissingListPrice($model->getEan()) || !$productDto->isPriceProtected($model->getEan())
+                            ? Arr::only($this->generateShopwareSimplePriceInfo($model), ['linked', 'listPrice'])
+                            : []
+                    );
 
                 $variantData = [
                     'productNumber' => $model->getVariantArticleNumber(),
                     'ean' => $model->getEan(),
                     'stock' => $model->getStockPerBranch()->get($this->glnToImport, 0),
-                    'price' => array_filter([$price]),
+                    'price' => [$price],
                     'options' => [
                         [
                             'groupId' => $swPropertyGroup->getId(),

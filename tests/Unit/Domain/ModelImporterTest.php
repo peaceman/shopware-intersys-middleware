@@ -743,16 +743,17 @@ class ModelImporterTest extends TestCase
                 'linked' => false,
             ],
             'linked' => false,
-        ], current($childA['price']));
+        ], Arr::only(current($childA['price']), ['listPrice', 'linked']));
 
         // check that price protection is respected and prices are not touched
-        static::assertCount(0, $childB['price']);
+        $oldSizeVariation = $oldColorVariation->getSizeVariations()->firstWhere(fn ($v) => $v->getEan() === $childB['ean']);
+        static::assertEquals($oldSizeVariation->getPrice(), $childB['price'][0]['gross']);
 
         // check list price is updated
         $newSizeVariation = $newColorVariation->getSizeVariations()->firstWhere(fn ($v) => $v->getSize() === 'XXL');
         static::assertEquals(
             ['listPrice' => ['gross' => $newSizeVariation->getPrice(), 'net' => $newSizeVariation->getNetPrice(), 'linked' => false], 'linked' => false],
-            current($childC['price']),
+            Arr::only(current($childC['price']), ['listPrice', 'linked']),
         );
 
         // check active state in variants is always explicitly set to null to retain inheritance
