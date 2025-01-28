@@ -80,7 +80,7 @@ class PropertyGroupImporterImpl implements PropertyGroupImporter
 
         $this->logger->info(__METHOD__ . " Create new property group options", array_merge(
             $loggingContext,
-            ['newOptionNames' => $newOptionNames],
+            ['newOptionNames' => $newOptionNames->toArray()],
         ));
 
         $newOptions = $newOptionNames
