@@ -47,7 +47,6 @@ class AppServiceProvider extends ServiceProvider
         $this->registerShopwareAPI();
         $this->registerModelImporter();
         $this->registerImportFileScanner();
-        $this->registerOrderProvider();
         $this->registerOrderXMLGenerator();
         $this->registerOrderXMLExporter();
         $this->registerOldImportFileProvider();
@@ -138,43 +137,22 @@ class AppServiceProvider extends ServiceProvider
         });
     }
 
-    protected function registerOrderProvider(): void
-    {
-// todo help to sw6
-//        $this->app->extend(OrderSaleProvider::class, function (OrderSaleProvider $osp) {
-//            $osp->setRequirements(config('shopware.order.sale.requirements'));
-//
-//            return $osp;
-//        });
-//
-//        $this->app->extend(OrderReturnProvider::class, function (OrderReturnProvider $osp) {
-//            $osp->setRequirements(config('shopware.order.return.requirements'));
-//
-//            return $osp;
-//        });
-    }
-
     protected function registerOrderXMLExporter(): void
     {
-// todo help to sw6
-//        $this->app->bind(OrderXMLExporter::class, function () {
-//            $exporter = new OrderXMLExporter(
-//                $this->app[LoggerInterface::class],
-//                Storage::disk('local'),
-//                Storage::disk('intersys'),
-//                $this->app[OrderXMLGenerator::class],
-//                $this->app[ShopwareAPI::class]
-//            );
-//
-//            $exporter->setBaseFolder(config('intersys.folder.order'));
-//            $exporter->setOrderNumberPrefix(config('intersys.orderExport.file.numberPrefix'));
-//            $exporter->setAfterExportStatusReturn(config('shopware.order.return.afterExportStatus'));
-//            $exporter->setAfterExportStatusSale(config('shopware.order.sale.afterExportStatus'));
-//            $exporter->setAfterExportPositionStatusReturn(config('shopware.order.return.afterExportPositionStatus'));
-//            $exporter->setOrderPositionStatusRequirementReturn(config('shopware.order.return.requiredPositionStatus'));
-//
-//            return $exporter;
-//        });
+        $this->app->bind(OrderXMLExporter::class, function () {
+            $exporter = new OrderXMLExporter(
+                $this->app[LoggerInterface::class],
+                Storage::disk('local'),
+                Storage::disk('intersys'),
+                $this->app[OrderXMLGenerator::class],
+                $this->app[Shopware6API::class]
+            );
+
+            $exporter->setBaseFolder(config('intersys.folder.order'));
+            $exporter->setOrderNumberPrefix(config('intersys.orderExport.file.numberPrefix'));
+
+            return $exporter;
+        });
     }
 
     protected function registerOrderXMLGenerator(): void

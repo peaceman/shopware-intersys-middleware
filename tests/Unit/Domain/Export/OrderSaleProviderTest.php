@@ -57,10 +57,10 @@ class OrderSaleProviderTest extends TestCase
                     ]],
                 ],
                 'includes' => [
-                    'order' => ['id', 'orderNumber', 'lineItems'],
+                    'order' => ['id', 'orderNumber', 'lineItems', 'orderDateTime'],
                     'order_line_items' => ['type', 'quantity', 'price', 'product'],
                     'calculated_price' => ['unitPrice', 'totalPrice'],
-                    'product' => ['ean'],
+                    'product' => ['ean', 'productNumber'],
                 ],
                 'associations' => [
                     'lineItems' => [

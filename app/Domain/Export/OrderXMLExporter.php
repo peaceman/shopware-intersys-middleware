@@ -79,17 +79,18 @@ class OrderXMLExporter
         $lineItems = $order->getLineItems();
         $exportableLineItems = $this->filterLineItems($lineItems);
 
-        if (empty($exportableLineItems)) {
-            $this->logger->info(__METHOD__ . ' Order has no articles to export', $loggingContext);
-            return;
+        if (!empty($exportableLineItems)) {
+            $exportXML = $this->orderXMLGenerator->generate($type, new DateTimeImmutable(), $order, $exportableLineItems);
+            $this->storeExportXMLOnRemoteFS($type, $order, $exportXML);
+            $orderExport = $this->createOrderExport($type, $order, $exportXML);
+
+            $loggingContext = array_merge($loggingContext, ['orderExportID' => $orderExport->id]);
         }
 
-        $exportXML = $this->orderXMLGenerator->generate($type, new DateTimeImmutable(), $order, $exportableLineItems);
-        $this->storeExportXMLOnRemoteFS($type, $order, $exportXML);
-        $orderExport = $this->createOrderExport($type, $order, $exportXML);
+        $this->logger->info(__METHOD__ . ' Order has no articles to export', $loggingContext);
 
         $this->updateShopwareOrderState($type, $order);
-        $this->logger->info(__METHOD__ . ' Finished', array_merge($loggingContext, ['orderExportID' => $orderExport->id]));
+        $this->logger->info(__METHOD__ . ' Finished');
     }
 
     protected function filterLineItems(array $lineItems): array
@@ -161,6 +162,10 @@ class OrderXMLExporter
 
     private function flagShopwareReturnAsTransferred(OrderDTO $order): void
     {
-        // todo implement
+        $this->shopwareAPI->updateReturnOrder($order->getId(), [
+            'intersys' => [
+                'exportedAt' => new \DateTimeImmutable(),
+            ],
+        ]);
     }
 }

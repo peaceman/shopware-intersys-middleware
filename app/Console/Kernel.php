@@ -6,8 +6,6 @@ use App\Console\Commands\DeleteOldImportFiles;
 use App\Jobs\DeactivateArticlesJob;
 use App\Jobs\ExportOrdersJob;
 use App\Jobs\ScanImportFiles;
-use App\Jobs\SendDailyOrderOverviewJob;
-use App\Jobs\TrackUnpaidOrdersJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -32,7 +30,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->job(new ScanImportFiles())->everyMinute();
 //        $schedule->job(DeactivateArticlesJob::class)->dailyAt('06:33');
-//        $schedule->job(ExportOrdersJob::class)->everyMinute();
+        $schedule->job(ExportOrdersJob::class)->everyMinute();
         $schedule->command(DeleteOldImportFiles::class)->weekly();
     }
 

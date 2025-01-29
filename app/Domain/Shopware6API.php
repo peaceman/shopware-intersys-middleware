@@ -307,4 +307,38 @@ class Shopware6API
             $responseData,
         );
     }
+
+    public function listCompletedReturnOrdersRaw(): array
+    {
+        $response = $this->httpClient->post('/api/search/pickware-erp-return-order', [
+            'json' => [
+                'filter' => [
+                    ['type' => 'equals', 'field' => 'state.technicalName', 'value' => 'completed'],
+                    ['type' => 'equals', 'field' => 'intersys.exportedAt', 'value' => null],
+                ],
+                'associations' => [
+                    'lineItems' => [
+                        'associations' => [
+                            'product' => [],
+                        ],
+                    ],
+                    'intersys' => [],
+                    'sourceStockMovements' => [],
+                    'order' => [],
+                ],
+            ],
+        ]);
+
+        $responseBody = Utils::jsonDecode($response->getBody(), true);
+
+        return $responseBody;
+    }
+
+    public function updateReturnOrder(string $returnOrderId, array $data): void
+    {
+        $this->httpClient
+            ->patch("/api/pickware-erp-return-order/{$returnOrderId}", [
+                'json' => $data,
+            ]);
+    }
 }

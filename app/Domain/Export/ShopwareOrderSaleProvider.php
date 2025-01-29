@@ -41,10 +41,10 @@ class ShopwareOrderSaleProvider implements OrderProvider
         ];
 
         $includes = [
-            'order' => ['id', 'orderNumber', 'lineItems'],
+            'order' => ['id', 'orderNumber', 'lineItems', 'orderDateTime'],
             'order_line_items' => ['type', 'quantity', 'price', 'product'],
             'calculated_price' => ['unitPrice', 'totalPrice'],
-            'product' => ['ean'],
+            'product' => ['ean', 'productNumber'],
         ];
 
         $associations = [
