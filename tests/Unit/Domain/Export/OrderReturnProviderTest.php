@@ -51,5 +51,12 @@ class OrderReturnProviderTest extends TestCase
         /** @var OrderDTO $order */
         $order = collect($orders)->firstOrFail(fn (OrderDTO $v): bool => $v->getId() === '0194b21c8c157316b7d0cec5bde82ea1');
         static::assertCount(0, $order->getLineItems());
+
+        // ensure that the order provider does not crash on non product line items
+        $order = collect($orders)->firstOrFail(fn (OrderDTO $v): bool => $v->getId() === 'not a product order id');
+        static::assertCount(1, $order->getLineItems());
+
+        [$lineItem] = $order->getLineItems();
+        static::assertFalse($lineItem->isProduct());
     }
 }

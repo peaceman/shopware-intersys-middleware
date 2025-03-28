@@ -53,7 +53,7 @@ class ShopwareOrderReturnProvider implements OrderProvider
 
         return [
             'product' => [
-                'ean' => $lineItemData['product']['ean'],
+                'ean' => $lineItemData['product']['ean'] ?? '',
                 'productNumber' => $lineItemData['productNumber'],
             ],
             'quantity' => $restockQuantity,

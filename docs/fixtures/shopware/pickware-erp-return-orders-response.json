@@ -4658,6 +4658,482 @@
             "id": "0194b22ab98f7726b1a4dcb0c03fba28",
             "orderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
             "apiAlias": "pickware_erp_return_order"
+        },
+        {
+            "extensions": {
+                "foreignKeys": {
+                    "extensions": [],
+                    "apiAlias": "pickware_erp_return_order_foreign_keys_extension"
+                },
+                "search": {
+                    "extensions": [],
+                    "_uniqueIdentifier": null,
+                    "translated": [],
+                    "number": "1004"
+                }
+            },
+            "_uniqueIdentifier": "0194b22ab98f7726b1a4dcb0c03fba28",
+            "versionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+            "translated": [],
+            "createdAt": "2025-01-29T13:05:38.060+00:00",
+            "updatedAt": "2025-01-29T13:06:06.870+00:00",
+            "price": {
+                "extensions": [],
+                "netPrice": 36.87,
+                "totalPrice": 43.87,
+                "calculatedTaxes": [
+                    {
+                        "extensions": [],
+                        "tax": 7,
+                        "taxRate": 19,
+                        "price": 43.87,
+                        "apiAlias": "cart_tax_calculated"
+                    }
+                ],
+                "taxRules": [
+                    {
+                        "extensions": [],
+                        "taxRate": 19,
+                        "percentage": 100,
+                        "apiAlias": "cart_tax_rule"
+                    }
+                ],
+                "positionPrice": 38.97,
+                "taxStatus": "gross",
+                "rawTotal": 43.87,
+                "apiAlias": "cart_price"
+            },
+            "amountTotal": 43.87,
+            "amountNet": 36.87,
+            "positionPrice": 38.97,
+            "taxStatus": "gross",
+            "internalComment": null,
+            "number": "1004",
+            "includeInInvoiceCorrection": true,
+            "shippingCosts": {
+                "extensions": [],
+                "unitPrice": 4.9,
+                "quantity": 1,
+                "totalPrice": 4.9,
+                "calculatedTaxes": [
+                    {
+                        "extensions": [],
+                        "tax": 0.78,
+                        "taxRate": 19,
+                        "price": 4.9,
+                        "apiAlias": "cart_tax_calculated"
+                    }
+                ],
+                "taxRules": [
+                    {
+                        "extensions": [],
+                        "taxRate": 19,
+                        "percentage": 100,
+                        "apiAlias": "cart_tax_rule"
+                    }
+                ],
+                "referencePrice": null,
+                "listPrice": null,
+                "regulationPrice": null,
+                "apiAlias": "calculated_price"
+            },
+            "lineItems": [
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "pickware_erp_return_order_line_item_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "0194b22aba597bc0b7b4fbb8c147e57d",
+                    "versionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "translated": [],
+                    "createdAt": "2025-01-29T13:05:38.060+00:00",
+                    "updatedAt": "2025-01-29T13:05:38.097+00:00",
+                    "type": "not a product",
+                    "name": "HERREN POLOSHIRT POLO (218755-BS559) (Größe: M)",
+                    "quantity": 3,
+                    "priceDefinition": {
+                        "extensions": [],
+                        "price": 12.99,
+                        "taxRules": [
+                            {
+                                "extensions": [],
+                                "taxRate": 19,
+                                "percentage": 100,
+                                "apiAlias": "cart_tax_rule"
+                            }
+                        ],
+                        "quantity": 3,
+                        "isCalculated": true,
+                        "referencePriceDefinition": null,
+                        "listPrice": 32.95,
+                        "regulationPrice": null,
+                        "type": "quantity",
+                        "apiAlias": "cart_price_quantity"
+                    },
+                    "price": {
+                        "extensions": [],
+                        "unitPrice": 12.99,
+                        "quantity": 3,
+                        "totalPrice": 38.97,
+                        "calculatedTaxes": [
+                            {
+                                "extensions": [],
+                                "tax": 6.22,
+                                "taxRate": 19,
+                                "price": 38.97,
+                                "apiAlias": "cart_tax_calculated"
+                            }
+                        ],
+                        "taxRules": [
+                            {
+                                "extensions": [],
+                                "taxRate": 19,
+                                "percentage": 100,
+                                "apiAlias": "cart_tax_rule"
+                            }
+                        ],
+                        "referencePrice": null,
+                        "listPrice": {
+                            "extensions": [],
+                            "price": 32.95,
+                            "discount": -19.96,
+                            "percentage": 60.58,
+                            "apiAlias": "cart_list_price"
+                        },
+                        "regulationPrice": null,
+                        "apiAlias": "calculated_price"
+                    },
+                    "unitPrice": 12.99,
+                    "totalPrice": 38.97,
+                    "productId": "0192dd25e5f9719bab8e05a55ae161ef",
+                    "productVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "product": null,
+                    "productNumber": "218755S23346BS559603",
+                    "returnOrderId": "0194b22ab98f7726b1a4dcb0c03fba28",
+                    "returnOrder": null,
+                    "orderLineItemId": "0194b22a06df71eb88ea83fdf4f67570",
+                    "orderLineItem": null,
+                    "reason": "unknown",
+                    "id": "0194b22aba597bc0b7b4fbb8c147e57d",
+                    "returnOrderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "orderLineItemVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "apiAlias": "pickware_erp_return_order_line_item"
+                }
+            ],
+            "refund": null,
+            "stateId": "0192af3c43c6736797ee8600010d6e6e",
+            "state": null,
+            "orderId": "0194b22a06e071dfad547c1190702afd",
+            "order": {
+                "extensions": {
+                    "foreignKeys": {
+                        "extensions": [],
+                        "apiAlias": "order_foreign_keys_extension"
+                    },
+                    "internal_mapping_storage": {
+                        "extensions": [],
+                        "apiAlias": null
+                    }
+                },
+                "_uniqueIdentifier": "0194b22a06e071dfad547c1190702afd",
+                "versionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                "translated": [],
+                "createdAt": "2025-01-29T13:04:46.316+00:00",
+                "updatedAt": "2025-01-29T13:05:30.157+00:00",
+                "orderNumber": "10013",
+                "currencyId": "b7d2554b0ce847cd82f3ac9bd1c0dfca",
+                "currencyFactor": 1,
+                "salesChannelId": "0192af1d893f7b88bc461169ef6d9f00",
+                "billingAddressId": "0194b22a06df71eb88ea83fdf5cecd50",
+                "billingAddressVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                "orderDateTime": "2025-01-29T13:04:46.303+00:00",
+                "orderDate": "2025-01-29T00:00:00.000+00:00",
+                "price": {
+                    "extensions": [],
+                    "netPrice": 36.87,
+                    "totalPrice": 43.87,
+                    "calculatedTaxes": [
+                        {
+                            "extensions": [],
+                            "tax": 7,
+                            "taxRate": 19,
+                            "price": 43.87,
+                            "apiAlias": "cart_tax_calculated"
+                        }
+                    ],
+                    "taxRules": [
+                        {
+                            "extensions": [],
+                            "taxRate": 19,
+                            "percentage": 100,
+                            "apiAlias": "cart_tax_rule"
+                        }
+                    ],
+                    "positionPrice": 38.97,
+                    "taxStatus": "gross",
+                    "rawTotal": 43.87,
+                    "apiAlias": "cart_price"
+                },
+                "amountTotal": 43.87,
+                "amountNet": 36.87,
+                "positionPrice": 38.97,
+                "taxStatus": "gross",
+                "shippingCosts": {
+                    "extensions": [],
+                    "unitPrice": 4.9,
+                    "quantity": 1,
+                    "totalPrice": 4.9,
+                    "calculatedTaxes": [
+                        {
+                            "extensions": [],
+                            "tax": 0.78,
+                            "taxRate": 19,
+                            "price": 4.9,
+                            "apiAlias": "cart_tax_calculated"
+                        }
+                    ],
+                    "taxRules": [
+                        {
+                            "extensions": [],
+                            "taxRate": 19,
+                            "percentage": 100,
+                            "apiAlias": "cart_tax_rule"
+                        }
+                    ],
+                    "referencePrice": null,
+                    "listPrice": null,
+                    "regulationPrice": null,
+                    "apiAlias": "calculated_price"
+                },
+                "shippingTotal": 4.9,
+                "orderCustomer": {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "order_customer_foreign_keys_extension"
+                        },
+                        "internal_mapping_storage": {
+                            "extensions": [],
+                            "apiAlias": null
+                        }
+                    },
+                    "_uniqueIdentifier": "0194b22a06e47341b8787892e79fe1aa",
+                    "versionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "translated": [],
+                    "createdAt": "2025-01-29T13:04:46.312+00:00",
+                    "updatedAt": null,
+                    "email": "hauberg@sneaxs.de",
+                    "orderId": "0194b22a06e071dfad547c1190702afd",
+                    "salutationId": "01929711d2e9711eab3e32fe4374e63e",
+                    "firstName": "Philip",
+                    "lastName": "Hauberg",
+                    "title": null,
+                    "vatIds": null,
+                    "company": null,
+                    "customerNumber": "10003",
+                    "customerId": "0193b4dff59171ddadb06dffc053cacc",
+                    "customer": null,
+                    "salutation": null,
+                    "order": null,
+                    "remoteAddress": "86.103.133.0",
+                    "orderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "customFields": null,
+                    "id": "0194b22a06e47341b8787892e79fe1aa",
+                    "apiAlias": "order_customer"
+                },
+                "currency": null,
+                "languageId": "2fbb5fe2e29a4d70aa5854ce7ce3e20b",
+                "language": null,
+                "salesChannel": null,
+                "addresses": null,
+                "billingAddress": null,
+                "deliveries": null,
+                "lineItems": null,
+                "transactions": null,
+                "deepLinkCode": "TaOCsXqZmYORq1dx9GEZ0naE37AM79TH",
+                "autoIncrement": 83,
+                "stateMachineState": null,
+                "stateId": "01929711d36c71f8b92a1ad022bc855a",
+                "documents": null,
+                "tags": null,
+                "affiliateCode": null,
+                "campaignCode": null,
+                "customerComment": null,
+                "ruleIds": [
+                    "01929711d34072ec816283fe01cc8516",
+                    "01929711d344728ba6691c0ddef598f6",
+                    "01929711d77273f2aa2641d4207779d3",
+                    "0193a27167707e1bbdcb6d62553e389e",
+                    "0193a27e456b70fcb6e067607afb7cf6",
+                    "0193bae075bb7655b276e408ec0ca8e2",
+                    "bf54529febf323ec7d27256b178207f5"
+                ],
+                "createdById": "01929715e1be753082e44e1823294cd4",
+                "createdBy": null,
+                "updatedById": "01929715e1be753082e44e1823294cd4",
+                "updatedBy": null,
+                "itemRounding": {
+                    "extensions": [],
+                    "decimals": 2,
+                    "interval": 0.01,
+                    "roundForNet": true,
+                    "apiAlias": "shopware_core_framework_data_abstraction_layer_pricing_cash_rounding_config"
+                },
+                "totalRounding": {
+                    "extensions": [],
+                    "decimals": 2,
+                    "interval": 0.01,
+                    "roundForNet": true,
+                    "apiAlias": "shopware_core_framework_data_abstraction_layer_pricing_cash_rounding_config"
+                },
+                "source": null,
+                "customFields": null,
+                "id": "0194b22a06e071dfad547c1190702afd",
+                "apiAlias": "order"
+            },
+            "warehouseId": "0192af3c42e471779685ccd2d4169952",
+            "warehouse": null,
+            "userId": "01929715e1be753082e44e1823294cd4",
+            "user": null,
+            "documents": null,
+            "stocks": null,
+            "goodsReceipts": null,
+            "goodsReceiptLineItems": null,
+            "sourceStockMovements": [
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "pickware_erp_stock_movement_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "0194b22b419a71609ca4f92206eb88c6",
+                    "versionId": null,
+                    "translated": [],
+                    "createdAt": "2025-01-29T13:06:06.886+00:00",
+                    "updatedAt": null,
+                    "quantity": 1,
+                    "comment": null,
+                    "productId": "0192dd25e5f9719bab8e05a55ae161ef",
+                    "product": null,
+                    "sourceLocationSnapshot": {
+                        "number": "1004"
+                    },
+                    "sourceLocationTypeTechnicalName": "return_order",
+                    "sourceLocationType": null,
+                    "sourceWarehouseId": null,
+                    "sourceWarehouse": null,
+                    "sourceBinLocationId": null,
+                    "sourceBinLocation": null,
+                    "sourceOrderId": null,
+                    "sourceOrderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "sourceOrder": null,
+                    "sourceReturnOrderId": "0194b22ab98f7726b1a4dcb0c03fba28",
+                    "sourceReturnOrder": null,
+                    "sourceStockContainerId": null,
+                    "sourceStockContainer": null,
+                    "sourceGoodsReceiptId": null,
+                    "sourceGoodsReceipt": null,
+                    "sourceSpecialStockLocationTechnicalName": null,
+                    "sourceSpecialStockLocation": null,
+                    "destinationLocationSnapshot": null,
+                    "destinationLocationTypeTechnicalName": "special_stock_location",
+                    "destinationLocationType": null,
+                    "destinationWarehouseId": null,
+                    "destinationWarehouse": null,
+                    "destinationBinLocationId": null,
+                    "destinationBinLocation": null,
+                    "destinationOrderId": null,
+                    "destinationOrderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "destinationOrder": null,
+                    "destinationReturnOrderId": null,
+                    "destinationReturnOrder": null,
+                    "destinationStockContainerId": null,
+                    "destinationStockContainer": null,
+                    "destinationGoodsReceiptId": null,
+                    "destinationGoodsReceipt": null,
+                    "destinationSpecialStockLocationTechnicalName": "unknown",
+                    "destinationSpecialStockLocation": null,
+                    "userId": "01929715e1be753082e44e1823294cd4",
+                    "user": null,
+                    "id": "0194b22b419a71609ca4f92206eb88c6",
+                    "productVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "sourceReturnOrderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "destinationReturnOrderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "apiAlias": "pickware_erp_stock_movement"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "pickware_erp_stock_movement_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "0194b22b41a272eeb9726d38644a7990",
+                    "versionId": null,
+                    "translated": [],
+                    "createdAt": "2025-01-29T13:06:06.886+00:00",
+                    "updatedAt": null,
+                    "quantity": 2,
+                    "comment": null,
+                    "productId": "0192dd25e5f9719bab8e05a55ae161ef",
+                    "product": null,
+                    "sourceLocationSnapshot": {
+                        "number": "1004"
+                    },
+                    "sourceLocationTypeTechnicalName": "return_order",
+                    "sourceLocationType": null,
+                    "sourceWarehouseId": null,
+                    "sourceWarehouse": null,
+                    "sourceBinLocationId": null,
+                    "sourceBinLocation": null,
+                    "sourceOrderId": null,
+                    "sourceOrderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "sourceOrder": null,
+                    "sourceReturnOrderId": "0194b22ab98f7726b1a4dcb0c03fba28",
+                    "sourceReturnOrder": null,
+                    "sourceStockContainerId": null,
+                    "sourceStockContainer": null,
+                    "sourceGoodsReceiptId": null,
+                    "sourceGoodsReceipt": null,
+                    "sourceSpecialStockLocationTechnicalName": null,
+                    "sourceSpecialStockLocation": null,
+                    "destinationLocationSnapshot": {
+                        "code": "HL",
+                        "name": "Hauptlager"
+                    },
+                    "destinationLocationTypeTechnicalName": "warehouse",
+                    "destinationLocationType": null,
+                    "destinationWarehouseId": "0192af3c42e471779685ccd2d4169952",
+                    "destinationWarehouse": null,
+                    "destinationBinLocationId": null,
+                    "destinationBinLocation": null,
+                    "destinationOrderId": null,
+                    "destinationOrderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "destinationOrder": null,
+                    "destinationReturnOrderId": null,
+                    "destinationReturnOrder": null,
+                    "destinationStockContainerId": null,
+                    "destinationStockContainer": null,
+                    "destinationGoodsReceiptId": null,
+                    "destinationGoodsReceipt": null,
+                    "destinationSpecialStockLocationTechnicalName": null,
+                    "destinationSpecialStockLocation": null,
+                    "userId": "01929715e1be753082e44e1823294cd4",
+                    "user": null,
+                    "id": "0194b22b41a272eeb9726d38644a7990",
+                    "productVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "sourceReturnOrderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "destinationReturnOrderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "apiAlias": "pickware_erp_stock_movement"
+                }
+            ],
+            "destinationStockMovements": null,
+            "id": "not a product order id",
+            "orderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+            "apiAlias": "pickware_erp_return_order"
         }
     ],
     "aggregations": []
