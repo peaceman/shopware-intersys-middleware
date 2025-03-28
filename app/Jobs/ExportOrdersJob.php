@@ -8,10 +8,12 @@ namespace App\Jobs;
 use App\Commands\ExportOrders;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Redis;
 
 class ExportOrdersJob implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, InteractsWithQueue;
 
     public $timeout = 5 * 60;
 
@@ -22,6 +24,14 @@ class ExportOrdersJob implements ShouldQueue
 
     public function handle(ExportOrders $exportOrders): void
     {
-        $exportOrders();
+        Redis::funnel('export-orders')
+            ->limit(1)
+            ->releaseAfter($this->timeout)
+            ->block(0)
+            ->then($exportOrders, function () {
+                // Could not obtain lock...
+                logger()->info(__CLASS__ . ' Could not obtain lock, delete job');
+                $this->delete();
+            });
     }
 }
