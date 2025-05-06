@@ -150,14 +150,19 @@ class OrderXMLExporter
     private function updateShopwareOrderState(OrderExportType $type, OrderDTO $order): void
     {
         match ($type) {
-            OrderExportType::Sale => $this->setShopwareOrderInProcess($order),
+            OrderExportType::Sale => $this->flagShopwareOrderAsTransferred($order),
             OrderExportType::Return => $this->flagShopwareReturnAsTransferred($order),
         };
     }
 
-    private function setShopwareOrderInProcess(OrderDTO $order): void
+    public function flagShopwareOrderAsTransferred(OrderDTO $order): void
     {
-        $this->shopwareAPI->updateOrderState($order->getId(), 'process');
+        $this->shopwareAPI->updateOrder($order->getId(), [
+            'id' => $order->getId(),
+            'intersys' => [
+                'exportedAt' => new \DateTimeImmutable(),
+            ],
+        ]);
     }
 
     private function flagShopwareReturnAsTransferred(OrderDTO $order): void

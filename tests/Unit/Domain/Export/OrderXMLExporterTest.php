@@ -6,27 +6,16 @@ namespace Tests\Unit\Domain\Export;
 
 use App\Domain\Export\FakeOrderProvider;
 use App\Domain\Export\Order;
-use App\Domain\Export\OrderArticle;
 use App\Domain\Export\OrderExportType;
 use App\Domain\Export\OrderLineItemDTO;
 use App\Domain\Export\OrderXMLExporter;
 use App\Domain\Export\OrderXMLGenerator;
 use App\Domain\Shopware6API;
-use App\Domain\ShopwareAPI;
 use App\OrderExport;
-use DateTime;
-use DateTimeImmutable;
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Mockery;
 use Psr\Log\NullLogger;
 use Tests\TestCase;
 use Tests\Utils\ArgRecorder;
@@ -97,8 +86,8 @@ class OrderXMLExporterTest extends TestCase
         $shopwareApi = $this->createMock(Shopware6API::class);
 
         $shopwareApi->expects(static::once())
-            ->method('updateOrderState')
-            ->with($orderDTO->getId(), 'process');
+            ->method('updateOrder')
+            ->with($orderDTO->getId(), static::callback($updateOrderDataRecorder = new ArgRecorder()));
 
         $generator->expects(static::once())
             ->method('generate')
@@ -132,6 +121,11 @@ class OrderXMLExporterTest extends TestCase
             'sw_order_number' => $orderDTO->getOrderNumber(),
             'sw_order_id' => $orderDTO->getId(),
         ]);
+
+        // check order update data
+        $updateOrderData = $updateOrderDataRecorder->latest();
+        static::assertEquals($orderDTO->getId(), $updateOrderData['id']);
+        static::assertNotNull($updateOrderData['intersys']['exportedAt']);
 
         // check line item filters
         $lineItems = $lineItemsRecorder->latest();

@@ -334,6 +334,14 @@ class Shopware6API
         return $responseBody;
     }
 
+    public function updateOrder(string $orderId, array $data): void
+    {
+        $this->httpClient
+            ->patch("/api/order/{$orderId}", [
+                'json' => $data,
+            ]);
+    }
+
     public function updateReturnOrder(string $returnOrderId, array $data): void
     {
         $this->httpClient

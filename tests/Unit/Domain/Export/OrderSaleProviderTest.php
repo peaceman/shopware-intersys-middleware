@@ -6,22 +6,10 @@
 namespace Tests\Unit\Domain\Export;
 
 use App\Domain\Export\Order;
-use App\Domain\Export\OrderArticle;
 use App\Domain\Export\OrderFetched;
 use App\Domain\Export\ShopwareOrderSaleProvider;
 use App\Domain\Shopware6API;
-use App\Domain\ShopwareAPI;
-use DateTime;
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Query;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Events\NullDispatcher;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;
 use Psr\Log\NullLogger;
 use Tests\TestCase;
@@ -45,16 +33,8 @@ class OrderSaleProviderTest extends TestCase
             ->method('listOrders')
             ->with([
                 'filter' => [
-                    ['type' => 'equals', 'field' => 'stateMachineState.technicalName', 'value' => 'open'],
-                    ['type' => 'multi', 'operator' => 'or', 'queries' => [
-                        ['type' => 'multi', 'operator' => 'and', 'queries' => [
-                            ['type' => 'not', 'queries' => [
-                                ['type' => 'equals', 'field' => 'transactions.paymentMethod.technicalName', 'value' => 'payment_prepayment'],
-                            ]],
-                            ['type' => 'equals', 'field' => 'transactions.stateMachineState.technicalName', 'value' => 'paid'],
-                        ]],
-                        ['type' => 'equals', 'field' => 'transactions.paymentMethod.technicalName', 'value' => 'payment_prepayment'],
-                    ]],
+                    ['type' => 'equals', 'field' => 'deliveries.stateMachineState.technicalName', 'value' => 'shipped'],
+                    ['type' => 'equals', 'field' => 'intersys.exportedAt', 'value' => null],
                 ],
                 'includes' => [
                     'order' => ['id', 'orderNumber', 'lineItems', 'orderDateTime'],
@@ -63,6 +43,7 @@ class OrderSaleProviderTest extends TestCase
                     'product' => ['ean', 'productNumber'],
                 ],
                 'associations' => [
+                    'intersys' => [],
                     'lineItems' => [
                         'associations' => [
                             'product' => [],

@@ -28,16 +28,8 @@ class ShopwareOrderSaleProvider implements OrderProvider
     public function getOrders(): iterable
     {
         $filters = [
-            ['type' => 'equals', 'field' => 'stateMachineState.technicalName', 'value' => 'open'],
-            ['type' => 'multi', 'operator' => 'or', 'queries' => [
-                ['type' => 'multi', 'operator' => 'and', 'queries' => [
-                    ['type' => 'not', 'queries' => [
-                        ['type' => 'equals', 'field' => 'transactions.paymentMethod.technicalName', 'value' => 'payment_prepayment'],
-                    ]],
-                    ['type' => 'equals', 'field' => 'transactions.stateMachineState.technicalName', 'value' => 'paid'],
-                ]],
-                ['type' => 'equals', 'field' => 'transactions.paymentMethod.technicalName', 'value' => 'payment_prepayment'],
-            ]],
+            ['type' => 'equals', 'field' => 'deliveries.stateMachineState.technicalName', 'value' => 'shipped'],
+            ['type' => 'equals', 'field' => 'intersys.exportedAt', 'value' => null],
         ];
 
         $includes = [
@@ -48,6 +40,7 @@ class ShopwareOrderSaleProvider implements OrderProvider
         ];
 
         $associations = [
+            'intersys' => [],
             'lineItems' => [
                 'associations' => [
                     'product' => [],
