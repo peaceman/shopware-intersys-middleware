@@ -171,6 +171,7 @@ class ModelImporter
             'configuratorSettings' => $newVariantOptionIds
                 ->map(fn(string $optionId): array => ['optionId' => $optionId])
                 ->toArray(),
+            'deliveryTimeId' => $this->fetchShopwareDeliveryTimeId(),
         ];
 
         $this->logger->info(__METHOD__ . ' Updating article', [...$loggingContext, 'updateData' => $updateData]);
@@ -222,6 +223,7 @@ class ModelImporter
                 ...$variants->flatMap(fn (array $variant): array => Arr::pluck($variant['options'], 'id'))
                     ->map(fn (string $v): array => ['optionId' => $v]),
             ],
+            'deliveryTimeId' => $this->fetchShopwareDeliveryTimeId(),
         ];
 
         $product = $this->shopwareAPI->createProduct($productData);
@@ -379,6 +381,20 @@ class ModelImporter
                 'linked' => false,
             ],
         ];
+    }
+
+    private function fetchShopwareDeliveryTimeId(): string
+    {
+        if ($deliveryTimeId = cache()->get("sw-delivery-time-id:0-0"))
+            return $deliveryTimeId;
+
+        if ($deliveryTimeId = $this->shopwareAPI->searchDeliveryTimeIdByMinMax(0, 0)) {
+            cache()->set("sw-delivery-time-id:0-0", $deliveryTimeId);
+
+            return $deliveryTimeId;
+        }
+
+        throw new MissingShopwareEntityException('deliveryTime', 'minMax', '0-0');
     }
 
     private function deleteProductVariantOptions(Collection $variants, ProductDTO $swProduct, string $swProductId): void

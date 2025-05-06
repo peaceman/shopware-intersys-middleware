@@ -161,6 +161,11 @@ class ModelImporterTest extends TestCase
             ->with(19.0)
             ->willReturn($taxId = Str::random(32));
 
+        $shopwareApi->expects(static::atLeastOnce())
+            ->method('searchDeliveryTimeIdByMinMax')
+            ->with(0, 0)
+            ->willReturn($deliveryTimeId = Str::random(32));
+
         // execution
         $modelImporter->import($model);
 
@@ -172,6 +177,7 @@ class ModelImporterTest extends TestCase
         static::assertNotNull($productData['name'] ?? null, 'missing product name');
         static::assertNotNull($productData['stock'] ?? null, 'missing product stock'); // shopware 6 requires stock for the main product
         static::assertEquals($taxId, $productData['taxId'] ?? null);
+        static::assertEquals($deliveryTimeId, $productData['deliveryTimeId'] ?? null);
         static::assertTrue($productData['isCloseout'], 'missing is closeout');
 
         [$price] = $productData['price'];
@@ -237,6 +243,11 @@ class ModelImporterTest extends TestCase
             ->method('searchCurrencyIdByIsoCode')
             ->with('EUR')
             ->willReturn($currencyId = Str::random(32));
+
+        $shopwareApi->expects(static::atLeastOnce())
+            ->method('searchDeliveryTimeIdByMinMax')
+            ->with(0, 0)
+            ->willReturn($deliveryTimeId = Str::random(32));
 
         $shopwareApi->expects(static::once())
             ->method('findProductByProductNumber')
@@ -345,6 +356,11 @@ class ModelImporterTest extends TestCase
             ->with('EUR')
             ->willReturn($currencyId = Str::random(32));
 
+        $shopwareApi->expects(static::atLeastOnce())
+            ->method('searchDeliveryTimeIdByMinMax')
+            ->with(0, 0)
+            ->willReturn($deliveryTimeId = Str::random(32));
+
         // article exists in the local database so there should be no lookup necessary
         $shopwareApi->expects(static::never())
             ->method('findProductByProductNumber')
@@ -407,6 +423,7 @@ class ModelImporterTest extends TestCase
         $updateProductData = $updateProductArgRecorder->latest();
         static::assertIsArray($updateProductData);
         static::assertTrue($updateProductData['isCloseout'], 'missing is closeout');
+        static::assertEquals($updateProductData['deliveryTimeId'], $deliveryTimeId);
         static::assertCount(1, $updateProductData['children']);
 
         [$updateProductChildData] = $updateProductData['children'];
@@ -554,6 +571,11 @@ class ModelImporterTest extends TestCase
             ->method('searchCurrencyIdByIsoCode')
             ->with('EUR')
             ->willReturn($currencyId = Str::random(32));
+
+        $shopwareApi->expects(static::atLeastOnce())
+            ->method('searchDeliveryTimeIdByMinMax')
+            ->with(0, 0)
+            ->willReturn($deliveryTimeId = Str::random(32));
 
         $shopwareApi->expects(static::once())
             ->method('getProductById')
@@ -709,6 +731,11 @@ class ModelImporterTest extends TestCase
             ->method('searchCurrencyIdByIsoCode')
             ->with('EUR')
             ->willReturn($currencyId = Str::random(32));
+
+        $shopwareApi->expects(static::atLeastOnce())
+            ->method('searchDeliveryTimeIdByMinMax')
+            ->with(0, 0)
+            ->willReturn($deliveryTimeId = Str::random(32));
 
         $shopwareApi->expects(static::once())
             ->method('getProductById')
@@ -881,6 +908,11 @@ class ModelImporterTest extends TestCase
             ->with('EUR')
             ->willReturn($currencyId = Str::random(32));
 
+        $shopwareApi->expects(static::atLeastOnce())
+            ->method('searchDeliveryTimeIdByMinMax')
+            ->with(0, 0)
+            ->willReturn($deliveryTimeId = Str::random(32));
+
         $shopwareApi->expects(static::once())
             ->method('getProductById')
             ->with($article->sw_product_id)
@@ -1036,6 +1068,11 @@ class ModelImporterTest extends TestCase
             ->method('searchCurrencyIdByIsoCode')
             ->with('EUR')
             ->willReturn($currencyId = Str::random(32));
+
+        $shopwareApi->expects(static::atLeastOnce())
+            ->method('searchDeliveryTimeIdByMinMax')
+            ->with(0, 0)
+            ->willReturn($deliveryTimeId = Str::random(32));
 
         $shopwareApi->expects(static::once())
             ->method('getProductById')

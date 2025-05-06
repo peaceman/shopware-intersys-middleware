@@ -349,4 +349,25 @@ class Shopware6API
                 'json' => $data,
             ]);
     }
+
+    public function searchDeliveryTimeIdByMinMax(int $min, int $max)
+    {
+        $response = $this->httpClient->post('/api/search/delivery-time', [
+            'json' => [
+                'filter' => [
+                    ['type' => 'equals', 'field' => 'min', 'value' => $min],
+                    ['type' => 'equals', 'field' => 'max', 'value' => $max],
+                ],
+                'limit' => 1,
+            ],
+        ]);
+
+        $responseBody = Utils::jsonDecode($response->getBody(), true);
+        $responseData = $responseBody['data'] ?? [];
+        if (empty($responseData)) return null;
+
+        [$deliveryTime] = $responseData;
+
+        return $deliveryTime['id'] ?? null;
+    }
 }
