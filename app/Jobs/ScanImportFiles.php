@@ -51,7 +51,7 @@ class ScanImportFiles implements ShouldQueue
                     }));
             }, function () {
                 // Could not obtain lock...
-                logger()->info('Could not obtain lock, delete job');
+                logger()->info(__CLASS__ . ' Could not obtain lock, delete job');
                 $this->delete();
             });
     }
