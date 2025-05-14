@@ -18,7 +18,7 @@ class OptionPositionAdvisorSize implements OptionPositionAdvisor
                 return $result;
         }
 
-        return 1;
+        return 2^32;
     }
 
     public function handleRegularNumber(string $value): ?int
@@ -26,7 +26,7 @@ class OptionPositionAdvisorSize implements OptionPositionAdvisor
         $value = str_replace(',', '.', $value);
 
         if (is_numeric($value))
-            return 10_000 + ($value * 10);
+            return $value * pow(10, 7);
 
         return null;
     }
@@ -41,9 +41,17 @@ class OptionPositionAdvisorSize implements OptionPositionAdvisor
 
         $suffixParts = preg_split('//', $suffix, -1, PREG_SPLIT_NO_EMPTY);
         $suffixValue = collect($suffixParts)
-            ->reduce(fn(int $result, string $part): int => $result + mb_ord(mb_strtoupper($part)), 0);
+            ->reduce(fn(int $result, string $part): int => $result + $this->convertToAlphaPosition($part), 0);
 
-        return 100_000 + ($number * 1000) + $suffixValue;
+        return $number * pow(10, 7)
+            + $suffixValue * pow(10, 3);
+    }
+
+    private function convertToAlphaPosition(string $char): int
+    {
+        $char = mb_strtoupper($char);
+
+        return mb_ord($char) - mb_ord('A') + 1;
     }
 
     public function handlePartialNumber(string $value): ?int
@@ -55,7 +63,8 @@ class OptionPositionAdvisorSize implements OptionPositionAdvisor
         $partialA = $matches[2];
         $partialB = $matches[3];
 
-        return 1_000_000 + ($number * 10_000) + (int) (($partialA / $partialB) * 1_000);
+        return $number * pow(10, 7)
+            + (int) (($partialA / $partialB) * 1_000);
     }
 
     public function handleShirtSize(string $value): ?int
