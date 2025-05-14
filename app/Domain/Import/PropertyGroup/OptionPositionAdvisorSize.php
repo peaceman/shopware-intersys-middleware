@@ -18,7 +18,7 @@ class OptionPositionAdvisorSize implements OptionPositionAdvisor
                 return $result;
         }
 
-        return 2^32;
+        return 2**32;
     }
 
     public function handleRegularNumber(string $value): ?int
