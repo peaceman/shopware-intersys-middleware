@@ -19,7 +19,7 @@ class OptionPositionAdvisorTest extends TestCase
             'regular number' => ['45', 45_00_00_000],
             'dot decimal' => ['23.5', 23_50_00_000],
             'comma decimal' => ['23,5', 23_50_00_000],
-            'random words' => ['one size', 2**32],
+            'random words' => ['one size', 2**31 - 1],
             'suffixed number' => ['95D', 95_00_04_000],
             'partial numbers' => ['7 3/8', 7_00_00_375],
             'XXS' => ['XXS', 1],

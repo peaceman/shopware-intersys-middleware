@@ -78,10 +78,12 @@ class PropertyGroupImporterImpl implements PropertyGroupImporter
         // find and create new options
         $newOptionNames = $this->determineNewOptionNames($propertyGroup, $optionNames);
 
-        $this->logger->info(__METHOD__ . " Create new property group options", array_merge(
-            $loggingContext,
-            ['newOptionNames' => $newOptionNames->toArray()],
-        ));
+        if (!$newOptionNames->isEmpty()) {
+            $this->logger->info(__METHOD__ . " Create new property group options", array_merge(
+                $loggingContext,
+                ['newOptionNames' => $newOptionNames->toArray()],
+            ));
+        }
 
         $newOptions = $newOptionNames
             ->map(function (string $optionName) use ($propertyGroup): PropertyGroupOptionDTO {
@@ -94,8 +96,13 @@ class PropertyGroupImporterImpl implements PropertyGroupImporter
         // check for and update changed options
         $changedOptions = $this->determineChangedOptions($propertyGroup, []);
 
-        if (!$changedOptions->isEmpty())
+        if (!$changedOptions->isEmpty()) {
+            $this->logger->info(__METHOD__ . " Update property group", [
+                ...$loggingContext,
+                ...['changedOptions' => $changedOptions->toArray()]
+            ]);
             $this->shopwareApi->updatePropertyGroup($propertyGroup->getId(), ['options' => $changedOptions->toArray()]);
+        }
 
         return new PropertyGroupDTOExtended($propertyGroup, $newOptions);
     }

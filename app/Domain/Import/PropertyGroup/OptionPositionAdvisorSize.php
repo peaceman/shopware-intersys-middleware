@@ -11,14 +11,15 @@ class OptionPositionAdvisorSize implements OptionPositionAdvisor
             $this->handleShirtSize(...),
             $this->handleSuffixedNumber(...),
             $this->handlePartialNumber(...),
+            fn (string $optionName): int => 2**31 - 1,
         ];
 
         foreach ($methods as $method) {
             if (!is_null($result = $method($optionName)))
-                return $result;
+                break;
         }
 
-        return 2**32;
+        return min($result, 2**31 - 1);
     }
 
     public function handleRegularNumber(string $value): ?int
