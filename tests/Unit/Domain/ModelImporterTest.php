@@ -36,6 +36,7 @@ use Illuminate\Support\Str;
 use Psr\Log\NullLogger;
 use Tests\TestCase;
 use Tests\Utils\ArgRecorder;
+use Tests\Utils\ArgsRecorder;
 
 // TODO this is not a unit test and should be moved to the feature tests
 class ModelImporterTest extends TestCase
@@ -284,21 +285,22 @@ class ModelImporterTest extends TestCase
         );
 
         $modelImporter->setGlnToImport($glnToImport = '4399901690509');
+        $modelImporter->setShopwareWarehouseCode($warehouseCode = 'HL');
 
-        $models = new LazyCollection(fn () => $this->readModelsFromFixture('Base4WebShop-100343-20220822114000.csv'));
-        /** @var ModelDTO $model */
-        $model = $models->first(fn (ModelDTO $modelDTO): bool => $modelDTO->getBranches()->contains($glnToImport));
-        $modelColor = $model->getColorVariations()->first();
+        $oldModels = new LazyCollection(fn () => $this->readModelsFromFixture('Base4WebShop-100343-20220822114000.csv'));
+        /** @var ModelDTO $oldModel */
+        $oldModel = $oldModels->first(fn (ModelDTO $modelDTO): bool => $modelDTO->getBranches()->contains($glnToImport));
+        $oldModelColor = $oldModel->getColorVariations()->first();
 
         $article = new Article([
-            'is_modno' => $modelColor->getMainArticleNumber(),
+            'is_modno' => $oldModelColor->getMainArticleNumber(),
             'is_active' => true,
             'sw_product_id' => (string) Str::uuid()->getHex(),
         ]);
 
         $article->save();
 
-        $sizes = $model->getColorVariations()
+        $sizes = $oldModel->getColorVariations()
             ->flatMap(function (ModelColorDTO $color): Enumerable {
                 return $color->getSizeVariations()
                     ->map(fn (ModelColorSizeDTO $size): string => $size->getSize());
@@ -308,34 +310,49 @@ class ModelImporterTest extends TestCase
         $propertyGroup = new PropertyGroupDTORaw([
             'id' => Str::random(32),
             'name' => ModelImporter::PROPERTY_GROUP_NAME_SIZE,
-            'options' => collect(['omega', 'XL'])
+            'options' => collect(['alpha', 'beta', 'gamma', 'XL'])
                 ->merge($sizes)
                 ->map(fn(string $size): array => ['id' => Str::random(32), 'name' => $size])
                 ->toArray(),
         ]);
 
         $newImportFile = tap(new ImportFile(['original_filename' => 'kekw.csv', 'type' => ImportFile::TYPE_BASE]), fn($v) => $v->save());
-        $firstSizeVariation = $modelColor->getSizeVariations()->first();
-        $importModel = new ModelTest($newImportFile, [
+        [$oldSizeVariationAlpha, $oldSizeVariationBeta, $oldSizeVariationGamma] = $oldModelColor->getSizeVariations()->toArray();
+
+        $newModel = new ModelTest($newImportFile, [
             'name' => '',
-            'number' => $modelColor->getModelNumber(),
+            'number' => $oldModelColor->getModelNumber(),
             'gln' => $glnToImport,
             'colorVariations' => [
                 [
-                    'colorName' => $modelColor->getColorName(),
-                    'colorNumber' => $modelColor->getColorNumber(),
+                    'colorName' => $oldModelColor->getColorName(),
+                    'colorNumber' => $oldModelColor->getColorNumber(),
                     'sizeVariations' => [
                         [
-                            'articleNumber' => $firstSizeVariation->getVariantArticleNumber(),
-                            'size' => 'omega',
-                            'ean' => $firstSizeVariation->getEan(),
+                            'articleNumber' => $oldSizeVariationAlpha->getVariantArticleNumber(),
+                            'size' => 'alpha',
+                            'ean' => $oldSizeVariationAlpha->getEan(),
                             'price' => 23.5,
                             'stock' => 38,
                         ],
                         [
+                            'articleNumber' => $oldSizeVariationBeta->getVariantArticleNumber(),
+                            'size' => 'beta',
+                            'ean' => $oldSizeVariationBeta->getEan(),
+                            'price' => 23.5,
+                            'stock' => 69,
+                        ],
+                        [
+                            'articleNumber' => $oldSizeVariationGamma->getVariantArticleNumber(),
+                            'size' => 'gamma',
+                            'ean' => $oldSizeVariationGamma->getEan(),
+                            'price' => 23.5,
+                            'stock' => 50,
+                        ],
+                        [
                             'articleNumber' => 'test article number' . Str::random(),
                             'size' => 'XL',
-                            'ean' => Str::random(8),
+                            'ean' => $newVariantEan = Str::random(8),
                             'price' => 23.5,
                             'stock' => 90,
                         ]
@@ -344,11 +361,14 @@ class ModelImporterTest extends TestCase
             ],
         ]);
 
-        $sizeVariationModelAlpha = $importModel->getColorVariations()->first()
-            ->getSizeVariations()->get(0);
+        $newSizeVariationAlpha = $newModel->getColorVariations()->first()
+            ->getSizeVariations()->first(fn ($v) => $v->getEan() === $oldSizeVariationAlpha->getEan());
 
-        $sizeVariationModelBeta = $importModel->getColorVariations()->first()
-            ->getSizeVariations()->get(1);
+        $newSizeVariationBeta = $newModel->getColorVariations()->first()
+            ->getSizeVariations()->first(fn ($v) => $v->getEan() === $oldSizeVariationBeta->getEan());
+
+        $newSizeVariationGamma = $newModel->getColorVariations()->first()
+            ->getSizeVariations()->first(fn ($v) => $v->getEan() === $newVariantEan);
 
         // mocks
         $shopwareApi->expects(static::atLeastOnce())
@@ -360,6 +380,11 @@ class ModelImporterTest extends TestCase
             ->method('searchDeliveryTimeIdByMinMax')
             ->with(0, 0)
             ->willReturn($deliveryTimeId = Str::random(32));
+
+        $shopwareApi->expects(static::atLeastOnce())
+            ->method('searchWarehouseIdByCode')
+            ->with($warehouseCode)
+            ->willReturn($warehouseId = (string) Str::uuid()->getHex());
 
         // article exists in the local database so there should be no lookup necessary
         $shopwareApi->expects(static::never())
@@ -374,12 +399,11 @@ class ModelImporterTest extends TestCase
                 'listPrice' => null,
             ],
             'children' => [
-                ...$modelColor->getSizeVariations()
-                    ->map(function (ModelColorSizeDTO $modelColorSizeDto) {
+                ...$oldModelColor->getSizeVariations()
+                    ->map(function (ModelColorSizeDTO $modelColorSizeDto) use ($warehouseId) {
                         return [
                             'id' => Str::random(32),
                             'ean' => $modelColorSizeDto->getEan(),
-                            'stock' => 23,
                             'customFields' => [
                                 'sim_protected_price' => true,
                             ],
@@ -389,6 +413,14 @@ class ModelImporterTest extends TestCase
                                     'gross' => 23,
                                     'listPrice' => null,
                                 ]
+                            ],
+                            'extensions' => [
+                                'pickwareErpWarehouseStocks' => [
+                                    [
+                                        'warehouseId' => $warehouseId,
+                                        'quantity' => 50,
+                                    ]
+                                ],
                             ],
                         ];
                     }),
@@ -402,7 +434,7 @@ class ModelImporterTest extends TestCase
 
         $propertyGroupImporter->expects(static::once())
             ->method('import')
-            ->with(ModelImporter::PROPERTY_GROUP_NAME_SIZE, ['omega', 'XL'])
+            ->with(ModelImporter::PROPERTY_GROUP_NAME_SIZE, ['alpha', 'beta', 'gamma', 'XL'])
             ->willReturn($propertyGroup);
 
         $shopwareApi->expects(static::once())
@@ -415,41 +447,61 @@ class ModelImporterTest extends TestCase
             ->with(static::callback($createProductArgRecorder = new ArgRecorder()))
             ->willReturn(new ProductDTO([]));
 
+        $updateProductWarehouseStockArgRecorder = new ArgsRecorder();
+        $shopwareApi->expects(static::exactly(2))
+            ->method('updateProductWarehouseStock')
+            ->willReturnCallback($updateProductWarehouseStockArgRecorder);
+
         // execution
 
-        $modelImporter->import($importModel);
+        $modelImporter->import($newModel);
 
         // assertions
         $updateProductData = $updateProductArgRecorder->latest();
         static::assertIsArray($updateProductData);
         static::assertTrue($updateProductData['isCloseout'], 'missing is closeout');
         static::assertEquals($updateProductData['deliveryTimeId'], $deliveryTimeId);
-        static::assertCount(1, $updateProductData['children']);
+        static::assertCount(3, $updateProductData['children']);
 
-        [$updateProductChildData] = $updateProductData['children'];
+        [$updateProductChildDataA, $updateProductChildDataB] = $updateProductData['children'];
 
         // check that the missing list price was added
         static::assertEquals(
             [
-                'net' => $sizeVariationModelAlpha->getPrice() / (1 + ($sizeVariationModelAlpha->getVatPercentage() / 100)),
-                'gross' => $sizeVariationModelAlpha->getPrice(),
+                'net' => $newSizeVariationAlpha->getPrice() / (1 + ($newSizeVariationAlpha->getVatPercentage() / 100)),
+                'gross' => $newSizeVariationAlpha->getPrice(),
             ],
-            Arr::only(current($updateProductChildData['price'])['listPrice'], ['net', 'gross']),
+            Arr::only(current($updateProductChildDataA['price'])['listPrice'], ['net', 'gross']),
         );
 
-        // check that the stock was updated in the correct variant
-        $swVariantId = collect($productDto->getChildren())
-            ->firstWhere('ean', $sizeVariationModelAlpha->getEan())['id'];
+        // check that the stock is updated
+        static::assertEmpty(
+            collect($updateProductData['children'])
+                ->filter(fn (array $childData): bool => array_key_exists('stock', $childData)),
+            'found variants with inline stock info in the update data'
+        );
 
-        $updateStockProductChildData = collect($updateProductData['children'] ?? [])
-            ->firstWhere('id', $swVariantId);
+        static::assertCount(2, $updateProductWarehouseStockArgRecorder->history);
+        static::assertSame(
+            [$warehouseId],
+            collect($updateProductWarehouseStockArgRecorder->history)->pluck('0')->unique()->toArray(),
+            'found unexpected warehouse ids'
+        );
 
-        static::assertNotNull($updateStockProductChildData, 'failed to find variant that should be updated');
-        static::assertEquals($sizeVariationModelAlpha->getStockPerBranch()->first(), $updateStockProductChildData['stock']);
+        $stockUpdateAlpha = collect($updateProductWarehouseStockArgRecorder->history)
+            ->firstWhere('1', collect($productDto->getChildren())
+                ->firstWhere('ean', $newSizeVariationAlpha->getEan())['id']);
+
+        $stockUpdateBeta = collect($updateProductWarehouseStockArgRecorder->history)
+            ->firstWhere('1', collect($productDto->getChildren())
+                ->firstWhere('ean', $newSizeVariationBeta->getEan())['id']);
+
+        static::assertEquals(38 - 50, $stockUpdateAlpha[2]);
+        static::assertEquals(69 - 50, $stockUpdateBeta[2]);
 
         // check that a new size variant will be added
         $updateNewVariantProductChildData = collect($updateProductData['children'] ?? [])
-            ->firstWhere('ean', $sizeVariationModelBeta->getEan());
+            ->firstWhere('ean', $newVariantEan);
 
         static::assertNull($updateNewVariantProductChildData, 'new variant cant be in the parent products update data');
 
@@ -457,26 +509,26 @@ class ModelImporterTest extends TestCase
         static::assertEquals([
             'parentId' => $article->sw_product_id,
             'active' => null,
-            'stock' => $sizeVariationModelBeta->getStockPerBranch()[$glnToImport],
-            'ean' => $sizeVariationModelBeta->getEan(),
+            'stock' => $newSizeVariationGamma->getStockPerBranch()[$glnToImport],
+            'ean' => $newSizeVariationGamma->getEan(),
             'price' => [
                 [
-                    'gross' => $sizeVariationModelBeta->getPrice(),
-                    'net' => $sizeVariationModelBeta->getPrice() / (1 + ($sizeVariationModelBeta->getVatPercentage() / 100)),
+                    'gross' => $newSizeVariationGamma->getPrice(),
+                    'net' => $newSizeVariationGamma->getPrice() / (1 + ($newSizeVariationGamma->getVatPercentage() / 100)),
                     'currencyId' => $currencyId,
                     'linked' => false,
                     'listPrice' => [
-                        'gross' => $sizeVariationModelBeta->getPrice(),
-                        'net' => $sizeVariationModelBeta->getPrice() / (1 + ($sizeVariationModelBeta->getVatPercentage() / 100)),
+                        'gross' => $newSizeVariationGamma->getPrice(),
+                        'net' => $newSizeVariationGamma->getPrice() / (1 + ($newSizeVariationGamma->getVatPercentage() / 100)),
                         'linked' => false,
                     ],
                 ],
             ],
-            'productNumber' => $sizeVariationModelBeta->getVariantArticleNumber(),
+            'productNumber' => $newSizeVariationGamma->getVariantArticleNumber(),
             'options' => [
                 [
                     'groupId' => $propertyGroup->getId(),
-                    'id' => $propertyGroup->getOptionByName($sizeVariationModelBeta->getSize())->getId(),
+                    'id' => $propertyGroup->getOptionByName($newSizeVariationGamma->getSize())->getId(),
                 ],
             ],
         ], $createProductData);
@@ -737,6 +789,11 @@ class ModelImporterTest extends TestCase
             ->with(0, 0)
             ->willReturn($deliveryTimeId = Str::random(32));
 
+        $shopwareApi->expects(static::atLeastOnce())
+            ->method('searchWarehouseIdByCode')
+            ->with($warehouseCode = 'HL')
+            ->willReturn($warehouseId = (string) Str::uuid()->getHex());
+
         $shopwareApi->expects(static::once())
             ->method('getProductById')
             ->with($article->sw_product_id)
@@ -751,6 +808,7 @@ class ModelImporterTest extends TestCase
         // execution
         $modelImporter = $this->createModelImporterWithApi($shopwareApi, propertyGroupImporter: $propertyGroupImporter);
         $modelImporter->setGlnToImport($glnToImport);
+        $modelImporter->setShopwareWarehouseCode($warehouseCode);
 
         $modelImporter->import($newModel);
 
@@ -913,6 +971,11 @@ class ModelImporterTest extends TestCase
             ->with(0, 0)
             ->willReturn($deliveryTimeId = Str::random(32));
 
+        $shopwareApi->expects(static::never())
+            ->method('searchWarehouseIdByCode')
+            ->with($warehouseCode = 'HL')
+            ->willReturn($warehouseId = (string) Str::uuid()->getHex());
+
         $shopwareApi->expects(static::once())
             ->method('getProductById')
             ->with($article->sw_product_id)
@@ -922,11 +985,16 @@ class ModelImporterTest extends TestCase
             ->method('updateProduct')
             ->with($article->sw_product_id, static::callback($updateProductArgRecorder = new ArgRecorder()));
 
+        $shopwareApi->expects(static::never())
+            ->method('updateProductWareHouseStock')
+            ->withAnyParameters();
+
         $propertyGroupImporter = new PropertyGroupImporterFake();
 
         // execution
         $modelImporter = $this->createModelImporterWithApi($shopwareApi, propertyGroupImporter: $propertyGroupImporter);
         $modelImporter->setGlnToImport($glnToImport);
+        $modelImporter->setShopwareWarehouseCode($warehouseCode);
 
         $modelImporter->import($newModel);
 
@@ -1074,6 +1142,11 @@ class ModelImporterTest extends TestCase
             ->with(0, 0)
             ->willReturn($deliveryTimeId = Str::random(32));
 
+        $shopwareApi->expects(static::atLeastOnce())
+            ->method('searchWarehouseIdByCode')
+            ->with($warehouseCode = 'HL')
+            ->willReturn($warehouseId = (string) Str::uuid()->getHex());
+
         $shopwareApi->expects(static::once())
             ->method('getProductById')
             ->with($article->sw_product_id)
@@ -1096,6 +1169,7 @@ class ModelImporterTest extends TestCase
             $shopwareApi, sizeMapper: $sizeMapper, propertyGroupImporter: $this->propertyGroupImporter
         );
         $modelImporter->setGlnToImport($glnToImport);
+        $modelImporter->setShopwareWarehouseCode($warehouseCode);
 
         $modelImporter->import($newModel);
 

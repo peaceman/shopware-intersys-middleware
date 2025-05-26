@@ -12,6 +12,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Utils;
+use Illuminate\Support\Str;
 use Psr\Log\LoggerInterface;
 
 class Shopware6API
@@ -76,6 +77,39 @@ class Shopware6API
         }
     }
 
+    public function updateProductWarehouseStock(string $warehouseId, string $productId, int $stockChange): void
+    {
+        try {
+            if ($stockChange > 0) {
+                $source = 'product_total_stock_change';
+                $destination = ['warehouse' => ['id' => $warehouseId]];
+            } else {
+                $source = ['warehouse' => ['id' => $warehouseId]];
+                $destination = 'product_total_stock_change';
+            }
+
+            $response = $this->httpClient->post("/api/_action/pickware-erp/stock/move", [
+                'json' => [
+                    [
+                        'id' => (string) Str::uuid()->getHex(),
+                        'productId' => $productId,
+                        'source' => $source,
+                        'destination' => $destination,
+                        'quantity' => abs($stockChange),
+                    ]
+                ],
+            ]);
+        } catch (BadResponseException $e) {
+            $this->logger->error(__METHOD__ . ' ' . $e->getMessage(), [
+                'request' => (string)$e->getRequest()->getBody(),
+                'response' => (string)$e->getResponse()->getBody(),
+            ]);
+
+            throw $e;
+        }
+    }
+
+    // @todo unify method names to use the same verb
     public function searchCurrencyIdByIsoCode(string $isoCode): ?string
     {
         $response = $this->httpClient->post('/api/search/currency', [
@@ -262,7 +296,12 @@ class Shopware6API
                     ['type' => 'equals', 'field' => 'id', 'value' => $id],
                 ],
                 'associations' => [
-                    'children' => ['associations' => ['options' => []]],
+                    'children' => [
+                        'associations' => [
+                            'options' => [],
+                            'pickwareErpWarehouseStocks' => [],
+                        ],
+                    ],
                     'configuratorSettings' => [],
                 ],
                 'limit' => 1,
@@ -369,5 +408,25 @@ class Shopware6API
         [$deliveryTime] = $responseData;
 
         return $deliveryTime['id'] ?? null;
+    }
+
+    public function searchWarehouseIdByCode(string $warehouseCode)
+    {
+        $response = $this->httpClient->post('/api/search/pickware-erp-warehouse', [
+            'json' => [
+                'filter' => [
+                    ['type' => 'equals', 'field' => 'code', 'value' => $warehouseCode],
+                ],
+                'limit' => 1,
+            ],
+        ]);
+
+        $responseBody = Utils::jsonDecode($response->getBody(), true);
+        $responseData = $responseBody['data'] ?? [];
+        if (empty($responseData)) return null;
+
+        [$warehouse] = $responseData;
+
+        return $warehouse['id'] ?? null;
     }
 }

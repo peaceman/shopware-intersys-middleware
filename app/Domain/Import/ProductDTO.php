@@ -34,6 +34,17 @@ class ProductDTO
             ->firstWhere('ean', $ean);
     }
 
+    public function getStockByEanAndWarehouseId(string $ean, string $warehouseId): ?int
+    {
+        $child = $this->getChildByEan($ean);
+        if (empty($child)) return null;
+
+        $stocks = Arr::get($child, 'extensions.pickwareErpWarehouseStocks', []);
+        $warehouseStock = Arr::first($stocks, fn ($stock) => $stock['warehouseId'] === $warehouseId);
+
+        return $warehouseStock['quantity'] ?? null;
+    }
+
     public function isPriceProtected(string $ean): bool
     {
         $child = $this->getChildByEan($ean);

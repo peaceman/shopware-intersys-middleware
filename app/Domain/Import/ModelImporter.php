@@ -33,6 +33,8 @@ class ModelImporter
 
     protected ?string $glnToImport = null;
 
+    protected ?string $shopwareWarehouseCode = null;
+
     // todo check if still needed
     protected bool $ignoreStockUpdatesFromDelta = false;
 
@@ -53,6 +55,13 @@ class ModelImporter
     public function setGlnToImport(string $branchToImport): self
     {
         $this->glnToImport = $branchToImport;
+
+        return $this;
+    }
+
+    public function setShopwareWarehouseCode(string $shopwareWarehouseCode): self
+    {
+        $this->shopwareWarehouseCode = $shopwareWarehouseCode;
 
         return $this;
     }
@@ -167,7 +176,7 @@ class ModelImporter
             'id' => $swProductId,
             'isCloseout' => true,
             // only already existing variants can be included in the update request of the parent article (sw api restriction)
-            'children' => $existingVariants->toArray(),
+            'children' => $existingVariants->map(fn (array $v): array => Arr::except($v, ['stock']))->toArray(),
             'configuratorSettings' => $newVariantOptionIds
                 ->map(fn(string $optionId): array => ['optionId' => $optionId])
                 ->toArray(),
@@ -176,6 +185,9 @@ class ModelImporter
 
         $this->logger->info(__METHOD__ . ' Updating article', [...$loggingContext, 'updateData' => $updateData]);
         $this->shopwareAPI->updateProduct($swProductId, $updateData);
+
+        if (!$model->getImportFile()->isDelta())
+            $this->updateProductVariantStocks($existingVariants, $swProduct, $loggingContext);
 
         foreach ($newVariants as $newVariant) {
             $this->logger->info(__METHOD__ . ' Creating new variant', [...$loggingContext, 'newVariant' => $newVariant]);
@@ -278,9 +290,6 @@ class ModelImporter
 
                 if ($isVariantUpdate) {
                     $variantData['id'] = $productChild['id'];
-
-                    if ($model->getImportFile()->isDelta())
-                        unset($variantData['stock']);
                 }
 
                 return $variantData;
@@ -397,6 +406,21 @@ class ModelImporter
         throw new MissingShopwareEntityException('deliveryTime', 'minMax', '0-0');
     }
 
+    private function fetchShopwareWarehouseId(): string
+    {
+        $cacheKey = "sw-warehouse-id:{$this->shopwareWarehouseCode}";
+        if ($warehouseId = cache()->get($cacheKey))
+            return $warehouseId;
+
+        if ($warehouseId = $this->shopwareAPI->searchWarehouseIdByCode($this->shopwareWarehouseCode)) {
+            cache()->set($cacheKey, $warehouseId);
+
+            return $warehouseId;
+        }
+
+        throw new MissingShopwareEntityException('warehouse', 'code', $this->shopwareWarehouseCode);
+    }
+
     private function deleteProductVariantOptions(Collection $variants, ProductDTO $swProduct, string $swProductId): void
     {
         foreach ($variants as $variant) {
@@ -411,6 +435,31 @@ class ModelImporter
             foreach ($optionIdsToDelete as $optionId) {
                 $this->shopwareAPI->deleteProductVariantOption($swProductId, $variant['id'], $optionId);
             }
+        }
+    }
+
+    private function updateProductVariantStocks(Collection $variants, ProductDTO $swProduct, array $loggingContext): void
+    {
+        foreach ($variants as $existingVariant) {
+            $oldStock = $swProduct->getStockByEanAndWarehouseId(
+                $existingVariant['ean'],
+                $this->fetchShopwareWarehouseId()
+            );
+            $newStock = $existingVariant['stock'];
+
+            $this->logger->info(
+                __METHOD__,
+                [...$loggingContext, 'ean' => $existingVariant['ean'], 'oldStock' => $oldStock, 'newStock' => $newStock]
+            );
+
+            $stockChange = $newStock - $oldStock;
+            if ($stockChange === 0) continue;
+
+            $this->shopwareAPI->updateProductWarehouseStock(
+                $this->fetchShopwareWarehouseId(),
+                $swProduct->getChildByEan($existingVariant['ean'])['id'],
+                $newStock - $oldStock,
+            );
         }
     }
 }
