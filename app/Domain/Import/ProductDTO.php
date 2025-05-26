@@ -45,19 +45,24 @@ class ProductDTO
         return $warehouseStock['quantity'] ?? null;
     }
 
-    public function isPriceProtected(string $ean): bool
+    public function isPriceProtected(): bool
     {
-        $child = $this->getChildByEan($ean);
-
-        return (bool) Arr::get($child, 'customFields.sim_protected_price', false);
+        return (bool) Arr::get($this->data, 'customFields.sim_protected_price', false);
     }
 
-    public function isMissingListPrice(string $ean): bool
+    public function isMissingListPrice(): bool
     {
-        $child = $this->getChildByEan($ean);
-        if (empty($child['price'])) return false;
+        $price = $this->getPrice();
+        if (empty($price)) return true;
 
-        $listPrice = Arr::get($child, 'price.0.listPrice');
-        return empty($listPrice);
+        return empty($price['listPrice']);
+    }
+
+    public function getPrice(): ?array
+    {
+        $prices = $this->data['price'] ?? [];
+        if (empty($prices)) return null;
+
+        return head($prices);
     }
 }

@@ -172,6 +172,12 @@ class ModelImporter
         $existingConfiguratorSettingsOptionIds = collect($swProduct->getConfiguratorSettings())->pluck('optionId');
         $newVariantOptionIds = $variantOptionIds->diff($existingConfiguratorSettingsOptionIds);
 
+        $price = $swProduct->getPrice();
+        $newPrice = $this->generateShopwareSimplePriceInfo($model->getSizeVariations()->first());
+
+        if ($swProduct->isMissingListPrice() || !$swProduct->isPriceProtected())
+            $price['listPrice'] = $newPrice['listPrice'];
+
         $updateData = [
             'id' => $swProductId,
             'isCloseout' => true,
@@ -181,6 +187,7 @@ class ModelImporter
                 ->map(fn(string $optionId): array => ['optionId' => $optionId])
                 ->toArray(),
             'deliveryTimeId' => $this->fetchShopwareDeliveryTimeId(),
+            'price' => [$price],
         ];
 
         $this->logger->info(__METHOD__ . ' Updating article', [...$loggingContext, 'updateData' => $updateData]);
@@ -265,20 +272,10 @@ class ModelImporter
                 $mappedSize = $this->mapSize($model);
                 $isVariantUpdate = $productDto && ($productChild = $productDto->getChildByEan($model->getEan()));
 
-                $price = !$isVariantUpdate
-                    ? $this->generateShopwareSimplePriceInfo($model)
-                    : array_replace_recursive(
-                        $productChild['price'][0],
-                        $productDto->isMissingListPrice($model->getEan()) || !$productDto->isPriceProtected($model->getEan())
-                            ? Arr::only($this->generateShopwareSimplePriceInfo($model), ['linked', 'listPrice'])
-                            : []
-                    );
-
                 $variantData = [
                     'productNumber' => $model->getVariantArticleNumber(),
                     'ean' => $model->getEan(),
                     'stock' => $model->getStockPerBranch()->get($this->glnToImport, 0),
-                    'price' => [$price],
                     'options' => [
                         [
                             'groupId' => $swPropertyGroup->getId(),

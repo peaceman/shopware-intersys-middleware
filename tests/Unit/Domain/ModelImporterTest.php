@@ -192,12 +192,8 @@ class ModelImporterTest extends TestCase
         static::assertNull($price['listPrice']['currencyId'] ?? null, 'currency id was supplied in list price');
 
         foreach ($productData['children']->all() as $productVariant) {
-            [$price] = $productVariant['price'];
-            static::assertNotNull($price);
+            static::assertArrayNotHasKey('price', $productVariant, 'variants must not have a price');
 
-            static::assertEquals($price['gross'], $price['listPrice']['gross']);
-            static::assertEquals($price['net'], $price['listPrice']['net']);
-            static::assertNull($price['listPrice']['currencyId'] ?? null, 'currency id was supplied in list price');
             static::assertNull($productVariant['active'], 'variants must not have an active state to keep inheritance of the field');
 
             static::assertCount(1, $productVariant['options'], 'variant should contain a single option that defines the size');
@@ -394,9 +390,11 @@ class ModelImporterTest extends TestCase
         $productDto = new ProductDTO([
             'id' => $article->sw_product_id,
             'price' => [
-                'gross' => 23,
-                'net' => 21,
-                'listPrice' => null,
+                [
+                    'gross' => 23,
+                    'net' => 21,
+                    'listPrice' => null,
+                ]
             ],
             'children' => [
                 ...$oldModelColor->getSizeVariations()
@@ -471,7 +469,7 @@ class ModelImporterTest extends TestCase
                 'net' => $newSizeVariationAlpha->getPrice() / (1 + ($newSizeVariationAlpha->getVatPercentage() / 100)),
                 'gross' => $newSizeVariationAlpha->getPrice(),
             ],
-            Arr::only(current($updateProductChildDataA['price'])['listPrice'], ['net', 'gross']),
+            Arr::only(current($updateProductData['price'])['listPrice'], ['net', 'gross']),
         );
 
         // check that the stock is updated
@@ -511,19 +509,6 @@ class ModelImporterTest extends TestCase
             'active' => null,
             'stock' => $newSizeVariationGamma->getStockPerBranch()[$glnToImport],
             'ean' => $newSizeVariationGamma->getEan(),
-            'price' => [
-                [
-                    'gross' => $newSizeVariationGamma->getPrice(),
-                    'net' => $newSizeVariationGamma->getPrice() / (1 + ($newSizeVariationGamma->getVatPercentage() / 100)),
-                    'currencyId' => $currencyId,
-                    'linked' => false,
-                    'listPrice' => [
-                        'gross' => $newSizeVariationGamma->getPrice(),
-                        'net' => $newSizeVariationGamma->getPrice() / (1 + ($newSizeVariationGamma->getVatPercentage() / 100)),
-                        'linked' => false,
-                    ],
-                ],
-            ],
             'productNumber' => $newSizeVariationGamma->getVariantArticleNumber(),
             'options' => [
                 [
@@ -665,7 +650,7 @@ class ModelImporterTest extends TestCase
         );
     }
 
-    public function testVariantUpdatePriceProtection()
+    public function testVariantUpdate()
     {
         $oldImportFile = tap(
             new ImportFile(['original_filename' => '1.csv', 'type' => ImportFile::TYPE_BASE]),
@@ -731,31 +716,26 @@ class ModelImporterTest extends TestCase
 
         $productDto = new ProductDTO([
             'id' => $article->sw_product_id,
+            'price' => [
+                [
+                    'net' => 5,
+                    'gross' => 5 * 1.2,
+                    'listPrice' => [
+                        'net' => 10,
+                        'gross' => 10 * 1.2,
+                    ],
+                ],
+            ],
+            'customFields' => [
+                'sim_protected_price' => false,
+            ],
             'children' => $oldColorVariation->getSizeVariations()
                 ->map(function (ModelColorSizeTest $colorSizeDto) use ($glnToImport): array {
-                    $netPrice = $colorSizeDto->getPrice() / (1 + ($colorSizeDto->getVatPercentage() / 100));
-
                     $data = [
                         'id' => (string) Str::uuid()->getHex(),
                         'ean' => $colorSizeDto->getEan(),
                         'stock' => $colorSizeDto->getStockPerBranch()->get($glnToImport),
-                        'price' => [
-                            [
-                                'net' => $netPrice,
-                                'gross' => $colorSizeDto->getPrice(),
-                                'listPrice' => ['net' => $colorSizeDto->getNetPrice(), 'gross' => $colorSizeDto->getPrice()],
-                            ],
-                        ],
-                        'customFields' => [
-                            'sim_protected_price' => true,
-                        ],
                     ];
-
-                    if ($colorSizeDto->getSize() === 'L')
-                        Arr::forget($data, 'price.0.listPrice');
-
-                    if ($colorSizeDto->getSize() === 'XXL')
-                        Arr::forget($data, 'customFields');
 
                     return $data;
                 })
@@ -817,29 +797,10 @@ class ModelImporterTest extends TestCase
         static::assertIsArray($updateProductData);
         static::assertContainsOnly('string', Arr::pluck($updateProductData['children'], 'id'));
 
-        // check that the list price is set if it is not existing, even if price protection is enabled
-        [$childA, $childB, $childC] = $updateProductData['children'];
-        static::assertNotNull($childA);
-
-        static::assertEquals([
-            'listPrice' => [
-                'gross' => $newSizeVariation->getPrice(),
-                'net' => $newSizeVariation->getNetPrice(),
-                'linked' => false,
-            ],
-            'linked' => false,
-        ], Arr::only(current($childA['price']), ['listPrice', 'linked']));
-
-        // check that price protection is respected and prices are not touched
-        $oldSizeVariation = $oldColorVariation->getSizeVariations()->firstWhere(fn ($v) => $v->getEan() === $childB['ean']);
-        static::assertEquals($oldSizeVariation->getPrice(), $childB['price'][0]['gross']);
-
-        // check list price is updated
-        $newSizeVariation = $newColorVariation->getSizeVariations()->firstWhere(fn ($v) => $v->getSize() === 'XXL');
-        static::assertEquals(
-            ['listPrice' => ['gross' => $newSizeVariation->getPrice(), 'net' => $newSizeVariation->getNetPrice(), 'linked' => false], 'linked' => false],
-            Arr::only(current($childC['price']), ['listPrice', 'linked']),
-        );
+        // check that price is not set in variants as variants have no separate price
+        foreach ($updateProductData['children'] as $child) {
+            static::assertArrayNotHasKey('price', $child);
+        }
 
         // check active state in variants is always explicitly set to null to retain inheritance
         foreach ($updateProductData['children'] as $child) {
