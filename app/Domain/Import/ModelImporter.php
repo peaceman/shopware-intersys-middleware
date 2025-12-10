@@ -282,7 +282,6 @@ class ModelImporter
                             'id' => $swPropertyGroup->getOptionByName($mappedSize)->getId(),
                         ],
                     ],
-                    'active' => null,
                 ];
 
                 if ($isVariantUpdate) {

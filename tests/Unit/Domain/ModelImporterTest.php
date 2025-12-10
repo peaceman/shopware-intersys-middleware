@@ -194,7 +194,11 @@ class ModelImporterTest extends TestCase
         foreach ($productData['children']->all() as $productVariant) {
             static::assertArrayNotHasKey('price', $productVariant, 'variants must not have a price');
 
-            static::assertNull($productVariant['active'], 'variants must not have an active state to keep inheritance of the field');
+            static::assertArrayNotHasKey(
+                'active',
+                $productVariant,
+                'variants must not have an active state to keep inheritance of the field',
+            );
 
             static::assertCount(1, $productVariant['options'], 'variant should contain a single option that defines the size');
             [$option] = $productVariant['options'];
@@ -506,7 +510,6 @@ class ModelImporterTest extends TestCase
         $createProductData = $createProductArgRecorder->latest();
         static::assertEquals([
             'parentId' => $article->sw_product_id,
-            'active' => null,
             'stock' => $newSizeVariationGamma->getStockPerBranch()[$glnToImport],
             'ean' => $newSizeVariationGamma->getEan(),
             'productNumber' => $newSizeVariationGamma->getVariantArticleNumber(),
@@ -802,10 +805,9 @@ class ModelImporterTest extends TestCase
             static::assertArrayNotHasKey('price', $child);
         }
 
-        // check active state in variants is always explicitly set to null to retain inheritance
+        // check active state in variants is not set to retain inheritance
         foreach ($updateProductData['children'] as $child) {
-            static::assertArrayHasKey('active', $child);
-            static::assertNull($child['active']);
+            static::assertArrayNotHasKey('active', $child);
         }
     }
 
