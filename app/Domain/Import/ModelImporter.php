@@ -180,6 +180,7 @@ class ModelImporter
 
         $updateData = [
             'id' => $swProductId,
+            'manufacturerNumber' => $model->getModelNumber(),
             'isCloseout' => true,
             // only already existing variants can be included in the update request of the parent article (sw api restriction)
             'children' => $existingVariants->map(fn (array $v): array => Arr::except($v, ['stock']))->toArray(),
@@ -233,6 +234,7 @@ class ModelImporter
             'stock' => $firstVariant->getStockPerBranch()->get($this->glnToImport, 0),
             'taxId' => $this->fetchShopwareTaxIdByVatPercentage($model->getVatPercentage()),
             'manufacturerId' => $manufacturer->getId(),
+            'manufacturerNumber' => $model->getModelNumber(),
             'price' => [
                 $this->generateShopwareSimplePriceInfo($firstVariant),
             ],

@@ -180,6 +180,7 @@ class ModelImporterTest extends TestCase
         static::assertEquals($taxId, $productData['taxId'] ?? null);
         static::assertEquals($deliveryTimeId, $productData['deliveryTimeId'] ?? null);
         static::assertTrue($productData['isCloseout'], 'missing is closeout');
+        static::assertEquals($model->getModelNumber(), $productData['manufacturerNumber']);
 
         [$price] = $productData['price'];
         static::assertNotNull($price);
@@ -464,6 +465,7 @@ class ModelImporterTest extends TestCase
         static::assertTrue($updateProductData['isCloseout'], 'missing is closeout');
         static::assertEquals($updateProductData['deliveryTimeId'], $deliveryTimeId);
         static::assertCount(3, $updateProductData['children']);
+        static::assertEquals($newModel->getModelNumber(), $updateProductData['manufacturerNumber']);
 
         [$updateProductChildDataA, $updateProductChildDataB] = $updateProductData['children'];
 
