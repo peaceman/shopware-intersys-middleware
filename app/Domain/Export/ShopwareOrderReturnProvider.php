@@ -23,7 +23,7 @@ class ShopwareOrderReturnProvider implements OrderProvider
 
     public function getOrders(): iterable
     {
-        $response = $this->shopwareApi->listCompletedReturnOrdersRaw();
+        $response = $this->shopwareApi->listTransferableDvsnReturnShipmentsRaw();
 
         return collect($response['data'])
             ->map($this->mapOrder(...))
@@ -48,30 +48,23 @@ class ShopwareOrderReturnProvider implements OrderProvider
 
     protected function mapOrderLineItem(array $orderData, array $lineItemData): ?array
     {
-        $restockQuantity = $lineItemData['quantity'] - $this->determineDisposedQuantity($orderData, $lineItemData);
+        $restockQuantity = $lineItemData['quantity'];
         if ($restockQuantity === 0) return null;
+
+        $orderLineItem = $lineItemData['orderLineItem'];
+        $unitPrice = $orderLineItem['price']['unitPrice'];
 
         return [
             'product' => [
-                'ean' => $lineItemData['product']['ean'] ?? '',
-                'productNumber' => $lineItemData['productNumber'],
+                'ean' => $orderLineItem['product']['ean'] ?? '',
+                'productNumber' => $orderLineItem['product']['productNumber'],
             ],
             'quantity' => $restockQuantity,
             'price' => [
-                'unitPrice' => $lineItemData['unitPrice'],
-                'totalPrice' => $restockQuantity * $lineItemData['unitPrice'],
+                'unitPrice' => $unitPrice,
+                'totalPrice' => $restockQuantity * $unitPrice,
             ],
-            'type' => $lineItemData['type'],
+            'type' => $orderLineItem['type'],
         ];
-    }
-
-    protected function determineDisposedQuantity(array $orderData, array $lineItemData): int
-    {
-        $productId = $lineItemData['productId'];
-
-        return collect($orderData['sourceStockMovements'])
-            ->where('productId', '=', $productId)
-            ->where('destinationLocationTypeTechnicalName', '=', 'special_stock_location')
-            ->sum('quantity');
     }
 }

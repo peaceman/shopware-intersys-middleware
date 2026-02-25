@@ -118,6 +118,7 @@ class OrderXMLExporterTest extends TestCase
         });
 
         static::assertDatabaseHas('order_exports', [
+            'type' => OrderExportType::Sale,
             'sw_order_number' => $orderDTO->getOrderNumber(),
             'sw_order_id' => $orderDTO->getId(),
         ]);
@@ -139,7 +140,83 @@ class OrderXMLExporterTest extends TestCase
 
     public function testReturnExport(): void
     {
-        // todo implement
-        static::assertTrue(true);
+        $orderDTO = new Order([
+            'id' => (string) Str::uuid()->getHex(),
+            'orderNumber' => Str::random(16),
+            'orderDateTime' => '2024-12-10T15:15:51.954+00:00',
+            'lineItems' => [
+                // product without ean
+                [
+                    'type' => 'product',
+                    'price' => ['unitPrice' => 5, 'totalPrice' => 25],
+                    'quantity' => 5,
+                    'product' => [
+                        'ean' => null,
+                    ],
+                ],
+                // valid exportable product
+                [
+                    'type' => 'product',
+                    'price' => ['unitPrice' => 500, 'totalPrice' => 1500],
+                    'quantity' => 3,
+                    'product' => [
+                        'ean' => Str::random(13),
+                    ],
+                ],
+                // voucher
+                [
+                    'type' => 'promotion',
+                    'quantity' => 1,
+                    'product' => null,
+                ]
+            ],
+        ]);
+
+        // mocks
+        $generator = $this->createMock(OrderXMLGenerator::class);
+        $shopwareApi = $this->createMock(Shopware6API::class);
+
+        $shopwareApi->expects(static::once())
+            ->method('updateDvsnReturnShipment')
+            ->with($orderDTO->getId(), static::callback($updateOrderDataRecorder = new ArgRecorder()));
+
+        $generator->expects(static::once())
+            ->method('generate')
+            ->with(OrderExportType::Return, static::anything(), $orderDTO, static::callback($lineItemsRecorder = new ArgRecorder()));
+
+        // execution
+        $exporter = new OrderXMLExporter(
+            new NullLogger(),
+            $this->localFS, $this->remoteFS,
+            $generator,
+            $shopwareApi,
+        );
+
+        $exporter->setBaseFolder('order');
+
+        $exporter->setOrderNumberPrefix($orderNumberPrefix = 'foo-the-bar');
+        $exporter->export(OrderExportType::Return, new FakeOrderProvider([$orderDTO]));
+
+        // assertions
+
+        // check existing remote files
+        static::assertTrue($this->remoteFS->exists(
+            "order/order-$orderNumberPrefix-{$orderDTO->getOrderNumber()}R_Webshop_2024-12-10_15-15-51.xml"
+        ));
+
+        OrderExport::all()->each(function (OrderExport $orderExport) {
+            static::assertTrue($this->localFS->exists($orderExport->storage_path));
+        });
+
+        static::assertDatabaseHas('order_exports', [
+            'type' => OrderExportType::Return,
+            'sw_order_number' => $orderDTO->getOrderNumber(),
+            'sw_order_id' => $orderDTO->getId(),
+        ]);
+
+        // check order update data
+        $updateOrderData = $updateOrderDataRecorder->latest();
+        static::assertEquals($orderDTO->getId(), $updateOrderData['id']);
+        static::assertNotNull($updateOrderData['intersys']['exportedAt']);
     }
 }

@@ -78,39 +78,6 @@ class Shopware6API
         }
     }
 
-    #[Deprecated("pickware plugin is gone")]
-    public function updateProductWarehouseStock(string $warehouseId, string $productId, int $stockChange): void
-    {
-        try {
-            if ($stockChange > 0) {
-                $source = 'product_total_stock_change';
-                $destination = ['warehouse' => ['id' => $warehouseId]];
-            } else {
-                $source = ['warehouse' => ['id' => $warehouseId]];
-                $destination = 'product_total_stock_change';
-            }
-
-            $response = $this->httpClient->post("/api/_action/pickware-erp/stock/move", [
-                'json' => [
-                    [
-                        'id' => (string) Str::uuid()->getHex(),
-                        'productId' => $productId,
-                        'source' => $source,
-                        'destination' => $destination,
-                        'quantity' => abs($stockChange),
-                    ]
-                ],
-            ]);
-        } catch (BadResponseException $e) {
-            $this->logger->error(__METHOD__ . ' ' . $e->getMessage(), [
-                'request' => (string)$e->getRequest()->getBody(),
-                'response' => (string)$e->getResponse()->getBody(),
-            ]);
-
-            throw $e;
-        }
-    }
-
     // @todo unify method names to use the same verb
     public function searchCurrencyIdByIsoCode(string $isoCode): ?string
     {
@@ -301,7 +268,6 @@ class Shopware6API
                     'children' => [
                         'associations' => [
                             'options' => [],
-                            'pickwareErpWarehouseStocks' => [],
                         ],
                     ],
                     'configuratorSettings' => [],
@@ -349,24 +315,35 @@ class Shopware6API
         );
     }
 
-    #[Deprecated("pickware plugin is gone")]
-    public function listCompletedReturnOrdersRaw(): array
+    public function listTransferableDvsnReturnShipmentsRaw(): array
     {
-        $response = $this->httpClient->post('/api/search/pickware-erp-return-order', [
+        $response = $this->httpClient->post('/api/search/dvsn-return-shipment', [
             'json' => [
                 'filter' => [
-                    ['type' => 'equals', 'field' => 'state.technicalName', 'value' => 'completed'],
+                    /**
+                     * return shipment status with id 99 is completed. the status entity
+                     * does not have a technical name so we use the position to not rely on
+                     * display strings that are subject to translations
+                     */
+                    ['type' => 'equals', 'field' => 'status.position', 'value' => 99],
                     ['type' => 'equals', 'field' => 'intersys.exportedAt', 'value' => null],
                 ],
                 'associations' => [
                     'lineItems' => [
                         'associations' => [
-                            'product' => [],
+                            'orderLineItem' => [
+                                'associations' => [
+                                    'product' => [],
+                                ],
+                            ],
                         ],
                     ],
-                    'intersys' => [],
-                    'sourceStockMovements' => [],
                     'order' => [],
+                ],
+                'includes' => [
+                    'order_line_item' => ['product', 'price'],
+                    'order' => ['orderNumber'],
+                    'product' => ['ean', 'productNumber'],
                 ],
             ],
         ]);
@@ -384,11 +361,10 @@ class Shopware6API
             ]);
     }
 
-    #[Deprecated("pickware plugin is gone")]
-    public function updateReturnOrder(string $returnOrderId, array $data): void
+    public function updateDvsnReturnShipment(string $returnShipmentId, array $data): void
     {
         $this->httpClient
-            ->patch("/api/pickware-erp-return-order/{$returnOrderId}", [
+            ->patch("/api/dvsn-return-shipment/{$returnShipmentId}", [
                 'json' => $data,
             ]);
     }
@@ -412,26 +388,5 @@ class Shopware6API
         [$deliveryTime] = $responseData;
 
         return $deliveryTime['id'] ?? null;
-    }
-
-    #[Deprecated("pickware plugin is gone")]
-    public function searchWarehouseIdByCode(string $warehouseCode)
-    {
-        $response = $this->httpClient->post('/api/search/pickware-erp-warehouse', [
-            'json' => [
-                'filter' => [
-                    ['type' => 'equals', 'field' => 'code', 'value' => $warehouseCode],
-                ],
-                'limit' => 1,
-            ],
-        ]);
-
-        $responseBody = Utils::jsonDecode($response->getBody(), true);
-        $responseData = $responseBody['data'] ?? [];
-        if (empty($responseData)) return null;
-
-        [$warehouse] = $responseData;
-
-        return $warehouse['id'] ?? null;
     }
 }

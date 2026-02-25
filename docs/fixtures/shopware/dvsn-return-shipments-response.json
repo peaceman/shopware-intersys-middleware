@@ -1,0 +1,1263 @@
+{
+    "total": 8,
+    "data": [
+        {
+            "extensions": {
+                "foreignKeys": {
+                    "extensions": [],
+                    "apiAlias": "dvsn_return_shipment_foreign_keys_extension"
+                }
+            },
+            "_uniqueIdentifier": "019c707c816a72e8a9266e8dab9fbd73",
+            "versionId": null,
+            "translated": [],
+            "createdAt": "2026-02-18T11:22:13.741+00:00",
+            "updatedAt": "2026-02-18T12:37:12.253+00:00",
+            "number": "50007",
+            "customerComment": null,
+            "privateComment": null,
+            "publicComment": null,
+            "dhlLabel": null,
+            "dhlQrcode": null,
+            "dhlLabelError": null,
+            "dhlLabelOrder": null,
+            "dhlLabelOrderId": null,
+            "dhlLabelOrderVersionId": null,
+            "upsLabel": null,
+            "upsLabelError": null,
+            "upsLabelOrder": null,
+            "upsLabelOrderId": null,
+            "upsLabelOrderVersionId": null,
+            "shipmentNumber": null,
+            "lineItems": [
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "dvsn_return_shipment_line_item_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019c707c816a72e8a9266e8dac882b44",
+                    "versionId": null,
+                    "translated": [],
+                    "createdAt": "2026-02-18T11:22:13.741+00:00",
+                    "updatedAt": "2026-02-18T12:37:08.886+00:00",
+                    "quantity": 3,
+                    "reason": "Sonstige Gründe",
+                    "procedure": "Auszahlung beantragen",
+                    "customerComment": null,
+                    "privateComment": null,
+                    "publicComment": null,
+                    "restocked": true,
+                    "returnShipment": null,
+                    "returnShipmentId": "019c707c816a72e8a9266e8dab9fbd73",
+                    "orderLineItem": {
+                        "price": {
+                            "extensions": [],
+                            "unitPrice": 23.77,
+                            "quantity": 1,
+                            "totalPrice": 23.77,
+                            "calculatedTaxes": [
+                                {
+                                    "extensions": [],
+                                    "tax": 3.8,
+                                    "taxRate": 19,
+                                    "price": 23.77,
+                                    "apiAlias": "cart_tax_calculated"
+                                }
+                            ],
+                            "taxRules": [
+                                {
+                                    "extensions": [],
+                                    "taxRate": 19,
+                                    "percentage": 100,
+                                    "apiAlias": "cart_tax_rule"
+                                }
+                            ],
+                            "referencePrice": null,
+                            "listPrice": {
+                                "extensions": [],
+                                "price": 74.99,
+                                "discount": -51.22,
+                                "percentage": 68.3,
+                                "apiAlias": "cart_list_price"
+                            },
+                            "regulationPrice": null,
+                            "apiAlias": "calculated_price"
+                        },
+                        "type": "product",
+                        "product": {
+                            "ean": "4067902508726",
+                            "productNumber": "JC5806030000612",
+                            "apiAlias": "product"
+                        },
+                        "apiAlias": "order_line_item"
+                    },
+                    "orderLineItemId": "019c27b86d7c72e786167929937d4518",
+                    "id": "019c707c816a72e8a9266e8dac882b44",
+                    "return_shipment": null,
+                    "orderLineItemVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "apiAlias": "dvsn_return_shipment_line_item"
+                }
+            ],
+            "status": null,
+            "statusId": "356c2265fbb37d19a444ea6adb0060db",
+            "customer": null,
+            "customerId": "0196ef4143977182aefcfb3d51400b9f",
+            "order": {
+                "orderNumber": "1039622",
+                "apiAlias": "order"
+            },
+            "orderId": "019c27b86d7e733baf479b9c493d79cf",
+            "salesChannel": null,
+            "salesChannelId": "0192af1d893f7b88bc461169ef6d9f00",
+            "id": "019c707c816a72e8a9266e8dab9fbd73",
+            "orderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+            "apiAlias": "dvsn_return_shipment"
+        },
+        {
+            "extensions": {
+                "foreignKeys": {
+                    "extensions": [],
+                    "apiAlias": "dvsn_return_shipment_foreign_keys_extension"
+                }
+            },
+            "_uniqueIdentifier": "019c709789e17193ada070528786d45e",
+            "versionId": null,
+            "translated": [],
+            "createdAt": "2026-02-18T11:51:45.381+00:00",
+            "updatedAt": "2026-02-18T12:09:32.290+00:00",
+            "number": "50009",
+            "customerComment": null,
+            "privateComment": null,
+            "publicComment": null,
+            "dhlLabel": "JVBERi0xLjUKJeLjz9MKNCAwIG9iago8PC9GaWx0ZXIvRmxhdGVEZWNvZGUvTGVuZ3RoIDUxPj5zdHJlYW0KeJwr5HIK4TJQsDAx1LOwVAhJ4XIN4QrkKlQwVDAAQgiZnKugH5FmqOCSrxDIBQD9uwpXCmVuZHN0cmVhbQplbmRvYmoKNiAwIG9iago8PC9Db250ZW50cyA0IDAgUi9UeXBlL1BhZ2UvUmVzb3VyY2VzPDwvWE9iamVjdDw8L1hmMSAxIDAgUj4+Pj4vUGFyZW50IDUgMCBSL01lZGlhQm94WzAgMCA1OTUuMjggODQxLjg5XT4+CmVuZG9iagoyIDAgb2JqCjw8L1N1YnR5cGUvVHlwZTEvVHlwZS9Gb250L0Jhc2VGb250L0hlbHZldGljYS1Cb2xkL0VuY29kaW5nL1dpbkFuc2lFbmNvZGluZz4+CmVuZG9iagozIDAgb2JqCjw8L1N1YnR5cGUvVHlwZTEvVHlwZS9Gb250L0Jhc2VGb250L0hlbHZldGljYS9FbmNvZGluZy9XaW5BbnNpRW5jb2Rpbmc+PgplbmRvYmoKMSAwIG9iago8PC9TdWJ0eXBlL0Zvcm0vRmlsdGVyL0ZsYXRlRGVjb2RlL1R5cGUvWE9iamVjdC9NYXRyaXggWzEgMCAwIDEgMCAwXS9Gb3JtVHlwZSAxL1Jlc291cmNlczw8L0ZvbnQ8PC9GMSAyIDAgUi9GMiAzIDAgUj4+Pj4vQkJveFswIDAgNTk1LjI4IDg0MS44OV0vTGVuZ3RoIDI1NDEyPj5zdHJlYW0KeJytvc2yHFlypLnHU8RqhJQhb0WEu0d41GaGxeJPd\/O3KntahsNZIDNvJsC6QFYDSFKaTzMPx2foFRfj56iZqpohyULPtFC6CxowtRPh4W6f2XEP5H99dT7t6+Vpf5zeHX88n15ebY\/t6br7HyPg5dWbV\/\/l1ftXl9M\/vbqe\/uMR\/g+vLufTX776v\/7v8+nbV\/91+s+nD9+\/+sVXr372p5fT5fq0LKevvjv+4nL6w8vxd8vytGyn7bw97ffTV+9eXUb6r7559Xu\/\/PO\/OP3q+dMPP354\/v2v\/uEwHC\/+yVevrpenx+l+vj\/dxvu7rk\/boban+368GajL7enycHW\/no4\/3\/Hny+m6PZ3xF+vt9M2rQ65THVG3p\/P1+POR7jbEcp9ifYyw29N2m3KZf3d8+iEuFxOPKwKHvJ6fLvM9uTzWetymOD7sIS7HAscHWtfhW0ey+\/X6dD3eyfyUx\/+\/XeLPl32892\/K53959d2r5Tze0DgE58s4IEfS4+Oc96d9G6tDXpan28XksdQy1l9c3B4z8Hhn80PMYzR9h7hBHO\/3eh8L3Y8vch6V+9N1inHA7k\/bMsV2pVjG9z3jpnyMD3G8j\/3pepvyOCjxCS73p3WjWMfB\/6Z+uvFxI9Hxlh778XHj749jN45Gmh9P61wlYo+jOM\/U7\/LLWI5PPs+e+G6OQ3of8Tjox5FYqZbL0+WKk+k+FnqMM4Ty+NtVzuNU3kwdobdcF+9kWccpwne9XJ\/2VW\/7CFo2e9vHp1jSv4\/3dHvcx\/F6F3Icletc7\/F0HVfB+rRfKSPY15cfK5yPL\/mBb+OyzHT44FNW\/2N8XPmnHAuu9v7P+nM3j7e33ca5\/y7luj894lQYn2V9xIeHRDD8kT79IQ8\/3jzeyyG3RdL98Wm38zh9+eEzIj58k8fbufPgz69zPS6Cm86Z9Tj\/H7q8l\/tInl\/9esbV51\/9UXq0+FTHUud9\/nkZfx7X4vHny7zIH+ObHefpes1L4vi780KxjzLJ62O9x8FA+uPd493YauPiOR9n634k\/qejmv7HqM2\/+rNXyzyUUYLfheQR+XXW7u24jLxyr7OAqnKfj2\/usW2zeP\/pr\/76L71qzxTX0z5qW8lxH59jO47icSbNHNt+fH8jxV++\/vDNl6Q43udxsGuK61E2R45ff\/rh66+fvyTL7TZqRsmynI\/jPbL86odPz+\/f\/PDd84fTf3n+\/nT9knz3bRSoku+2juN05Luul+MA\/+Xzy8dvf\/jw3Zdk249jv7bP+MBH\/OXzj58+fvPm5fX7bz\/L9Pl3djkotR8vX86jpM9M9+OArzPVV3\/9k+\/l0VMcbFnam7mt+Gi\/\/u0PHz6d\/pfTrz\/9t5fn0189\/\/juX99\/\/HQcuD979\/Wf\/0T2430c52NJf9TUezty9\/sD6f\/m7Te\/+TiX+Ov3L2\/f\/9Q3+xMZ1+XpXo\/e\/bzc8Zl\/8d9\/8\/z+tH1Zou1oDGqe+\/12ie\/0OOtOv\/jwr99\/\/4Xv6nYfBaVkW27L\/u99qZdRMv\/p1eWoFo9x5R1X\/bhgj7NpfiPQL9TX0dOMCzgMt30dJYSG0DTcbsDoYTg+6dVXuK+DmFohtFaAQSsgQCuE5gpxXI56d6uH5XFFPzg7hHlY1uO6wWH5o68\/PH\/z5v2P77\/\/+P7D089Pt2W53pb1fr6c7+efuiw\/S389XwaCS\/pl25D+18\/vv2Xu9Xy7Pc7X63Y+r1+U+XL0AnvNfN0fKIf\/6cf33z6\/\/\/B8lJDn9\/\/88+N0WB63pbxj1ebr6IRW1ePQVpDjldt5QT9xvZ3H2qE9YltHw6cIaIsYED+ONyNCzwi8ovcREQ0Mx9EcOcux2I\/epZBhWdfz+hOHonT2j6PFPb76+1GbZm93xXGAfqG+zZL0wvjUb5Th+rR6giHlv19GMZU\/tfnX6C7TMfWLazSFip\/aMhwAf3iGqS3DPshuGUIrw340k54BWhn2yzi4ypDaMtzQ8NBxQ1dAfXTBF88QWhke8wtXBmjLcMcQyAz3HAqZYRlNsGVY0BRTX0bfowypLcM6cGAZVsx6lvHhRzK1ZXiMfsYyPNAsUd9HD2UZQjPD7SgaNzuSoV+kzwOqL4oPbRnW0fRahqktwzLKo2UIbRli4qUjJkDq2yjhliG0MhwF6mKXRWjLsI8J1zKEtgzbCLQMWwwAqe2LuNUr4nZ0DZMMjN1BBurRBpsbUv5jZr5dzA9t\/scIswShLcM6ZlrLMLUyXJfYN8j40Jbh6Kc9wf2p+I\/u4O7+0OZ\/jMbOEkxtGfZyJlIrwzEy3ux6Cq0MR\/O0W4KQ5j9qgNuHNPcB8dXtoc1\/H2eVJbjjLLOEDz8GqZVhvYxOSBmgLcPjafPvMbVl2MaYbRk2jN3Ua2wyZHxoy3C0O7tnmNoy3DB6M\/6Wo3i+sh3Xp3+T0MpwDJt3P5KpLcMxIHiC7cmv5sFp\/yJTy3\/A+OpfJbRlOOqDf4bUluH6dPe3AK0Mt6NV8gypLcM69qcsw9SWYRlThmUIbRnu5Xyc0vzb2AUyf2j5D3Z7QZpS\/qNzcNJTm38dWzCWYI0tmdRLIT21MuxnbLylA9oy3Ou5lNoyXMZeg2W4YO\/BMjrpqS3DOshtGVaQnPqK3oHxocf+xL\/Vzy7L+nS7Tgoc\/xP97LpgDvv73\/s\/\/\/73f6KJ\/bcawuW4gu6P2hFeb0evMJL9xfPbT9\/88O3zz371w4+f3r7\/fvzZky7HxTW4fNBmcnzFTmvoF+mjt5jfXcaHfqNX7iAgHXcQkHpuv1iG0Mowdmc3ywBtGR64TpnhkdctM+zYe2SGHaSnXif4GL4GB\/OF5QwGZzy0+R\/oJJngkZ0lM6xjV8gyrNg6o76MfR1lSG0ZjlriCYY0\/4a+gdFb9hH5ylHz7+afUv71HN1VRoc2\/xzoLcGC6kp9HXv+liG0Zdifdv8I0Jbhhg6O8bfs6PKV43\/mjJAOaGXYoloyntWTr9zRj9BxRz9Cvbl9K96j2l+u5oU2745BnfbQlmF2N5Yhuh3q66gIypDaMhzdgZ9H0JZhDSJlfGhliDktDTGn0f8Y9w7MH9r8a70W7mu9Fo5qXa6F1JZhH0SwDDsIQX0bd38sQ2hl2CfTlGEPxlGP7THLkNoyzDtUluGGs5V6jfk340MrwzGX7Z4B2jI8guyZIbRluNbrAVoZjrls99qa2jLc6\/UAbRkWzIaMX3JWjFdu5ys2m8IR2jIUe\/NupbKHfpFenuxUTCn\/2J+zzx\/a\/HdcHUxwz9mAGeadLsuw4GylvgaTM\/6a0zZfufnVAGn+2JdhdGj5j4lotSs6tGV44GYVM4S2DMuo1JZhQeWmvuLqYPw1+ym+chtdpmW4oeuk3mJqy\/jQyrCc0Q2lA9oy3GPiyQyhLcOGno4ZNpyr1BdMhoy\/5KTIV+64+01H7GtQ39CBMf6WHVm+ciDNr4bQliHufjFDaMuAzpgJ0BlTLtFlZnRo+fN2VzqgLcMOYjDDnp0tMyxj+rMMC6ZB6ku9JlJbhnu9JqAtwxa7YhkfWhmOmWP1DNCW4WDC7hlCW4b1afME65NV5zGRlGsitfnvmDbpuGPapL7VayK1MhxDyc2vKmhlGPubniG1ZVjGBGsZFky01NdCCGrLsBdChLYMt9hVy\/jQynBw7eFnA7Qy7JdS36ktwx2TEh13nLPUK\/aVGb\/mPdx85eDa2a8qaMuQe0qZIbRlOM4wT7A9+VE4mHTxypDa\/Dt2L+jYsXtBfYsdnYwPzQz3g2qLnQ2hX6TPhRPUlmEr10Roy7Di8QfGh7YMj\/GIhmWY2jLsT5sn2J\/KUZiPhbgfWv7LJXZkMj60ZbhhN5OOG3YzqbdS5amV4Tq2tpTgip0u+udjAOYPbX7sv9CP\/RfKtVR4avPvY2fLEuzY6aK+YR+a8bfcl85Xlvn0kDJAK8NyLfMstWW4j\/PTMtxxvlLfxsMMliG0Mhyz1dW\/SWjLsJd5lvrf2zlYx8bp7OYP9OMG7nrZc+NgPS9\/\/\/vX+23eMP1fH4\/z+fxYluX4n\/NP3YX9bCthXeZTL76VsJ7Pt6Xewfvx3bvnD55uPWbAYzrZbngOYxsXRagXqi2a\/4zdspTzlcf4CmR\/4BtJecdJwuh7njT5ylH6l11+SPrvsYXH6HMOTHxlwaiQhgWTQsortkoZfc2tU75yH2Os\/HdMtSnXaHMyes0Snq\/s8w40\/ZD077HJyWhuevKV+ziL5L+j80q5YjOZ0WvewshXRsF\/yA8p\/45LjP49Lzn6VzzAlP7YVU15iaY\/o0PTP27szJsYMISU\/x4XcPrvuX1E\/4qxPf1x3zDlFcBj9DUByFfmIzfy37AzkzLaJ0azneIr+9Nu9v1pN3dsEDOWG8b5yjGy7Dr6IeV\/RAFM\/yO3\/umPDYP0x35ByhW3Bhm95vNz+cpR48\/29iHl37FBQf+eGxb0b2iJ07+hI05pp+7tulbnHRvdGXrHPnfKG25aMvqWNzHzlWPEsK9tKrl3NGt079m80b1ZzYKim5t3GRva3LvXrJDy30rNslEmXzn+52LfGqT8j1KzqM0fGwPpj32BlFtsemV0aPm3Mza3w7BFP5T+RyAv\/Y9s2eif7Y\/80Q2lvOCWNqNDm39\/2syOXihVDjQZe88tqnzldsVt\/DDcYuc95QUbUoy+5AYVX1nHtqH8K3YRUy5oaxi9ZJvDV+5oWNNwR7+aEvf\/GHx7qt\/dAJSduJBy77HdlvbQ5r\/jJlX67zg5Uq61XqU2\/7z5J3\/cC0y5A5+M3nP4y1f27clO\/ano3q8Y9Rh7zdGPr9yxFZGGO3YiUt5icySjb7nN\/W+3RtvohPcJjks2L\/dj9J7Ny9jnHh3FfOboVB46ms88\/NOr8Qkfdz2RE3o8jHrDcz\/\/5sL7vEE5dnG3uJtzPQb6ue4f\/\/Du3Q\/vT3\/x+uvnl9Pf\/MWf\/e\/jyftf\/Pjx7fvnjx9Pf\/PDh0+vX+qTSvt2Xh7jQbTT+L\/xBOl9fPZjDJh0glqPw3TDk0T1r0dfcxxpyPHX8UIYfsJfHO9avD2heplPj9QbT6NDgnH+uOCylUbx7fvvfvjw7vWnt8cB+O5fP5z+w5sPz6f\/\/P7T84eX198\/vy+PJ93HTeLl6MJnORlP3q6HPM9aHmo9x3YC5fH1LONZUojbEPttivv4scCBgmva8ODjEAf3jmWO1mA5yuk+Hgg+5HFpDHmwYdz0v0wxHpiHWGevOAOn5PMlJscC1yke4308xmLbyDEfOJ5y\/nQiPum4r36hmBvC39SjMH9\/MAan5fDj2eHzeBZrGU\/CX3Acptzx1LzkcRIu8\/GTKS4nPEg\/xPWOw7Jf0nestYzPPu4yHX8+rsHx52XDp8XfXMexwv9\/Gw9mp5gN5hEHuS6z4TnU4zLVkWq+\/XU+0IM\/H4vex+8x\/IPND4oc407++KDw7XGrFmrBGJ2rbfzdQXwN255PtuFb2eJBtjjE8cB\/yANUs\/8ap8+RfLtWGZsjGXwrqXSzRu97R\/OFt3rE4\/yAusSTMBG65LbJ4V7HN7Jcr\/HkD+TxJnCjdN4uHwcJzyKFvCYHuDr98b2cY7NoGTcihsRlA1n82yCq\/CF5a2h+R9xMfepuvKGDG7OFSYkfhMRnuV9iUA\/5yBk5z226oc55b3G+k3s+RBXS3fisYw5+6KNnRHzWLq\/jeXj487t8gMFx0hxDaTyrAnmORyQieNEvD\/LbfIzP967KZd4xHWIb1+C8ZLa50DfzKN3nCZOXxPE31z3+PFqUCy+P483d7zpzjqMxJ76y1ouAOC\/8wqXZ5LM+j6fkj+sgHvb9eBTp5w8\/\/8mH0n8yz2MblzF+inB+rL\/jdwTbZ78A2K81xXq5\/66fEbQko0O5e5JtfcST5l\/0K4KW7jF\/Lufp9mOq\/dIfEbRkl\/N8YMI\/4eVy\/t2\/IvipVOMc2fx7ux3XJA7Wn7z77Xf\/8v77L\/ziIpN\/xGPuv\/x\/+jHB58mPYeO4SCz5en9sX\/xTgs\/z3ebPbcr3sTyW3\/FDgs\/T4Cki\/yLWbfzi43f\/juDzXPvsBf9nfKnXY2JmlxU\/gbnnV2GPxv8P5PK3te1xpP6dPlfpLjXd6JOWWie25fFTz9Z\/0btDOnt398f9jvPiJx\/Nv5\/3223+bCp+MnUd\/dbKjjTker5jevx3OtLrMSPSOVvSMxb+o\/fvX79593yc4C8vx5l0VL5TfIHPRxP+8dNptOV\/9uGHH3\/7kz9H2OsqB0ju5QJdL\/uO4z\/b29O3b16evn0+ffd2HL3Tr98+n749\/t8fff39MQbke3j7fjbEH05\/9S\/Hm\/hhvKXfvBzXTRi+fvvp0\/Pp9Y\/fnUaK7354+f55Jvvz\/\/bbo39++\/43f3D68d1I+yVveD8PiPsbXh8o4O\/\/5Zs3Hz99\/\/zyfOQ\/3qIfJzXt8VPh0z\/\/eHr+8G68s5f3n58Ml59e+H66jl+83vLXQZcFNfvNp0+\/\/fjzn\/0MB+tn82B9+JJP85j3ZMrhP65U\/Mrq7W9\/+\/P6nn\/z39+\/j2P6+sdv3pw+HKd0HLrTf37z4TTkD2\/eD8P3bz9++vD2+Yj4\/vQaZ8nfvD4q2SfMMP\/4\/OEjvoQfvuydLuf5u4Jy3G9B4OdjOnp9vJ3xXt\/N0+\/vfsRh\/3A6jvD3z18\/v38qT+pd5k1BzoGQX3JVjBbwUa6KS1ATh+j9y5xOX\/\/48dsPP44T8Ce+2b391m0ZW03lGhg\/dQuij\/MdmU4fn1++\/vjpp+tGTThaonqs7gu+1F9GrriOPh6X7C\/\/9A9\/+frT89t5gRyH8vTL\/\/BXpz9aT794ef3p0\/gk82v9zcs4irz+xu+bjmvqz\/\/l5bvjf77\/8Yve1vgBTHlb2+USP0v7+PbI9\/XrD\/NN+Dn3dPrFvHqf3386Cmeeff\/84z\/+cMS+HH\/xfxxn0gEOHPfxTn9x9FHHSfXx6UsO\/ePcULKf1+vC3\/XPQ\/9pXry\/\/snyMH9nVm774D5ovaLi11V\/9\/z2+zyGx\/\/+7a9Of3y8UX7kd6dfv3v94dNv3\/zw\/vn\/Ob6H47s4TuA\/ffvy9vXL8x9M+e64iH7z\/Onjmx9++wenr4\/vDGUvTvfffHj93ac\/QP17\/fmZ95Pv9rMz5bzEryyx\/DgK5cL94cPTyQ7Nt68\/xo5MHKRxxvwPf2lf9F4v8ze45b1uZ1SAn\/zOV\/yacPxjCvM2NCZSyBfKDTuLEbvlxmLofUwt8u4YYnoqX8jc17Os17P5Mo0v4r7LeLBC1guesyiZuIL7lrjpH4FL3PNvaXwRd6+40RzR+AFkT+ULufcWjydGeDxb0nLZOuZdLvFwZOwYXGKzNrwP3PpL8yOfb033Go+chDt+Q5FyiQcvIjik3PMOiNx5g6Ql86XcnY8SRng+SdiS+VLmHntYm9yQdK9rPOoQwSHpxlYI3bkzku54mDrdfLY63St+FpLuFb8KSXmNhxwiOKTcG\/6Fgwzf4nZgS+ZLufuOOw0Zfsedhp7MlzL3bcUmR4RD0n27xqOEEXzNp2Dzhfkvpsi9xW2JlsyXcvf9yU6WqV4+S+ULmfcYpR72viHpPrpgWziUvPFDogyO3xH1VL6Qufd8CB3hez6DHvLq9S+UvFupf\/tW6h9T+ULuzgepIjyfo2rJfClzH2i+2tUFKfdeqllKueMJgHTHEwA9mS\/l7qXUM8iXz5L5Uu7ex2a13FPKfSsV7XFrFe1yzqfHghbnfHqspfPFiv8Sz2mn\/xLPafd8Zb2SYcFvrelY8AzvZxnLiiXDWkpj6JfPM5YVS4ZbPLuVjls8u9UzlhVLhj1+A5OOPX4D0zOWFWcG5\/tIMO+cqXOAjM6h9BH0iogzWESErHQlER2B9IqI8CYRKyDlJhHhJhEhl3IyGRGdWnKTiC1ZASTd40eSm9yQcj\/wEHW6H\/lMdbqv+Lljuq\/YQf4smS3l7gk5uROBIe94UDSD7\/ncaOEO3WIaZAOkmOYQk5tMa8kK4uSOn9tmePza9rNkhZd0i4jxZEESMR7TCCJWQNI9HuK1zw0p9wN3WNL9yBsuzi2Zg2I9lS3k3vuTfeip5G2I2\/K5zHxhj0fnI3yPJ+dbLq1j3n2OfPTucU\/ns1S2kLuvT3ZxJT17KlvIveQhwslDyAZX8dCZRbd4CPdehgTjoSNM7qXUo45HEc2ZIzeJBnkrFcmIViqvCqkqcehe260SW+kdCZZxe1eVGHLzb8EqMerlWcaYwuDiMAebprDwcQqDlVOYZ8oV3McpDIGcwloaW8Td5AbCyQ3I5IZTRN4HnprMYIICco8fVkRwSLrFjQW3\/rPUQ5IbBSNykxsIJzdasoIRuTlJIZyTVEtWmES3uDHDxQ3ICiHnBl7gHIZwzmGQOYdFsOYwx4zcpA4kqVMgRLemuBmuKa4lK0STm1Mc3IQUZE5xEawpzrkiNzED2QBozDJIyU1mtWQFYXTfzvEzPoRDvnyerPBQ7mv8gCzcRFxLZku5mzMgwjkDQjZ8agaMF3IGRHTOgC2VLWResXaGC5Bwk7UFvXKTeXATVJCVn2KekYlegaqlKgiUm1Mg3AQVJAdKBGsKdMzJTeq1ZAWCcu+lCgtzLVkhKt1i5gwXM1uyglC5OUPCTUi2ZIXHci+lkou4LVkBsNwkLsJJXEgStwBYvNQMCNZpBgx9LuXcZ8B8hTNgODgD9oy+YsmwlqJuM2DP6CuWDOwbwsG+ITT7htpHvGEE+4b5r+Oqb4DMvsG7CHqjb5iRQXu49nL6e99ghJeVwPdM6iHkY9+AQPYNLU1pI+Rm34Bw9g2Q2Td4FyEv+wYEs2+AZN9Q2gi60QrQrUYBksMrgi989NY7A7nZKLRkpQmRm30Dwtk3QLYmxPoGvPDAP9WU4RxPW7LSk9CtWXeGq81oyWwpd7NngZs9S0tWWhi51\/hhXISzSWnJSj8kNzsehLPjaclKA0S3epYZrp4F7tYAWc9iTYrc7Fkg2bOUFkZudh0IZ6MA2VoY6zoMuHSLv1OKvwXHcuesC3POui1VIbu83P1FOHd\/ay6t417u\/iKYo3FLZQuZW7u\/M1ywhrx6BdTuryOLXhEMsuHQCGbIkpsEg7yV4cQJ5nxR6RZvQp9LaSgEc75YBvKmZ6xEswxrKS9GsJ6xEs0y7KVIGMFCk2CVaG8qskaC++hERTDIJJjzjN4g2IwM7sBFghWgyUeCwUr0eCbRTD4SDIEkWEtTgCY3CYZwEgwyCeY8k5cEQzAJBkmCFaDRrf3WGS5ktWSFjnKTYHCTYJANh0Ywq\/R0q\/DD3ZBkFLFKLzcLf0tWoEL3Fk\/8RriKL2Qt7CnlZiVHOCt5S1YKu9zcb0U4x82WrFBCbnIA4eQAJDlQsEC3ps8ZroGxJSuMkZvTJ9ycPlsyW8rd3K1FOMfNlsyWcjdnV4Rz4GzJbCl35+yK6JxdWypbyLxi5x3\/CH8CD26ys6BUbvIPbkILsrJU\/DPgyUv+tVQFh3LnLjOic0puqQpZ6dXUPMM1NcPNqRlum5oNtXKTvJBXr9xGXmhO3AjmkNxSFabTLW7PcHEbktwuGJeb3EY4uQ15K9XQue1UFbBE2dDnUhALt52qloGU7Rkrxy0DuR0OcrtnrBy3DHspy8bt0OR25fibCuqRYB9XkrgNmdx2itMrEu7xH3iJ7w8ySehclJckRDDhBUkSFjDSLZbNcLEMkiwraJObe8AI5\/jVkhVOys1ZDuEcv1oyW8rc4ugMF\/rgJkcLVuUmR+EmR1uyglW5OU8hnPMUJOcpBNs8hRfu+IejM5xbxi2ZLWVuTWMzXNCGm9MY3DaNGSnlJjghG5RtD9hIKTfB2ZIVKNMtls1wAQiygdFYJmbQTIJAVTj5NGbMkJkIqbmcTfSqqs9glWLIq1\/XVtWt8tKrQgzJ\/UQE236iFWK5WZchb6Xl9brsFUwFSRUtNCtarXBvagk7EoxfgaqgQWU98+omZz5FidicPmqeWifpxQwzQzF41By+gLtygoExJw9Lw+zuyvkFcTm+1By+gHvj6UkER4mueXwRd2a1R3QW+5KoVH45s9YjNks9FCt9Kfz0ctduRrOyQ3EAQqjt2Vktppf\/qsRUDRlW5a0S05t1GaqVfNtxs7KcXhZpqFrwvUZbHaU3qyoUK3Qp2PLmPT5EZ02FauXa7vChCuaMNaM5FUHVYu0TltVferMaQ3FCQqhNSFaM6c3SDNXKvFVm1N6ccGY0ZxIozjcItfnGyji9WdShWNNLiZf3gX+1JqJzpoDKaQWRUHQmDWZoFnAIsqCgQc6cLhCdEwFUA4PNFngh78ghOucBqJw0EKn7ceJEGhMaEBwyEGjPkOCFzWspBwOoBiObC\/DC7lWRd7+geCcNoXYnzWCVXqILiuQqIJN3w79mFNEb\/jGjUEtpblPKm9RDdEIP6laaW2deMO3sRU6jR81VeWrunGTCnWNHS1bWKv6cY8KQQ0dLV1Yr\/pxiwpBDTEtXViv+fIIyDAn4lq6sVvzZMYQhG4aWrvUPbwqO3s1\/duRsu2ghE08FVunlGIJgMiVkhZWmEMORvPZvHpVUDit6cwSJ4ORRT+XYSy8HEASTR+GtoNP8YSiTl2RrqRx09OatoAhOlvVUjkx6CTYEP\/Sv\/JztkckCuvQKTjNYdIJMPBVY0ZtjRwQnj3oqxx69BBuCSbaWykGXXsFpBotOkImnAit6Y\/MsYgNHPZFDj05iDcHkWs1klEsnN90QSpb1RI5Legk2eEk2yERbAR29sWkWsYGynsiBmU5umSGYNAtvRaR2zMRBWa9Pds0rkUOSzhzKInjRv+\/nmQy2dObDKRGaFAxZ8apnUwyg8pKnLZXjNb18MAXBJGhP5aCmlyiGlyxuqRzN9ObWYAQv+pckSyqHPL3EOILJ8ZbKsf4m\/1rT4zJ+zK7xEXLzL1vzY8DiLGMMgXBxkoRNU2D4OAXCyjHQM+UK7uMciEAOgi2NLeLunAQRnaNgS2ULuZezIMI5DNZcWse8vIuFYA5x4W381V0sh5vcZB1kI7Bx0xBFt4gFN+FXWCg3EQY3EQbZaGgMwwuc7BDO0a4lK3iUO3ffIpzMa8lsKXNz9w3hHOjC3Xj68H8072z7Z+EmyiAbFY1lKP95FwvhHMx6soJJuTnjwc0hryWzpdydd7EinORsyWwpdxPDCCc9W7JCZbo5681oDntQlZA27Tn2ZCYFay6t414CFcHkYEtV+Eq35rYZLrJANmIt\/g\/Snu1ZQoSr1kI2AljdxgucoRDOIQryViqDTVFRVjVFoepqjGrpbLHi5xwVfg5SPZ+vVzJwkgoHR6me0VcsGThLhYPDVM\/oKyKDsWYkOL45I89UDWbawyRp0hjQqTkKzOQihaaR5JiqocwYhBf2+I8qIJrD1lQNKjeR2mp9elX5p1rKV++zl2GDXkKkZipIkZc7gzOazJjqXr4u2xl04KRX+KmZCozk5fA1vaRNzVS4Ji8HqBnNej9VQ4nNT6jQ+fzEjNbANBX3CRGqpyfiBQ5fM5oDU81ky7iXw9eMJmVqJlvGvGLOiBYlprfhy4hjVKCXjKiZCn7kJW9mNAlRMxX4yEvazGjCpmYq6JE3h74ZnJNazVMYJieHvhnNUa0k0hrm1NA3YkW0mscWcS8ZNb1E1FQNdkYoMCjHrxHMmWkKDl8ItOnL6EUrWVYSaQ13bl5VBcWapyBSXo5uM5rjVs1UaCsvR7cZzXGrZrJlzKvRbURr3KqZbBn3coSaXk5QUzWoL60uA8z0kto1ky3j9BJBJ3qEO8hOZOOn81J+4rOlqzQ1P\/ciYeBeZEtX6Wz+3Qu87UW2dL4a\/AL0cN\/GSS9eQ252rtvsKdDSKe5CiuacIAVrucjulsRRTi9HQAST1pA5As5QTYDCvJykfkvkTQC93K1FMKfFlsrbifTqVuIMVo8AyTl0xupeorUI8rJjgKzNh3UMAru85Dzk3U9R7xgmnDlyzmBNiZC1CbCJU2CXl5yH5Mg4Y21iVIsgLzuGlsobiPTqVuIMVo8AydlzxupeojUF8rJHaKm8+aCXDQOC2TFA1ubDOgaBnV5xHl62DN5ApJeD3ozlcAZVsOhznlAnK8lXM3ERcxKgCCVBWyIHKr25a4rY3DVtiRzMdPJGIoK5TVozcRE5tRc4QzUJQhY4+V6ggCPvUiqNUmkd8xJkCCZ\/WioHG723UmtEspbKwUYvR1kEc\/ZsqRyRpIAghLovbIRuVDMKGTeGfx\/fnzACmRhxqNAbM+CMDGzAxSkQNpsCjR2yEiWQjUfGEuFC5oRHS1UgJS9xgnAyALJxyXhiBJGbQGnJCl\/o1l7mDBdDWrICK7k5wcJNikA2PtkMawySm0hqyQqh5OYtRISTQi1ZwR3dmkVnuDgEyWkUwTaNGsXkJtRassI4uYk1hJNFkMRaoZzcBBvCCbaWrHCObu2jznCxrCUr0JSbYISbNGvJCiflJhoRTjS2ZIWUdGu6nOEaCyE5XyLY5ku8kPMlonMubKlsIfdywkQ4R8OaS+uYl2idsQQiFNFaSCsv4YpwMrHmctTKm4hEbIINqrHWGGlUlJmQrLkcmfRytp2xnEmhON0i1KZbvMAZFeEcLSE5pSLYplS8wCkV4RwuWzJbyt2cUxHO8bIls6XMLcDPcFEZsvUKRngDsdzkcktWiC9WatcYnNMuL\/yN3LZrHH7uGoefM2rP5+uVDGspxYb30JxaI96mVm8QLAMbhp6xNhBvKp+PBNvRe4nWUNYFcHo0ttKVpIWqDNcEaFylMylb81SA00tyzWiCC6pB0LhlZEovOQUv5zJ4bf\/VMEVvQguqAdCYZdU5vazVUBUiXvfxQu6hIjrHGKgGAdtDxQs5EiE6J6KayZdxb971Q3SOQDWTL2NejlMzmtNUzeTLuDdYA2vgAaJBy0ijmp7OLPAQZEVBh5w5TiE6KzxUA4dNU6rotEZ5r3kqOOjkQygzmvUd3oYNewbFaiq9WWGhWum3am3lmd7dr\/Ze+K1Wox7mruKM5uBWM1UKyJtDILxZ12smX8a9OVAhOqsy1K007T5PeT1Ms8pjyF5vVR0RkOPUcWnu9kuAkDFOIZTTlBVSOlVXIc+1xtIVw1BERSENlcMQIjULWSGVlXUVshZo1VWUvxxGEMz5IWQOI4jVLGJlV96swj2V1jEvyzmCWc9bKi\/v6VU5n8Gq5\/BmQS\/lnV6Wc3hZzyGzoJfyTm+OIBGcU0PIHEEQqwnEyj29rP7hzRECXk0QVu7lzeofsmJFE4CVbHnJAsiKFbHASra8ZEFL5WhIL2+JIZiTRsi8KYZY3ROzgi9v1v+eSuuYNzGC2ORIS+RYoTMHlgjOgaVlMjylkyiYkWQBVIWKWGDFn1axAN6EQUEDvTE0hDWGhp7IEUNnjgwRnNwImSMDYjUxWLGXdy+1rQFJFEHBzoYfwezRQ1YwqN+HznY\/grPd76m0jlVygQC1WyQIvXo3WUhgtX\/4l\/nfYyAKIDc\/9MaCLPc0RumHay9H3XbWnBqyEiKeSUCRj905Aln9IStW2J9H6cx9LQRzXyu8ua8VZu1reS2lW6UVkqW1VFq5WVwRzuIKyeJaai3dKq8zXOUVbpbXUm3lZqGDm4UOstVMq3QoDex6Z7ja3pasFFG5WSjhZnWDZKEsdVPuLHeIziIF1eqm1TurcDKz4NVcXv7o5S4Lgtksh8wmHLHcZfGSKC8rZEtlC7k791kinDUSshZf7rN4WaRXVbKlKtVX7nyOINysk5C1AF9rFVD\/PIPVQMPbqqg6aC+NcrNStmS2lLvzhkaEZ9scslVS3dGIF9iBI5wteEtmS3nl5D5LVD3ui\/R0tljx5z5L+nOf5bN8vl7JkM8WpCP3VT7L6CuWDMRHOIiP0GtpXgs\/DBgjwTb+g5\/iB2Tyw2lCb\/BjRkbVh4v8KDiRL+\/MhJUTBGTDie7MGCdkTmq0VLaQe\/PeSoQTG5CcThCseysOHbrFoJasIEnuvOkebs4CkJwyEHxv35MGixmuwaIls6XcnfcYwk3oQDag6R5DcIJ7RTNcXT1kBZrtFsULHBEQzhGhJbOl3M0hAeEEHiSHBATblGCEk5vAa8kKTOnmc3cIF\/AgK0ztyTtnnNxEHmSDqc0KYpzMSbyWqsBUXtIT4aRnzeUspVf0nMFCHmTS01kqbw4biE3eQTWU2rRhwKNZ\/IO7odT4BzfHBrg5NkA2HNrcgBe4c4VwTgotmS3lbo4dCCcwWzJbytwaPGa4pgXIhlObPIxxct9KPRM\/C05V+0VA1G0RC\/4GVCOg88n85FXPV4loGUjAcJCAPWMlomXIexXpIPF6xsrYN5UZI8FtnBdCCOSlfJ1OI\/FH5qRRS1XgJC\/nIYRzHqq5nHPykmQIJnwgSbICNrpFshkukrVkBWxyc2MObu6mQS7lJPKdObzArTmEcz+tJbOl3M3NOYQTmy2ZLWVuUXSGi6JwNyQbReHOZwzCzbGxJSuElpszKMI5g7ZktpS787daEc6hsyWzpdzNCRbhBH5LZkuZWwSf4SI4ZGsHjODGSbqFTbgbkm0GNdbJTfRBkqIFqnInRRGd5GupClTp1Sw4wwUwyAZGmwVFP5mThS1VQSO9otkMF4AgSbMCN7lJM4QTQC1ZgRvdel4Y8XpgODUnjIjXE8NWt4Z\/tv2sYlCtuFpFtEJEs+oS3K3IWV2yyiM3C1FLVmqe3KxqCGchaslKkZObVQ3hLEQtWSlydKuyzHAVA8hapryy2PUrNy9nyFZorDbgBc4GCOdsANlKhc0GuH65uzXDNQy0ZLaUu3knGW6285Ct0OhespcSulVZ4GZlKYVGblYWuFkOIFlZSqGROysLorOytFSl0MjL\/hzh7M9rLq9Z9KoqzWCVEkhWpVKk5M6qhOisSi1VKVL0qkOf4erQ4WaHDrd16FZ35GYZgmRNKyVObvbYCGePDdlKnPXY8wX12DNcPTYke2wEW4+NF7i9j3A21S2ZLWVu67FnvPXE8LPHht967PCzQw4\/+9nQ7JAj3jrkeIUdcjjYIfeMvmLJwF2mcJABPaOvWDKQKuEgVXrGSpk3jMh9quMqP9s+Vcjcp0Ks9qnAjbxfgWC29CHPRphz8WV\/HoHZn4esZFN\/bqySN9EVkv05gq0\/N1bRTXS1ZBWLcmePHO7skUM2NFmPbLShm\/AJN3tkuK1HNtrInfAJ2cBmXa6hS+4kWUtWwSZ3drkRnuhqySol5U4ORniiqyWrWKSbe2QIZ1McsmLR98gMfHInB0OSgwWLcuceWYTntlZLVhkrd+6RRXhisyXzpcxNBiOcDG7JKpLlzjtM4U7ohuSGG4LtDpNIKXNwM1TDuTHYoCtzMrjmKkSml78zRTAf5WqpKt3ljmfCwhw7ai2VL+Te3J2L8MR9zWXruDfYH7HB\/lCtjTD2G91lTtjXXKWroJf3phBM1Ie8euW2e1NGdnkT9CFbE2GzjLUJcu+l7qtrKE0E3byzhXC2CSF5ZwvBdmfL+gK5l8IO9RylBZH7VujBfb2QrQWxfT3rKeTOFqMl86WmO1ia\/17DbXKSN3NCNvDqX2wgTWkFWXsaW8R9MTWGM9gaKqfGCNXU6DSVOeEasmFbT5k5HukWLSGTlhWecuddnQhPPPZkhcR0i7UzXKxtyQp65Sbv4CbvIBs8xTsHnNzkXUtW8Ec35z6EE3A9WWGp3LmjFO4EXMgGT+0oOZPkJu8gGzzFO0cU3SIW3A1\/IpYzSe5EVE9WaCg3eYdw8q4lK\/ijW9yZ4eIO3A1h4k7Uu5zfEM75LZK1kq75zeq0zFG1eypbyL0kAMJJgJrLeSDvVqoRS35PVdgiNwmAcBIAsuFEBPAaTzdLfk9W6CI3+QE3+dGSFZzITX4gnPxoyQpO5CY\/EE5+QCY\/Kk5EAN7XidrNGTN1zrAZr\/s6+cpaiqomxNQ5c2a8Zs58ZS+lURNj6pwYM14To5NqJFjGsRW4IDc\/gzUxklw0BsXgajA0isHHSRNWTpqeSWyUj5MmAoksyEpDTpqOO3lJv5aqwJBuTZozXJMm3I9y4tik6XyTm7iDJDsLSunWrDjDNStC5qwYwZoVnW9yE3ctmS1lbhFohotAkCRQAZLcJBDCSSBIEqgASW5OXAgnclqyQje6OfXMaE49UDn1RKimnqjyOXvMaM4eUBUnNnvEC5w9EM7Zo+bSOu7NXcsIznGjp7KF3J2TC6JzcmmpbCHzinozXKiCm9QrEJSb5IKbuIGsFLzWGqLZBcGEDWQD2dYqidgzw4ULuBvIjD2GC7mXUk86iowehgu5SQ9I0qPARHWXO55RM0UL+DmOwK8dz8IG85MVoTuNtONZ2GAZyIrQnUbar4y6l88EHB3awx4rC9nKup4JiLqX96EQzltHIWuJtftQXjXlZhGFzDtJEaw7SV6C5WZFbslKgaab96EQrhIMyfEEwboP5TVXbpbglqyUd7k5zSCcAwhkK+82zeAFTjMI5wDSktlS5tY0M8M1zbRktpS7ufcHN+HRktlS7iaJEE4StWQFTHJz5xDhRE9LVignNzmGcKKnJStYk5scQzg51pIVrNGtSWqGa\/iB5CSFYJuk8AInKYRzkmrJbClzi0czXBCBbGgzHlntplulHLJBwmYSA4Hc5EJLVjAhNycahBMELVlhDt2iygwXVVqyAhm5805YuAkCyAYZ3QlzjMhNqrRkBTJ0G1VmvFEFflKlQMb8aymMxoDQnTI2kcQrnEjCwYkkdKeMTSSI4ERydOGbTSSQOZEgVhOJMYdeIQjybHQ6Fx8nCwRyHIDMyQKxmiygeQ8LwRwGIDloIFj3sJxUdAtckA2Kep7CSSU3wdWSFSjKTQoinBRsyQoU6RYFZ7jABXkpX7tT0LAnNynYkhUo0i2WzHCVf8gKJmeJ1Xu5Wf5bsoIWuckShLP8t2QFLXSrns9wlWBI1vNS3uXOpzEinIMMZCvvehojXsiZCNE5E7VUtpB7eScI4dxGq7m0jnm1IzeDNUK1VLaQu3MagzknqJbKFnIvCYZwEgySBCtAkzsnKkTnRNVSFTbKy3tBCOcIVXNpHfNqGpvBmsZaKlvI3bkHCXNOXy2VLeReUhfhBCVkQ7hRF3ThXt4M1wAFWTHqe3nGJrmJKsgGQrsfE1zhbhw4ofkndCVh2Y1zMlkGkip0Z6HNQ4aqkWAfXBa5IDf\/JoxcYgytJA4UByuE2p0dQ47MJBAkCVSARLfmsBku5EByDkOwzWFGCbkJDciGMyOQ1Xm6VfYhyZCCFLm5t4VwDj+QDSm2t4UXOAshnOMLJGchBNssZJSgW9CAJIEKkOQmgRBOaLRkBUhyk0AIJ4FasgIkuTnNIJwDSEtW6Ea37gvNcAELbg43cNt9ISOU3AQWZIOhzSNWc+lWCYZkNS\/FXe6s5ojOCtxSleIuL6s5wlmCay6v7fSqms9gleCWqhR3ubm3BjfHJsha3a+1pmgCQzDLd0tlC7mbLEA4WdCSFTTIzQkM4RyaWrLCGbpFkhkukkCSJAUscnNfD+EcuVqyQim5Ob8hnCNXS2ZLuftWarGw1ZLZUu4mAxFOBrZkBYnijxgI4oiBocnAykTLwF3FcHDe6xkrZS0DJ8hwkJo9o69YMnCCDAcnyNCdyzZBGnhHgklCcRgyOexUlpfPdSCYt7JaqkJ4uuOO2IyNabOlsUXcx7kVVs6tnilXcB\/nVgRyboWsXYTmVmsT5GXXAMmuoTQRdOuO2AxXm9CSlY5EbvYccLPnaMlKCyI3Z2aEs8loyUo\/Izc7FoSzY2nJSgMjN2dmhHNmbslKNyQ3n4NBOB9daclsKXOrW5rh6pYgL+Uy8W7J+iG52R61ZKUTo1t7vzNcDQ7crXmyvV\/rSeRmiwLZmifrd6xFkZsdC2Rrf6xjQVfBmXmGa9CFbC2Izcx4IWdmROec21LZQu7lzIxwDro1l9Yxr2bmGaxBt6WyhdzNu5BwszWCzBkasboLab2QvGyNWqrSdNGtnmOGq02AbO2L9RxGdroFerhbE2E7r8ZmuZdSDXsTYdx3Oqr0i5bwNxjb3qmTzvxrqQ2fs9TI52SzDCRdz1jZ+sZIcbjvl\/HWQA38uWPM+GPAkTX545mMRfLlHcAIzEG1palUkztm3ogOWrVUvpB5SRCEs+iHrDhyglillTsLb8iGBKviVrblzirektWiTjefZkQ4y3ZLVgkhdzIg3Fm2W7KKBLnz7mGE55AbkgM0gu3uodVpulm2Q1Yk+MxrRV\/uZEBLVpEgd868EZ5FvyWrfJE7CRLhSZCWrAJF7ryDF+E55LZklU50c2JGOCfmlsyXcndOzOFOXIXkxIxgm5iNUHInsFqyikK5k18RntAJWVkofhmw6CW\/WqqKM7mTQeFOBoVsODMGgRM5cSOcE3e4OXHDbRO3MUruRFbInLgRq4nbcCdv0q+lqjCUOyfuCM8huSWrZKWb7EQ42RnuvdRiZyfcOfWGOwfVkA2lNvXihZx6IzwH1ZbMlzK3yBu0InnDT\/IWEJs\/597055Ta8zWyW4ace9ORrO4Zy4olw17KuqbW1J3lmlojIqfW+2QZR82QMbVGLKdW57u8ifueyhYyd3QNMza6hpamNBHysWuAlV2DZ1IHIR+7BgSya2hpShMhd3YNiM6uoaUqTYS8OS9HeM7LLZf3I\/LmE6QRnANyT2ULuTun7QjPAbkns6XMzWkb4WxvejJbyt3sleBmr9SSldZJ7py2IzwH5J6s9GF0q9uZf6NuB+7WOqnb8fZGbnY7LVlpfuTOiTfCc+LtyUonJTd7JYSzV4LMXqm2TnLn3YUIzwG5Jyt9GN3qlWa4eiXI1nipV\/KeQm72K5Ct+VG\/4g0K3epXWrLSvsid97fDnQ1KT1Z6IbnZ7SCc3U5LVpofudntIJzdTktWmh+5Y9KP6OhueqrSR8nLTgnh7JRqLu+b6M3724jN2TxUbZvs\/rZ3QjJnY9RyaR335j2NCM62KGTc04hY3tOwLojW7IlC1XbL7jF7WyMzuxzI1jJtjTm8M4BwDvUha9Njdwa8E5GbXQ7kUmq4dTne1sh9KzW8t0zqcryLkTubmp6sdFAivHoksFk9UktXWibzs0cKP3uknq\/2TJYh9zfSkbsRqXvPpP0N70NGgnWsrbYEcvOzyDoc60XkZWvSUpWGh251HDNcbQJka1ys4zC+yk3cQrZGwNhthKRbwISsKHf6Gm7lJn1bsgJjuXOvO8JzY6MnK2SnW+ye4cIt3GR3QbncZDfcxG1LVlAuN\/mJcPITssHY+AlK5W41wrk10ZMVNsvNfQ64iduWzJZyN9mNcLK7JSsol5vsRjhxC0l2F5TTLQLOcGELsuHUCChOyZzUaqkKEOUlARFOAtZczkN6tVcwgwW9lqqwVW4yEG4yELLyVAyE5j4DgrnP0FIVutKtfYYZLvDB3YCqfYZwc58Bbu4zQFamXms11D4DgrdSDZXKFnI3CYxwErglK0CWO+\/sR3huLPRkhe50a5dihgvYLZkt5W7yG24iF3Ip45zz25kniIiBoStTCwOdcZaBzOsZK2UtAykaDlK0Z6xUfVNZNxLcxt8IfZBJUWeqvKQogknRlqpAlW7N+zNc2IQ8GxPPxUf6IpD0bWkKjOXmzI5wDtqQObMjVjO7oVpekhuS5C4gp1v0nOGiJ2RDsdETL\/AeA8J5j6ElK2SmW7PrDNfsCtlgarOrUYZuQQey4tAJZtCRmwyCJIMKkujWBDjDNbRBcgJEsE2Axhm5iR1IEqwAjW6RZIaLJHA3KBlJxAqZkxwtVWGUvKQQwomOmsuZJC8phGBSqKUqUJI7nmuL6JzbWqrCN3rFoBkucEBevZYYg6x006tKDm\/Dwt6ualVyuFnJIVnJS2GXm7MUwjn8QN5Kg+6zlFdplUFV7dDkQOWCZSAHwsGq3TNWLliGtZQH40DPWLnwptbNkeCoLA8ro5DnVpnlYzVGIKtxS1OKs9ysqAhnRYVkRS0Flm7tY85wDT8tWanWcnMWgpsFGJKzEIJtFrICLDfrMWQr7laP8QLv+SKcw09LVmo93ZqkZriGn5bMlnI3WQA3WQBJFhQ0yJ1PSUc4Ny5bssIZubkLinAOXi2ZLeVuTnEI5+DVktlS5hbFZrgoBkmKFajJzTkM4ZzDWrJCSLl5vxnhvN\/cktlS7ub9ZoQTmS2ZLeVu8hfh5G9LVnBMtwg6w0VQSBK0AFVuznEIJzIhc45DrOY4IxW9Ahdk5akYaKSSl+BqqQoS6dYkNsM1icHNSQxum8QMe3KTgpBJQWeivJzEEMzhqaUqfKVbDJ3hYijce6nFzlCDptxkKORSGmVnqDOKdmNW6HMpqIWCzizLsJaa+jkVO8Psrmk49lIZddc04+2uKSI4DT3G32iEgcxpCLGahox19Ap9kOdGU\/lIUASSoC1NAarcef8S0Tm\/tFSFzfJyFkI4Z6GaS+u4l\/cvEUxUt1S2kLvJfYQT1S1ZaQPoFvdnuLjfkpU2QG7uoMJN0LdkpaeQm9xHOFENSe6XNkBuch\/hRHVLVtoAusX9GS7ut2SlDZCbO6hwE\/QtWekp5Cb3EU5UQ7YmwrhvdKVbsIW7gdx2UI2uchO2LVkBudxkL8KJS8gGcmOv8VFu4rIlKyiWm+xFONnbkhUU0617pzNcw25LVrguNydnuDk5t2S2lLt57xThBH1LZku5m10Dwtk1tGSliaCbk\/OMJumhODkj1CZnY7vMRH3N5T2EvOwaEMyuoaUqTYTcOTkjOifnlqr0I\/Ly7inC2WLUXFrHvOpWZrC6lZaqNC906w7oDNcdUMjaQvgdUOsK5F4KQZTMlnI3Ow6Es+NoyUoDIvetMERjektWuhm5OfMjnDN\/S2ZLeZ+g+6foDNTdtHS2WPGzWwo\/u6Wer3ZPlmEtILJuKTS7pdo9WYZ8Pjwd7I56xtqPvSFp55Ne+0QF+hv8WRvBSGRPehljaSVyI1NrBozfBmy5k98tWcW53Dn1R3hO\/S1Z7Q3kTvpHeAI7JOlfmgG5k\/4RnsBuyWozQDfpj3ACuyWrzYDcOfWHO4EdsjUDNvUbcukmgUNWnDuBjbFyJ3Jbskp3uZPfEZ7IbckqzukmiRBOEoVsWDMS4YWcXyM859eQOb8iVvOr8YJe4iNkpZpIhCIeT8QgNmfGULXA+xMxeCHnzwjPobHmsnXcm\/NnBOf82VL5Qu7OO4ERnjfvWjJfyt15JzDCc1xtyXwpc5NECCc8QjasGYmMFnInPFqyCia5kyURnsU\/ZAPTrdUzsSSqJ2t\/S1fRYv7cPU5\/Vv7UnS22e+yV3jKspa4ZSypbLENO3unIyTt1Z4sm74jIyfs4JfeHJu+Qm18BmrydN\/ImfnoqW8jcQbEZGxRraQrU5IvJO5wxLYfKyTtCNXnHCzl5R3iOyy2X1nFvTt4RnMNyT2ULuTsn7whP2PZktpS5Rc8ZLnpCNhSLns5HuROXPVkhs9ykJ8JJT8iGYtHTCUc3gReywtSmX8el3KRnS1ZgSrf4N8PFP8gGU\/HPgSc3+deSFRzKnfNrhOfI2ZMVttLNGRLhHPtC5gwZwZohna5yJ2x7MlvK3SQ3wknulqyAXO54+iiig9Q9VekJ6OUciHAObyEbyDUHxgs5y0V4DmAhY5aLWM5yznZ6ifqeyhZyN\/kLN\/kL2WC+tXomBs5wMRCyAXVpdYXTWITfSl3pQNU05oyTmwRtyQpQVf85TUXlJvFSV6L6NFUIZxnI0J6xMtUykKHhIEN7xsrUN5UZI8GsLkIIZO4DR7D2gY0ZMidBWqoCJ3nJBISTCZANMMYEq\/p0CwKQHO4QrHnMq77chEBLVgAjN4mCcBKlJSuAkZvTHMKJkJas0Epu8gjh5FFLVvBEt4gy\/yCiQDY8GVHwQt5HjfC89RkyN2cjWPdRo+rnbizCOb6FO3djw63dWOeV3MRXS2ZLuZs0QzgBBNnQaDTDC7mfGuG5BRqywU37qV656VYhh4yJLGI5kTkE5CUTWqqCCLljbzCikwEtVaENvWLCDBcT4G54MSbAzWkQbk6DkDlZIpbToBNDXgKkpbKF3M15DuGc5yAbnDTPlZpNu9XwqTsiNBWVemt+1t\/QnRFW0b2CW4a11IfPGWEV3eruSHBcgTcrw5CXckC8oquGy5wVvaUqBV5ezhcI51BQczkr6FVFnsEqopCtvFtFtronN8sgZCvQVlOtiMrNmtqSlRJLt3r8Ga4iCskeH8HW41sJlpsVuSUrBVpuVmSEsyJDsiKXAk23JoQZrjII2UqsTQhWROVmTW3JSomVmxMCwllEW7JSr+lWjz\/D1ZZDssdHsPX4eIE9PsLZmLdktpS5uUs2o1nLoGqZtF0yr14ys5jVXF4l6eU9EwRzcylk3jOJYN0ziRfYZyOcrTEk+2wEW5\/tdZB2q4vwsy6WMml+1sXws4qFZl2sddIyrOUSt7rYM9Y6aRnyzkM6cnfos4y18loG7jeFg\/tNPaOviAyI4J7RcaX6Zg8k94wQbHtGqKDsmGe4OmZIdswIto4ZdYz3P2a4WuSWzJYyt+4DzHCVNSRrJVP3AbwSyc3CBNmKnu7jezWgW8UBspUtqzR4gd0bwtm9QbbCY90bqkHeDUe4Nh9aMlvK3axTcLO0QLJOlbIlN+8DIJz3ASBzdwGxvA8AnXezEcsuEyrvZkeo7mbHC+xYEc42s+bSOu7NnhOx2XNCsedEqPWceIF7GAhnk1lzaR3zql+dwSrELZUt5G7WZbhZlyFrjVddht7KNa1+taUqFV9u9qsIZ78KyX4Vwdavou7eSkXQlgVkK\/K2\/2FVW24W8ZbMlvJaJiageokJLV1BhPnJhPCzgocmEyojLAOZEA5W8J6xMuJNrbgjwTFvLlaAIXP\/H7Ha\/7fiLS9reUtVSjvdfG4P4WrLIc9Wmc\/Fx+4egWzJWxpbxN3s0BHODh0yO3TEqkM3QshLYECSPgVGdIs+M1z0ackKjORmfw83W3JI9vcItv7e6CQ3YdWS2VLmVn8\/w9WSQ1YQen9vbJObqGvJbCl3s79HOPt7yIZR6+\/xQj65HuHcYmnJbClzazqY4cIsJKcDBNt0YKCkW9yEu0HYuGmglJvchCQ3C0blZn+PcPb3LVlhsty5h4\/opGxLZQuZl7\/dQrhAC3cDuH675aCVm9yFrAwXd42t8hK1LVUhOt1i2AwXwyAbDo1hRim5Ca2WrPCRbk0mM1zQguRkgmCbTIxSct9KVVKyAkTVcO3ho2qLOaEr08oevpX9I8Exj51vokDIBhSjQNZ5WlHzW5rKFvmSHmHNsu+ZjCTyJT0iMOnR0lSY0M0ajnDW8HA3IFgNtzord5bdkKzhpaTTzTqKcNbRkK0oWx21Wid3lr6QrKOlrMqddTTCs462ZLWs0s2da4SzcIbkzjWCbefayq7cWYVbslqU5c7JKcJzcmrJaoWXOyenCM+iHZKTE4JtcrIqTTeLdsgKBL+La5VW7iy8IRsQrIZb+aOb1TBkK6xWDfFCzDARHXNHS1XrLL2cQxDOOSTcnEPgtjnEKq3cWXhD5hyCWM0hVmfl3UolUg0vJZ1uVmGEs3CGXEqj6FXYyq7cWYVbslqUVUO5MxPVj\/soqdfS75WdmXgld2bSkTszPWNZcWbwSj0SzGuIhTtkTAIRy0nA6ya9qsaQVtezGofKbjwCsxsPGd14xLIbj3qZ++UI5n55yNwvj2Dtl3u1lTuLb09mS5mbHTHCWXxDXsqht47Yq63cWXxDtsKuvSCvtnKzkrdkpbDLzUqOcFbylqwUdrp5BxPhLN09WaGE3KzFcLMWQ7bCrlrs9ZJuls9wt9KsftqLr9ysxS1ZKc1ysxYjnLUYMmtxLc1yRz8d0dFP91SlytObu1iIzg44VDbXEapdLK\/yMmfRb7m0jnuTAIhNAkA1mIgAXuNlzpLfcjlb6M17C4jNeh+qosTuLXiFl5nsqLmcJPJmBx\/B2cGHbChRBx8v7KX+cQ+rJ7OlzM3fjyKcNzJ6MlvK3XlXJNx5V6Qns6XcTeohnNSDTOpVCIoZ3AELSnBaCH\/ugIVfO2Dpzx2w9Od+VeqcRjJeO2CFjJYhSflZRl8RGRDB+eWoOLaLFbJhUPML2UZrcK6lsUXcl3tJYc3RIWTuJUWw9pKCT5xDZrjmkJbMlnJ3PjkUbqKyJbOl3E1yIpzkhGwYNnLihdyJivDciQp5L1+e7UQ5aOkWdyHJ3YJhuTlBIZygbckK0+UmORFO2EE2DBs5wSfOQDNcMxBkBanNQI5KuUlOSJKzgFTuvNMc4Tm29GSFynJzBkI4QduS2VLmFndnuLgLWSHu3BUrZU5yQjUIGznxQt47ivDcemq5nMn0chcLwQJtS2ULuTuZDXNytqUqCJeXzEY4mV1zOcHl5cyHYGK6pSrdAN2anma4kAfZYKrpyRknN5HXkhWc0i0CznBBC+6GUyOgUUpuQguyAVG\/QYkXbqUSa3KDbEDU5OaEk5vAa8lsKWeP6AVqiF6hOw+NXsankWBet8IVZE5tiNXUBk5wapvBmtogjWac2qA4tSGQUxtkTm2I1dRmZJOXoGupbCFziz0zXOyBJHsKiuTm\/hvCCZuWrHBNbpIL4SRXS1ZARjefHkC4UNWSFSrKTe7BTVS1ZAWDcpN7CCf3WrKCQbk5rSKcA2ZLVphKtybGGS7Qwd0gahOjwUZusgeygczYY7ChW+yBJHsKiuTmzIdw4gaSMx+CbeYTX2RO2rRUBWT0kh8zmjUfqqLI+WFVXmYW\/ZrLaSIv+YFg8qOlKjihW\/yY4Sr5kORHwYnc5AfCyY+WrOCEbvFjhosfcJMfBSdyc4KCm8BoyQqb5OYEhXACA7LBaGkVTfdfomJr4gl9Lt25338pjLAMZEbP6CsiAyI4Ad2f\/AbOVA0oNv8kJdIYwKg5bAF3kTzTSPBYGjFILt67mXG8dVNzFJbJG0\/1IjgRVfPYIu4ksWY0gTVVQ5\/xCi9wypvRnMtqpkJCejXjjWhNZTWTLeNeTnjTywGvZrJl3EtKzmhybaoGXGOkcYxeUq1mKsCkV4Qc0WJazVRwKS\/5OL0kWs1UYCkv+TajibepGiqNbniBe7EzmjNgzVS4Sa\/ua41ozXBTcTxEqO5qxQucB2c0J7iayZYxr\/ZRR7QoOL0NsLaLauSilxybikQsgJQ3iTiDE4g1T8EjneLSiBaWpmqAMyqh9vNu1IjWDuL0cmMSXt2LcurQu3ldFM8K3ugVFUa0oDDVUqqGM8ErOAuyCjpkJ8Rn9Vx3k2DgzSTItVyIfi8pX9n9UrRbSS2drwa\/kDHcx+njO2iQOZLMUE0kwoacpEhL5GBKr4aSGazKDFkqvmYSlUc6VS0hS+H1aqmCKC\/rIyQHkhlr84gKorysjy2VF156WWgRzPrYUnnhTa8K7QxWfWypvPDSy0ILLyttS+WFl14WSwSzWkLWwmvVcmpuviGYc0NL5WU4vdp6m8GqrZCcSGas7bypIMrL+gjJAWTG2vyh0kqvKm1L5YWXXhZaeFkhIVlqvfDSm4UWsVlpWyIvvOnk4DFjOSxAcfCYkTZ3qAzLyqpcM3ERc+aNJkTmzSGoWurtPpPKt6ys5jUTF5FTUJihokJL5JCgN29QwZo3lVoihw2dvD2FYBKkZuIicmpAmaEaUCA5oMxYm08EG3mXUheVSutYPdZwggos9IQ+e2dZZhMjl\/lJsp6vkE1+giziiZ7Qqxe6QjIjl\/n3Uus+I6ORzAj07tV2fLL9TiClbGQzIgE6Ma9EeE4WKTmxINgmFoMH3UmPlI1S9nyDlXG5o46nbKwxQlghpzsreUvWiCF3QCLdAYmWrDFD7ujHMzxIkJIdOYKtIzcyyB2gSNmYY6QwGNCdNGjJGoTkjo4+3dF5p2zcsZ7egCB3ECElUVPIQ3fCJsITNi1ZY4\/c8bRxuoMoKblxhmA9bezVnu4s\/ikrRlT9VfZojbqXqtZlr6dWQWWOglpz1fIq71au7GzuW6pWquWO3aoMj92qlqws5e54WiDDYz+qJStLmTv3uiI8631LVpZyd+Ag3YGDlI0sxgO8EFNNhsdY05I11Mgdd1oyPO6GtGRlKXfHnZYMjzstLVlZyit5oixrd7KG+lwKamGZw8syBMx6xg43yxB3e+gIXvWMHZeWYS+FmUCj7oAk0QrCRoLr02ZAmyoA1vBGb45YiM4JKxRmqozMCSuJEXtZiM0hKpyPchpoL6uAj15icKrAXoOivPc84DP6nod7qhipMpQTVuFUeoXA6W04JQEL8uglAGumgkN5yb8ZTfxNFbhrMKQ3Rx1EJ2JCVZhp0imEoTcAEyp2mDKUzwgU3KRX8JneBjKyJ70x6oQ3RpJQDUScdApq0ivwTAXSVArJGXtKERujRc9TeEavuDOihZ2pKsGSOoUMdG5+9XV8kTml0KdXZX96G0JY9UtdpzfKes9UeCIva\/6MZsmfquGDFb9UZXpZ8GumUv7lZb2f0Sz3NVMp\/qpyqvazsKnYQ55L2bBaXyuz\/KtXjs8rP+u0l9Xhniesqiwky6wX3fTOGyoROW9\/fJbECzddl2wpYLzk+eB5Ir25cFMko7KEQ3FamZG8K+KFl1bVYchS4LVn5iVcXlb0lsoLPL0s6AhmRYdkSfcCTy9HIgSzhrdUjor0qqDPYFV0yAIHr+hTx75XBsfQkbIWeO57RfHkSDGDNVJA1gLPicKLtrys4S2V1jEvhxEEs4ZDVjhwFvGiTa9qOGRMDxHLWcLLv7ykQUvlcKAX+14Zi32vzxI5ZOiMR8UyOB7o6pm4iJz5oFiE5rbYZ4m0inkJL3hJHcjEl7GMTsILoaRXS+Qwoxf7bRmLjbHPEjkU0ynszWDxCjLBZxSkcyv1UNxriRyD9O6lsol0kJy8ZixnJUcbvSJdS+UIpZeDErwkHWRFKOckh5W8ZBdkxaCxy1gjeIg9oQmfwiL5OSJEPEeE0DESZLhNCIan4T+ukrvRCnJ7sqLJ+zcCDY0BHbgaAY1eQo+cCSIogqhwSV5OJQjnWFJzOeLkjXv7GRz34D9LZQuZW1PNDBf14OZcA7fNNQY6ucm9lqwQVW5CFOGEaEtWmCo3UYhwohCyUdVYaMiiWwSD5IyCYJtRDFp0i2GQnFIQbFOKUUxuQg2y8dGoZuCSmxxryQow5SYUEU4otmSFkXRrRprhGpJasgJcuQlGuMkzyMZYI6NgQjPRAlWZpTs7jgh5ExhQjTxGDCvtNKvSQ169lhgzrMTSq4oLWWu5Ty1WZOVmzYXk7IFgmz2iSJ7LxWkTA\/ytovN3LfRz\/gg\/B5Cez9dDBiu7I8FoOFSEp8oa7BVZTg4fM5aVt+YptZ3eqN8jNMp3zVGKuVwcPqaRs4elERHk4t2RGccqX3PYAuZV5R3RqpXT+yhftdddK5X0snBO1Yrw0r4VjR8zmnVyKg4fCLXpw4osvSy5NVMpwPRqL2pEa9yomUotl5ejy\/RycqmZbBn3xpPDEc3KXjPZMu7lnZgZzRsxU3EGQijvwxQKpFdMqJlsGfeSL9NLvNRMBTbyki4zmjyYimwpqJGXbJnRpEHNVEAjL8kyo8mCmqlghl5xZUQLKzVTgYy8HNWmlxSZioMaQm1SMwTRSyDVTAVP8uaoNoNzvqp5Cufk5Kg2ozlglURaw5xk4HidCJyCBCxAlJPj1owm86bisIVQm7bAuHjUANF5Cyu88WhBevmkgfOR1oRlzWOLuJPcndHEbknkDJZzc3poUqt5Cs3l5V2xGc3RrGayZdy7O0M0mtVMtox5NeaNaHUGNZMt416OedPLKW+q1nLYlGddBL3sKWomW8a9HBFnNPuJqVqzcmsEs+5i4lnNBWTtVX6it9CdLBg4UbZ0tXcx\/+oYtAm1pfPV4J+A5sB2XL2rTVmQObDNUM1rwiSdoiYkAew4Tq+GlhmsoQWyos1mFiFHXhIIkjBztKVXOJrB4hFkQZvzSMiRlwRqqRx09BIpCCYJICuejCmCCL1iSkvliKE3fnSTXlKkpXJY0UscIZgUaakcT\/QSRwgmR1oqx1N6tYs3g8UDeCtkbBdPAJCXPIAsnNEunkAiJ7nSEjlm0iuszGDxAF6CxTFDL+EAL6s6ZOGM6KDSSqcqLZy1aFulVTGVl7W1pfISTi8LLYJZaSFr0bZKq2IqL2trS+UlnF4WaQSzSrdUXrTTayPkjLay3JI5AORmiQ83i3LPVmq+\/PHkHOO56xe61exVEwfKcPxyZbscF4NtZoXkRhmC+duVLMU5nyGcA1pL5ku5O8t8uLPMh2SZL1Vf7pyzIjzHo5asIoRuTloI54DUkvlS7s5ZK9w5IrVkvpS7E1ERnogKSUQVYsmdt5kiPKnUklX80c2JC+HkUrgb8WzmMjLJnaAK2ZhnpMILOXVFeA5LLVmFoNwJughPOoUk6Ar36CY2EE5shGwEMm4YKegmOMJNcBSO0M0ijnAW8UjGIl5qutwxHYQ5ynZLVfEgbyIgwhMBNVcBgrw5IURwNvYtVYUL3UQIwln3w02EFKLInSAId1bvkEvpJJ0EXkRpV1FNXUt0qapeNi3DWmqT9b4Rb71vvLKXAqPbM6l7odb9mYjIncHL0U5ctKUXcvPzQHuDoXNvMIJzY6+nsoXMjd1BxGJfr6exRdyX+4Nhzc29kilXcF\/uEEZgbhH2NLaIu+OeUkTHWNFT2ULuzRElwnNEabm0jnnFnxks\/kA2mIk\/jgy6RRDIiiMjiFd5uUkQyCRIBYrcOeZEeBb9kA0omnMcGXSLIC1ZAYrcJAjcJAhkEqQCRe7ce4vwLPohG1C0++bIkJsEackKUOjmwINwTikhc+CJYE08Dhy5yR\/I5E\/Fkdy5GxbhCZyQsR8WsdwPC77Efhhic1AJVUFmO2LxQo4uEZ6jS8gcXSJYs0u8EHeUIjruKPVUtpB740c\/GZ6QbLm0jnnF2xks3rZUBb90c4BBOAeYkBVkNsE4quQmuSCTXBVkcucgEuE5O4S8lebcJpHCOZV9cS90cq9x0DLkjlE6knOfZaxktQw5kKQjOZe6k1QTidNpJDjOJ7uVFTK55xSkV\/V8BqueQ1Y2qJ5DcxJCMCchyJyEIliTUNT7vMuPcN5gCsnBCMG6yx8v5L2qCM+bVT2ZLeXu+HFqhufg1JPZUubWJDTDhR64G9Y0CTkt5CY8IBuYNI04POgWS+BuYDKWGC3kJjxassIpuTmNIJzwgGxg0jTi8JCbLIFsYDKWWPmnWzSAJA0KHOSOuyoRndW\/pSqckZckQThJUnM5V+jVFDSDBY+WqjBK7txACzfhAVm5xB00r9nysoRDVrKIBij\/OT\/NWM5PUBUNNj\/FC5yfEM75qebSOubVBDSDBQ5499Ic2wTk4JCbHIFcSqPqHPE6rSKquh36XEpKIYFXfstAEvSMlQyWgTNUOFj5e8bKGsuwl9JkM1TozhaboQweI8HsL8QSyM3PBWMJKv5Zxphd4OIUBJtNQfBxCoKV44tnyhXcxykIgRxdWhpbxN0kH8JJPsgkn3NQXpIPwSQfJMlXQEi39gBnuFDXkhWqys09QLg5NkE2lGkPMAiRzy0gXIMPJIcqBOvJBQcG3eIHZIWR88OAITf5AUl+FJzIzUkG4QRGS1bYJDfpg3DSpyUrMKKbt30QrtGlJStkk5tzENycg1oyW8rdeesnwom6lsyWcje5iXDCriUrGJU7uYnoZF1LVTBKr9g3w8U+uBtGjX2im8zJupaqUFVezmAI5+AE2TBqMxg4w128Ga5dPMgGNO3ixQt5pz\/C8wZ9T2ZLmVsEnOEiINx7qWhOQLg5h8HNOawlK3SVm\/xEOPkJuZTBwPmJF26lImrwaskKm+XmFIdwTnEtmS3lzOINpeCNWN3S2WLFT\/aHn6Tu+WovYBnI\/nCQ1D1j7QXeVNCOBEcz5huOkMldpzC9wd0ZGbSEay+nrnPXCCkrgemZxGD5yF0EkrstTcGw3OQuwsldyOSuU1hechfBRCUkuVswTLdmxhmuMQ9yKSeNz4xgI6e+Ga6pD25OfXDb1GeopFvkhCQ5C0jl5h4gwonKlqxQWW6yD+HEFWQDqbHP+ES3cNWSFRTKTXrBTeBANhQavUQcmZM\/UA1lxh8jjMwETs3lZKNXk9cMFjIgK400eUHnHh5ic9KCaiiyPTxUeO7DzXANW3BziIPb9uHgzrkN5py1WipbyL2kHsIJKkhSr0CQbnFrhgs1cO+lIji3jC1yL6UidIzpWTOng9y3UhM6xow8XplVeFWpQ1eWlNrvtd4ysPb3jJUFb2qxHwnmN6raD7n592i1P6s0jVGx4drLF+i136q0rCzankkckI+1H4Gs\/S1NQYHcrP0IZ+2HzNrvJJCXtR\/BrP2QrP0FBXRrt3GGq9hDcgRDsO02GirkJjlasgISubnbiHCOaC1ZoZLcvGuGcIIGkuMfgu2uGTDFu2YzXAMeZIWY3zXDC5wWEc5psSWzpdzNu2YI5+YkJDc+EWx3zQwVdIsckCRHAYncnHsQTli0ZIVKdGt2meEaOOBuKLHZxaq83Cz6kA0mNn+IGDInP1qqghN5ueuHcAKj5nIy0Sv2zGABo6UqKJKbcw\/cnHsgG062Vo34jHOE76UaKZktZW7RZ4aLPi1ZgZHcnJrgJm5askI2uTk1IZy4gWwos6nJYCX3rdQ0JSsoEzc096Dmi1Xwc+6B3+YeA81hvx7f9S7uhEzuOIXoZSVHMCt5yKzkXtfp5f4Xgll8w9sKu+1\/WbWVO4tvS1YLu9y5exbhWT5DttJsu2dWL+lm+Qx3K802A8CdzyCEO2\/1hGzF1Z5BsHopd5bPlsyXcnfW4gjPWtyS1dJMN+cPhHP+CMn5A8E2f+CF3LmL8Bw4QnLnDsG2c4cXcnqJ8Bw4WjJfytycXhDO6aUl86XcnQwKd2IjJBlUkCR3MijCk0EtWUWS3Dm\/RHhCJ2TOL4jV\/GLAopf8aqkqzuTO6SfcCayQOf0gVtOPGCNrECdUA6HRyxgjcyKn5iosozdnH8Tm7BOqosxnH7yQ96wiPIedmsvWcW9yL4ITVSHJvYJBuZN7EZ6oaskqBukmuRBOcoWsGHRyOS1U\/kmP8JMeBSbmX0sp1d2q1JyDIl53qxw4I8FxUG3PK+Tm36H4Ezqf14vgHHd6qkI2ujE1IRazTk9ji7gvp6aw5rhTMuUK7supKQJzauppbBF3x\/N6ER1s7alsIfeS0wgnp2sup7a8OXFFcII5ZE5cEayJy8FMtzgNWaFvnI4XcuKK8BySerLSA8idM1OEJ5hDNuhrZgoa5syEcI45ISv0bWZytMpN0kI2bIu0QaR8vgPh3BjsyQrF5c5dxnAnmHsyW8rdpDzCSfmWrECfbt7lQjjhGLKC1+5yGc9kDrqFauDUTp8Rid7kU6iKPrtX5HCTmayruZx88uacF8GJt56qUJRu7rghnKgI2SCkHTdng9zkTktWMCT3XuqYuNOSFQzRzZkH4RxTQi5lFLCZx7kid2ImZI5AEax7PYVSKvyiVktXIGb+fNou\/flEROpOMT5t992rX3z16md\/eqzx9Lievvru1fl0Of3h5XQ+bUcJwT8Lupy+evfqMkj71Tevfu9Xf\/LVer7dHufrdTuf19\/\/6h8Oz\/EXf\/JVprpcxoThudbRCI57PMfJdhvZzgfVb0fxGwn\/9lenP\/7h2+fT+7ffvPl0enn++PXrD\/\/bZ2mvp\/1pq0mPnue2l6Tber0h6S\/efvr0fPr++evn96dfv30+fffDy\/fP749V\/u75WOZ48d3r9z8+v7ycnt++\/\/mXLPa4jtGlLnY7OoAvOyQ93XY7+obH6bI8rTweRy8xs\/3Zv758evv9b57ffvqC97Xd17Hxaom2y3pBol++ff74\/OGUx\/cfnz+8vH3+8On08fjMzyctc3r97kD70S8\/Xc8HS33VI93yOC6jf3p18GL8Q3iXYP5xONY19curXx+Rl\/P9KAa\/O\/I4QY7\/+\/D9q8s6qul6dEFzcj7kbar7\/M99TCrdYqS\/bVMc5eKbV8fgf5zcQ44vZB9ph2ub\/0zieQSuo4rPwDneLgOzI9V9inkiPu2PKZYZuI6Tf8jj7DnEzHiMqvupvMVvjqvleGH+B+Fj9\/Myz+shz+PkeLqP\/5LsNt7FuG6WKa43vBeoY5KL9zXaltspPs31PqjHuH1cbZni6DRn8mWbYsM7XnbGLch3n08\/+Rsc7\/h8Gv93HO5lXi7rscJj1IoiX\/5\/yWPlbRz3x\/ieDrmOystv\/AhebnlYplyrvG5TLvcvkWccxonpf\/NvR207St8yvprrOMov48CuCs2vYITGWYMjJnG0R8dxDnl\/upz053GY73iWSF\/bfYlvJ860K37QgzMN4ojb5oHj380jkeKK7\/e4iOYXPM7CQ45T8jgxl7nYcQGkyHdIOR6jpjgAcZl4HeK6lMDrQLbk+AeJGHq+8nTaxuT1Dc\/4eczjesBhPMR+meKy4bNdhm+Nx+jmZ1tHMciDMEvVDLxDzgZ2nCePebrcoXDuYGjgeXT8\/9tlivNYLOU57tCs88\/3RX\/e5puPOnLHnBhX1PE\/jw3yek15ubHeRHWYYr7dead8lp\/4kIdYL3kARhocqDvU+WGF4zGryLhaR967vtuodBS3KS6sZt+8KvLF5FGMJI6PIHG5mm8dX4yK23XnR7uO\/Sgdnmv8x\/7m0Tjq9zyJ1yXFN3H1xF\/t+DQL\/mHa7TFXWu+4XEJuu\/3d\/WHiYXFZta\/3OIqq7bdxzh4X75xGHuPAzQt8Hvz7eAO8\/PPLjTpjcoW8Qc0vkar+Xag5jrXi9iY5havqncntdpK43U3c43ueMuvyA3V+HMJ4MPGoKHerClPmxbKPBnSclPjT\/LJuG\/\/iqEgPpgM05jpEyB2Hc8nqhT8ep\/pDMagTUa\/m9R4nAa52niBZcPO9oRZsWcgfc2PjzHIyP\/osDbPYxIURBdYP5jfj6KJ04hR6R7rPyeIQZ55qce0uAGCcrPE38yzGnxUS1y2ojvI6ats13yyuD75ZvIO8iseJmpdOXlZhwyXXxDwxt\/EWZ+BgdZze+HLjao\/rLytBfApUibjkUD\/mnkaI+X1dVE7iiM3VdPjuD4EInwUNPvutbY8LJhquoeNt38d\/z2qfREDZG+r8UNO13e\/jIETXtd1vI398wqHmR4y+a+hH9l3DqMZru+\/Zky0IfeDYzy9pvKF5Jc76Ud\/uaGU2dPzsvobe2H6N3I8tO4uh1osasPE+1jVbsHiLuIbzsyXMGTq7Kyaabdh4w9F5jVNnvINoy654xzuv+PpuSyu23QDV7MWqfvmfoON8iY5sux\/ftDqyET4\/RPRgQ1\/vVQvzX6bvqhL\/9l\/PGfReG7NxtKNTRvR9juYIH9\/T\/ZHH0NTsfahHgTOxXPgF21c6v+J9\/gvWc3MsGi+eNtGijW\/4ctffxvdNdVOTxvNvx9l7Qe2cbRpVvlfp8bNSqaMMDnVhuSyxs1czPf6xUEWPsz5asNmrjTd03\/Ob4Mk5j+xQ0R7Pqjc+yyzLK54Oj885GzYek+jYxt+eb2rZtvsyO\/7o2YZct+zaTF3vUy2rGjfqM8pMxM7ezdTs3sbbmNUskD70xoYN+sZ+jrWFBeyxqYsbH+HKNi4\/PPq4PDTRyLEuzuKbRxG1lyUqKnieAlFDpW43FoBs56p+cb2uHn29urpc3TuZNd6+mjp+1OjqeNiu+M+mx0GazVtWs2zsstbl30ZdX54grpuaO9Pb7n97f7h6eCj5sO1xeMeCV2vxshxkjxfFInu8Ia2py9LietnZyWUhM9n+NiT23VvVfENCZqtnerudTN3uru55Jlw5HybY0KCxpkTDx+tp6jxx0dnlt5dtX5I4\/xazduYNUkXrZ\/rqf3mRiAbQ9LoR0qgjeZllE5hnEOt7vl9Umbiw0vvIZu+SJfLMsdPUsp7q0R69YNb+bAbZdcxucKjbxrMzTmQ0eywN+Xe3xcR9sUB8FdFxHGp9ZF\/IqrCqRM7LbL4dVolxjrNxyeszrbh6P1M3dYdZavPiwKmgJmxfrbzkx0LxORQ7xCEuD7WIeWZkaBzJuagd13vG6jijTfzb4\/\/+X\/DftbwKZW5kc3RyZWFtCmVuZG9iago1IDAgb2JqCjw8L0tpZHNbNiAwIFJdL1R5cGUvUGFnZXMvQ291bnQgMT4+CmVuZG9iago3IDAgb2JqCjw8L1R5cGUvQ2F0YWxvZy9QYWdlcyA1IDAgUj4+CmVuZG9iago4IDAgb2JqCjw8L0NyZWF0aW9uRGF0ZShEOjIwMjYwMjE4MTI1MTQ2KzAxJzAwJykvUHJvZHVjZXIoT3BlblBERiAyLjAuMyk+PgplbmRvYmoKeHJlZgowIDkKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwNDM1IDAwMDAwIG4gCjAwMDAwMDAyNTQgMDAwMDAgbiAKMDAwMDAwMDM0NyAwMDAwMCBuIAowMDAwMDAwMDE1IDAwMDAwIG4gCjAwMDAwMjYwMzkgMDAwMDAgbiAKMDAwMDAwMDEzMiAwMDAwMCBuIAowMDAwMDI2MDkwIDAwMDAwIG4gCjAwMDAwMjYxMzUgMDAwMDAgbiAKdHJhaWxlcgo8PC9JbmZvIDggMCBSL0lEIFs8NDhjM2U3NGE1ODk4ZWFiMjlhYTEyNDcyZDFjZGMyZjc+PDQ4YzNlNzRhNTg5OGVhYjI5YWExMjQ3MmQxY2RjMmY3Pl0vUm9vdCA3IDAgUi9TaXplIDk+PgpzdGFydHhyZWYKMjYyMTcKJSVFT0YK",
+            "dhlQrcode": "iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xAAAj+UlEQVR4Xu2T0ZIjua4D\/f8\/XTfCcaRJo0CRlKpn9kY7HzEJiNW7fl1fvvxiXhp8+fKb+P4Avvxqvj+AL7+a7w\/gy6\/m+wP48qv5\/gC+\/Gq+P4Avv5rvD+DLr+b7A\/jyq\/n+AL78ar4\/gC+\/mu8P4Muv5vsD+PKr+f4Avvxqvj+AL7+a7w\/gy6\/m+wP48qv5\/gC+\/Gq+P4Avv5qjH8DrUXR9EDnMLZRTKkXrMIzAhkcLDu3c0MJAvSVadrR8ykS9M3S9zH7z+lvfEDnMLZRTKkXrMIzAhkcLDu3c0MJAvSVadrR8ykS9M3S9zH7z+lvfEDnMLZRTKkXrMIzAhkcLDu3c0MJAvSVadrR8ykS9M3S9zH7zwjfoP3RIR6YgDvMJBaLeQL0b23KEdt6kgkB\/otJAvSVaHkTOOpScpEKF85H95vXE81dhZAriMJ9QIOoN1LuxLUdo500qCPQnKg3UW6LlQeSsQ8lJKlQ4H9lvXk88fxVGpiAO8wkFot5AvRvbcoR23qSCQH+i0kC9JVoeRM46lJykQoXzkf3m9cTzV2FkCuIwn1Ag6g3Uu7EtR2jnTSoI9CcqDdRbouVB5KxDyUkqVDgf2W9ewfMzXGB9G0pO6Fi0MLCODSUnVkAvLFoqxchhnsLiRKWBelvo6MAK6IVYn2GL\/eYVPD\/DBda3oeSEjkULA+vYUHJiBfTCoqVSjBzmKSxOVBqot4WODqyAXoj1GbbYb17B8zNcYH0bSk7oWLQwsI4NJSdWQC8sWirFyGGewuJEpYF6W+jowArohVifYYv95hU8P8MF1reh5ISORQsD69hQcmIF9MKipVKMHOYpLE5UGqi3hY4OrIBeiPUZtthvXsHzM1xgfRsu8kkqdOEgsY4NhYrTgoMpWl6yXSSVESugF2J9hi32m1fw\/AwXWN+Gi3ySCl04SKxjQ6HitOBgipaXbBdJZcQK6IVYn2GL\/eYVPD\/DBda34SKfpEIXDhLr2FCoOC04mKLlJdtFUhmxAnoh1mfYYr95Bc\/PcIH1bbjIJ6nQhYPEOjYUKk4LDqZoecl2kVRGrIBeiPUZtthvXsHzM1xgfRsK1mEYgY0P1CujQzdacoVo0IYR2PB\/QLgf0EmpFK2AXoj1GbbYb17B8zNcYH0bCtZhGIGND9Qro0M3WnKFaNCGEdjwf0C4H9BJqRStgF6I9Rm22G9ewfMzXGB9GwrWYRiBjQ\/UK6NDN1pyhWjQhhHY8H9AuB\/QSakUrYBeiPUZtthvXsHzM1xgfRsK1mEYgY0P1CujQzdacoVo0IYR2PB\/QLgf0EmpFK2AXoj1GbbYb15PPH8FIzOUnNCxVOS6IA5zC2Wi3o2WfAUPqVRme6RbbMkR5yP7zeuJ569gZIaSEzqWilwXxGFuoUzUu9GSr+Ahlcpsj3SLLTnifGS\/eT3x\/BWMzFByQsdSkeuCOMwtlIl6N1ryFTykUpntkW6xJUecj+w3ryeev4KRGUpO6Fgqcl0Qh7mFMlHvRku+godUKrM90i225Ijzkf3mFfzpt4mW09yG3dyGldyG3dyG3dyGldyG3dyGxfwcLrfYb14\/+Q2t3Ibd3IaV3Ibd3Ibd3IaV3Ibd3IbF\/Bwut9hvXj\/5Da3cht3chpXcht3cht3chpXcht3chsX8HC632G\/+KJVvo2PZlknFmVCO0M4NLWRo\/41Kg4ozackVOPgf4b9401X7346OZVsmFWdCOUI7N7SQof03Kg0qzqQlV+Dgf4T\/4k1X7X87OpZtmVScCeUI7dzQQob236g0qDiTllyBg\/8R\/os3XbX\/7ehYtmVScSaUI7RzQwsZ2n+j0qDiTFpyBQ7+Rzi6yX4YvrcHR0jqpMIVO8wtkcw8hcUWOuTQzg0tlNkeqRTptNChM47m7E04tQdHSOqkwhU7zC2RzDyFxRY65NDODS2U2R6pFOm00KEzjubsTTi1B0dI6qTCFTvMLZHMPIXFFjrk0M4NLZTZHqkU6bTQoTOO5uxNOLUHR0jqpMIVO8wtkcw8hcUWOuTQzg0tlNkeqRTptNChM56Z0xsHkcN8kgoC\/UkqCPQtqUwhouu34PgkFQjlbXR0oN5AvRtaWKLlMvtNoucMIof5JBUE+pNUEOhbUplCRNdvwfFJKhDK2+joQL2Beje0sETLZfabRM8ZRA7zSSoI9CepINC3pDKFiK7fguOTVCCUt9HRgXoD9W5oYYmWy+w3iZ4ziBzmk1QQ6E9SQaBvSWUKEV2\/BccnqUAob6OjA\/UG6t3QwhItl9lvXjhR\/2GACz+oOJNIXoeLnFgBvQ9SJxIq+TYcbKFDZ+h6GR3KOOneOZpI78CpH1ScSSSvw0VOrIDeB6kTCZV8Gw620KEzdL2MDmWcdO8cTaR34NQPKs4kktfhIidWQO+D1ImESr4NB1vo0Bm6XkaHMk66d44m0jtw6gcVZxLJ63CREyug90HqREIl34aDLXToDF0vo0MZJ907RxP2DpwX5iQVCPZynzJR700qVODINjrqSP1UeAV\/efTCIqE\/UWmg3huVBl1nj6MJewfOC3OSCgR7uU+ZqPcmFSpwZBsddaR+KryCvzx6YZHQn6g0UO+NSoOus8fRhL0D54U5SQWCvdynTNR7kwoVOLKNjjpSPxVewV8evbBI6E9UGqj3RqVB19njgYkFlVvpTFQqE42kOcMKtjjDIuxaKrIV0PvAOgwjsJGjZUdLJnin3b3zwMSCyq10JiqViUbSnGEFW5xhEXYtFdkK6H1gHYYR2MjRsqMlE7zT7t55YGJB5VY6E5XKRCNpzrCCLc6wCLuWimwF9D6wDsMIbORo2dGSCd5pd+88MLGgciudiUplopE0Z1jBFmdYhF1LRbYCeh9Yh2EENnK07GjJBO+0u3eOJtI7cKr\/0zO34QL6lki2uQ0ruQ0lJ3QmKmVof0lUZD6JhEo+oUDU2+LZwaOJ9A6cmv8FbbiAviWSbW7DSm5DyQmdiUoZ2l8SFZlPIqGSTygQ9bZ4dvBoIr0Dp+Z\/QRsuoG+JZJvbsJLbUHJCZ6JShvaXREXmk0io5BMKRL0tnh08mkjvwKn5X9CGC+hbItnmNqzkNpSc0JmolKH9JVGR+SQSKvmEAlFvi2cHjybsHTjvAzqkLiycbewyHizlKSwSK6CXF4lKg9SJBOYR9CcqDdQrE40w3+Nowt6B8z6gQ+rCwtnGLuPBUp7CIrECenmRqDRInUhgHkF\/otJAvTLRCPM9jibsHTjvAzqkLiycbewyHizlKSwSK6CXF4lKg9SJBOYR9CcqDdQrE40w3+Nowt6B8z6gQ+rCwtnGLuPBUp7CIrECenmRqDRInUhgHkF\/otJAvTLRCPM9jibsHTgvzAmdiUoD9ZZoeaDekqjIfJIKr8Cx4QL6k0hIc4YEvRDtvIkEmzOsgL0HOJqzN+HUMCd0JioN1Fui5YF6S6Ii80kqvALHhgvoTyIhzRkS9EK08yYSbM6wAvYe4GjO3oRTw5zQmag0UG+JlgfqLYmKzCep8AocGy6gP4mENGdI0AvRzptIsDnDCth7gKM5exNODXNCZ6LSQL0lWh6otyQqMp+kwitwbLiA\/iQS0pwhQS9EO28iweYMK2DvAR6eW6DfcaMiV5xJS47giKUlXwWfAlFviZYH6i3R8kC9f8f5SfvNLvgDeipyxZm05AiOWFryVfApEPWWaHmg3hItD9T7d5yftN\/sgj+gpyJXnElLjuCIpSVfBZ8CUW+JlgfqLdHyQL1\/x\/lJ+80u+AN6KnLFmbTkCI5YWvJV8CkQ9ZZoeaDeEi0P1Pt3nJ+03zwBf8z8AMopWnZY34aSEzqTVLgKDoUI7dzQwsA6DAl6vij5hAJR700kME9hscV+84TW6ZRTtOywvg0lJ3QmqXAVHAoR2rmhhYF1GBL0fFHyCQWi3ptIYJ7CYov95gmt0ymnaNlhfRtKTuhMUuEqOBQitHNDCwPrMCTo+aLkEwpEvTeRwDyFxRb7zevgL0isgN4HdCyRXMlTbNGGRWwRe+3BSWWEziQSmJO6EDkU\/j5Hz6ffgM\/MHRsKdCyRXMlTbNGGRWwRe+3BSWWEziQSmJO6EDkU\/j5Hz6ffgM\/MHRsKdCyRXMlTbNGGRWwRe+3BSWWEziQSmJO6EDkU\/j5Hz6ffgM\/MHRsKdCyRXMlTbNGGRWwRe+3BSWWEziQSmJO6EDkU\/j7PPK\/fNFBvYB0bduFIhHZuaMFhZWyUcgvliK5v4UjK40Xmk0hIc4Yt9psE532g3sA6NuzCkQjt3NCCw8rYKOUWyhFd38KRlMeLzCeRkOYMW+w3Cc77QL2BdWzYhSMR2rmhBYeVsVHKLZQjur6FIymPF5lPIiHNGbbYbxKc94F6A+vYsAtHIrRzQwsOK2OjlFsoR3R9C0dSHi8yn0RCmjNssd+8gudnKNAh6r2JBOaWlnwVXk+JiswJnZRKkU6KLdqwm9uwkttwI9\/jaMLegfM+oEPUexMJzC0t+Sq8nhIVmRM6KZUinRRbtGE3t2Elt+FGvsfRhL0D531Ah6j3JhKYW1ryVXg9JSoyJ3RSKkU6KbZow25uw0puw418j6MJewfO+4AOUe9NJDC3tOSr8HpKVGRO6KRUinRSbNGG3dyGldyGG\/keD0wUeeRuO8KQoPeBem9S4SnShyhs88ggR1K0PFBvYAX0PogcG7bYb3bBJ+w\/akcYEvQ+UO9NKjxF+hCFbR4Z5EiKlgfqDayA3geRY8MW+80u+IT9R+0IQ4LeB+q9SYWnSB+isM0jgxxJ0fJAvYEV0PsgcmzYYr\/ZBZ+w\/6gdYUjQ+0C9N6nwFOlDFLZ5ZJAjKVoeqDewAnofRI4NW+w3r8LzU6g4NpSc0LFoYaDeG5UytH9DCw4rY6PH4yMkdVJBsDI2wpGKU+doIr0Dp+aODSUndCxaGKj3RqUM7d\/QgsPK2Ojx+AhJnVQQrIyNcKTi1DmaSO\/AqbljQ8kJHYsWBuq9USlD+ze04LAyNno8PkJSJxUEK2MjHKk4dY4mtu\/AJ\/huJNjchgusb8NinhIV1+EJHEzZLr6CT2iBx0sj1mfYYr95HTw\/i1E3EmxuwwXWt2ExT4mK6\/AEDqZsF1\/BJ7TA46UR6zNssd+8Dp6fxagbCTa34QLr27CYp0TFdXgCB1O2i6\/gE1rg8dKI9Rm22G9eB8\/PYtSNBJvbcIH1bVjMU6LiOjyBgynbxVfwCS3weGnE+gxb7Dev2rkTLQ+sgN4zpOMUIqxvw0WewmKFtIjtHpURK6AXFicVmQ5Rr8\/RhJ6zRMsDK6D3DOk4hQjr23CRp7BYIS1iu0dlxArohcVJRaZD1OtzNKHnLNHywAroPUM6TiHC+jZc5CksVkiL2O5RGbECemFxUpHpEPX6HE3oOUu0PLACes+QjlOIsL4NF3kKixXSIrZ7VEasgF5YnFRkOkS9Pg9MCHpjhvaXpEUKFbT\/JhWu\/kOWdA0PlpxJKlyF\/3cjrM+QoPdBKhDsfZAKKfvNCJxdQvtL0iKFCtp\/kwpX\/yFLuoYHS84kFa7g\/x70QqzPkKD3QSoQ7H2QCin7zQicXUL7S9IihQraf5MKV\/8hS7qGB0vOJBWu4P8e9EKsz5Cg90EqEOx9kAop+80InF1C+0vSIoUK2n+TClf\/IUu6hgdLziQVruD\/HvRCrM+QoPdBKhDsfZAKKfvNq3b6X0DPcmjnRkWmM0mFKx7cJh2nQKxjQyF1IoF5i2iE+TlHczzrH6JnObRzoyLTmaTCFQ9uk45TINaxoZA6kcC8RTTC\/JyjOZ71D9GzHNq5UZHpTFLhige3SccpEOvYUEidSGDeIhphfs7RHM\/6h+hZDu3cqMh0JqlwxYPbpOMUiHVsKKROJDBvEY0wP+dojmdNVBpUnEkkM7dQJuoN1LuhhSVaHlScCeUKaRHbH1gBvR4cIRVnQjlCO2cczelpb1QaVJxJJDO3UCbqDdS7oYUlWh5UnAnlCmkR2x9YAb0eHCEVZ0I5QjtnHM3paW9UGlScSSQzt1Am6g3Uu6GFJVoeVJwJ5QppEdsfWAG9HhwhFWdCOUI7ZxzN6WlvVBpUnEkkM7dQJuoN1LuhhSVaHlScCeUKaRHbH1gBvR4cIRVnQjlCO2cczelpb1LhFTg2lNxCmajnaMmkVZyy+OtQckKnhQ7daMlX8AkEe\/4zbbiA\/jlHc3ram1R4BY4NJbdQJuo5WjJpFacs\/jqUnNBpoUM3WvIVfALBnv9MGy6gf87RnJ72JhVegWNDyS2UiXqOlkxaxSmLvw4lJ3Ra6NCNlnwFn0Cw5z\/Thgvon\/PwnKC3D9S7oYWBdWy4oOtPtouEI5ZIjvIJBaLewArofUCH1IWFM4nkNGfYYr9ZAWd\/oN4NLQysY8MFXX+yXSQcsURylE8oEPUGVkDvAzqkLiycSSSnOcMW+80KOPsD9W5oYWAdGy7o+pPtIuGIJZKjfEKBqDewAnof0CF1YeFMIjnNGbbYb1bA2R+od0MLA+vYcEHXn2wXCUcskRzlEwpEvYEV0PuADqkLC2cSyWnOsMV+8yo8P4WfQB97o1KGLWLvAzqTVDiB4xHa6aOLW+joMZVxOnscTaR34NTn0cfeqJRhi9j7gM4kFU7geIR2+ujiFjp6TGWczh5HE+kdOPV59LE3KmXYIvY+oDNJhRM4HqGdPrq4hY4eUxmns8fRRHoHTn0efeyNShm2iL0P6ExS4QSOR2injy5uoaPHVMbp7PHAhPDsfVf88ZOW\/Ap8hhWw59FCmWgkyiepEMFiF916o9IgdVLhFTgMW+w3I3DqM+MctLTkV+AzrIA9jxbKRCNRPkmFCBa76NYblQapkwqvwGHYYr8ZgVOfGeegpSW\/Ap9hBex5tFAmGonySSpEsNhFt96oNEidVHgFDsMW+80InPrMOActLfkV+AwrYM+jhTLRSJRPUiGCxS669UalQeqkwitwGLbYb17xiRMtDNRbouWBem8iIconFFrokEM7A\/WWaHlJVGQ+oRDR9ScsWlryq\/l6ytGcnnZDCwP1lmh5oN6bSIjyCYUWOuTQzkC9JVpeEhWZTyhEdP0Ji5aW\/Gq+nnI0p6fd0MJAvSVaHqj3JhKifEKhhQ45tDNQb4mWl0RF5hMKEV1\/wqKlJb+ar6cczelpN7QwUG+JlgfqvYmEKJ9QaKFDDu0M1Fui5SVRkfmEQkTXn7Boacmv5uspD88t0O8YqPcmEpi34AixAnphPomESv4sfCXC+jYUIof5HtEac0LnnIfnFuh3DNR7EwnMW3CEWAG9MJ9EQiV\/Fr4SYX0bCpHDfI9ojTmhc87Dcwv0OwbqvYkE5i04QqyAXphPIqGSPwtfibC+DYXIYb5HtMac0Dnn4bkF+h0D9d5EAvMWHCFWQC\/MJ5FQyZ+Fr0RY34ZC5DDfI1pjTuic8\/DcAv2OG1rIsEXsfZA6kcDcQjlCOze0MFDvZ9BXB+otiYpRPokE5ikstthvdtGTb2ghwxax90HqRAJzC+UI7dzQwkC9n0FfHai3JCpG+SQSmKew2GK\/2UVPvqGFDFvE3gepEwnMLZQjtHNDCwP1fgZ9daDekqgY5ZNIYJ7CYov9JnnkFMJBol6ZdCQVKkQjzIkV0PsgcphPUoFU5MhhnsKipSLTOeeZucfv4yBRr0w6kgoVohHmxArofRA5zCepQCpy5DBPYdFSkemc88zc4\/dxkKhXJh1JhQrRCHNiBfQ+iBzmk1QgFTlymKewaKnIdM55Zu7x+zhI1CuTjqRChWiEObECeh9EDvNJKpCKHDnMU1i0VGQ65xzN6WlvUuEVODYU6Fi0MEidVHgFr6eCYH2GEdjojaDXQ4cG6i3R8kC9N6nwOEfP8NxJKrwCx4YCHYsWBqmTCq\/g9VQQrM8wAhu9EfR66NBAvSVaHqj3JhUe5+gZnjtJhVfg2FCgY9HCIHVS4RW8ngqC9RlGYKM3gl4PHRqot0TLA\/XepMLjHD3Dcyep8AocGwp0LFoYpE4qvILXU0GwPsMIbPRG0OuhQwP1lmh5oN6bVHicZ57h3RW0v6RVbMkXfBsKFWcSyTa3oeQtOEKsY0OBTgsdGqhXRofeqFRmv0n0nAztL2kVW\/J18D+B\/tuNSLa5DSVvwRFiHRsKdFro0EC9Mjr0RqUy+02i52Rof0mr2JKvg\/8J9N9uRLLNbSh5C44Q69hQoNNChwbqldGhNyqV2W8SPSdD+0taxZZ8HfxPoP92I5JtbkPJW3CEWMeGAp0WOjRQr4wOvVGpzH7zCv6CBBfmjv5DBrb\/oJLD+gwrYO8PqXAFD6XC6ycH9R8G2AgdS1RkPokE5oTOOUdz6U04O3f0HzKw\/QeVHNZnWAF7f0iFK3goFV4\/Oaj\/MMBG6FiiIvNJJDAndM45mktvwtm5o\/+Qge0\/qOSwPsMK2PtDKlzBQ6nw+slB\/YcBNkLHEhWZTyKBOaFzztFcehPOzh39hwxs\/0Elh\/UZVsDeH1LhCh5KhddPDuo\/DLAROpaoyHwSCcwJnXOemdMbB+qV0SGHlbFRyicUSOSswwXWZ0jQ20dHy+jQwDo2XOQTChFdv84zc7yPqFdGhxxWxkYpn1AgkbMOF1ifIUFvHx0to0MD69hwkU8oRHT9Os\/M8T6iXhkdclgZG6V8QoFEzjpcYH2GBL19dLSMDg2sY8NFPqEQ0fXrHM2lN+HskjNRaYmWj9EHBhXHEhXXoUCHqHdDC2V0aJA6kcDcQpmo9xxH0+l9+ISSM1FpiZaP0QcGFccSFdehQIeod0MLZXRokDqRwNxCmaj3HEfT6X34hJIzUWmJlo\/RBwYVxxIV16FAh6h3QwtldGiQOpHA3EKZqPccR9PpffiEkjNRaYmWj9EHBhXHEhXXoUCHqHdDC2V0aJA6kcDcQpmo9xzPTOu9HbZH8P4fVMpIi9j2aGGg3iB1KBD1llSKdWHhpGyPREXmEwot9ptEz+mwPYL3\/6BSRlrEtkcLA\/UGqUOBqLekUqwLCydleyQqMp9QaLHfJHpOh+0RvP8HlTLSIrY9WhioN0gdCkS9JZViXVg4KdsjUZH5hEKL\/SbRczpsj+D9P6iUkRax7dHCQL1B6lAg6i2pFOvCwknZHomKzCcUWuw3r4dOaRXxTv7\/bgVs\/0GlgXUYRmDjA\/XeqDRQb6Dem1SowJEULQ\/UW6LlQepQaLHfvB46pVXEO98fwP9Q700qVOBIipYH6i3R8iB1KLTYb14PndIq4p3vD+B\/qPcmFSpwJEXLA\/WWaHmQOhRa7Devh05pFfHO9wfwP9R7kwoVOJKi5YF6S7Q8SB0KLfabpHJKxWmRruHBECtjIxyxAnof0CFWQK\/H9giL22wPdovWZ9hiv0lwXjhYcVqka3gwxMrYCEesgN4HdIgV0OuxPcLiNtuD3aL1GbbYbxKcFw5WnBbpGh4MsTI2whEroPcBHWIF9Hpsj7C4zfZgt2h9hi32mwTnhYMVp0W6hgdDrIyNcMQK6H1Ah1gBvR7bIyxusz3YLVqfYYv9JsF57cG0iO384+GGObECeiGpjL3wEuaTVIhgkai3RMsD9QbqvUkFEsmV\/Jxn5k7uS4vY9n8UGy5yYgX0QlIZe+ElzCepEMEiUW+JlgfqDdR7kwokkiv5Oc\/MndyXFrHt\/yg2XOTECuiFpDL2wkuYT1IhgkWi3hItD9QbqPcmFUgkV\/Jznpk7uS8tYtv\/UWy4yIkV0AtJZeyFlzCfpEIEi0S9JVoeqDdQ700qkEiu5Oc8M8f7IiKfeQqLk1R4xQ7zSSoQyiRymE8odGmN4E2PFgapEwnMSSoQ7PmHGLbYbxKcFxL5zFNYnKTCK3aYT1KBUCaRw3xCoUtrBG96tDBInUhgTlKBYM8\/xLDFfpPgvJDIZ57C4iQVXrHDfJIKhDKJHOYTCl1aI3jTo4VB6kQCc5IKBHv+IYYt9ptX8PwMJSd0LNsyqTiTlnwVvr0Cu5NUEFIZe6EzacmkUrQOQ4LeD3L0jL0VnxCO07Fsy6TiTFryVfj2CuxOUkFIZeyFzqQlk0rROgwJej\/I0TP2VnxCOE7Hsi2TijNpyVfh2yuwO0kFIZWxFzqTlkwqReswJOj9IEfP2FvxCeE4Hcu2TCrOpCVfhW+vwO4kFYRUxl7oTFoyqRStw5Cg94McPaMnl9GhJVFxHXbhCFHvRksWzovs2lByQuecyrJ1bLiA\/jlHc3paGR1aEhXXYReOEPVutGThvMiuDSUndM6pLFvHhgvon3M0p6eV0aElUXEdduEIUe9GSxbOi+zaUHJC55zKsnVsuID+OUdzeloZHVoSFddhF44Q9W60ZOG8yK4NJSd0zqksW8eGC+if8\/DcBs9+GP5QvcGoWMknFIh6ZXRoYB2GBL0PrIBeWCT0J6lQgSOk4tR5YOKQBz\/mOvjrRMVKPqFA1CujQwPrMCTofWAF9MIioT9JhQocIRWnzgMThzz4MdfBXycqVvIJBaJeGR0aWIchQe8DK6AXFgn9SSpU4AipOHUemDjkwY+5Dv46UbGSTygQ9cro0MA6DAl6H1gBvbBI6E9SoQJHSMWp88DET8CPJOrd0EJGWsS2\/9MzJOj5YkRFrjgpHEnR8qAuLJxJJKc5wxb7zR8F3\/uBeje0kJEWse3\/MzAk6PliREWuOCkcSdHyoC4snEkkpznDFvvNHwXf+4F6N7SQkRax7f8zMCTo+WJERa44KRxJ0fKgLiycSSSnOcMW+80fBd\/7gXo3tJCRFrHt\/zMwJOj5YkRFrjgpHEnR8qAuLJxJJKc5wxb7zav5F0zR9WOicZvbUHJiBfTyIh0bdnMbVmBxm2gwzW0oRA7zPY4meMo5un5MNG5zG0pOrIBeXqRjw25uwwosbhMNprkNhchhvsfRBE85R9ePicZtbkPJiRXQy4t0bNjNbViBxW2iwTS3oRA5zPc4mnjkDjsyw0VuoUwqziSSmU8ioZJbKFewRex9YB2GBL2QVMZe6EwoR1ifYYv95vXE81cwMsNFbqFMKs4kkplPIqGSWyhXsEXsfWAdhgS9kFTGXuhMKEdYn2GL\/eb1xPNXMDLDRW6hTCrOJJKZTyKhklsoV7BF7H1gHYYEvZBUxl7oTChHWJ9hi\/3m9cTzVzAyw0VuoUwqziSSmU8ioZJbKFewRex9YB2GBL2QVMZe6EwoR1ifYYv95hU8P8MF1rehQMfSkq\/g9Qq2OMOfIH0oEpi34AhJnVTowsFnOZq29+HsEOvbUKBjaclX8HoFW5zhT5A+FAnMW3CEpE4qdOHgsxxN2\/twdoj1bSjQsbTkK3i9gi3O8CdIH4oE5i04QlInFbpw8FmOpu19ODvE+jYU6Fha8hW8XsEWZ\/gTpA9FAvMWHCGpkwpdOPgsR9P2PpwdYn0bSk5SgWCv5KdwcKLSQL2BFdDLiyQSKvkkEpgTK6BXyicUiHrPcTRt78PZIda3oeQkFQj2Sn4KBycqDdQbWAG9vEgioZJPIoE5sQJ6pXxCgaj3HEfT9j6cHWJ9G0pOUoFgr+SncHCi0kC9gRXQy4skEir5JBKYEyugV8onFIh6z3E0be\/D2SHWt6HkJBUI9kp+CgcnKg3UG1gBvbxIIqGSTyKBObECeqV8QoGo9xxH0\/Y+nB1ifRsuckskR\/mEAqk45\/AVot4gdSikaNmhnSWVohXQ+0scPWnvxueEWN+Gi9wSyVE+oUAqzjl8hag3SB0KKVp2aGdJpWgF9P4SR0\/au\/E5Ida34SK3RHKUTyiQinMOXyHqDVKHQoqWHdpZUilaAb2\/xNGT9m58Toj1bbjILZEc5RMKpOKcw1eIeoPUoZCiZYd2llSKVkDvL3H05CN3pyNTENR7EwlRPqEQoZ03kcA8IpWxlzs2lJzUhYpjwwqVYsXZ42jukZvSkSkI6r2JhCifUIjQzptIYB6RytjLHRtKTupCxbFhhUqx4uxxNPfITenIFAT13kRClE8oRGjnTSQwj0hl7OWODSUndaHi2LBCpVhx9jiae+SmdGQKgnpvIiHKJxQitPMmEphHpDL2cseGkpO6UHFsWKFSrDh7HM3xrHOi5SifUCCRE+UWyilazkiL2C45Fi2U0SGHdm5EMvMJhYiuv+ZogqecEy1H+YQCiZwot1BO0XJGWsR2ybFooYwOObRzI5KZTyhEdP01RxM85ZxoOconFEjkRLmFcoqWM9IitkuORQtldMihnRuRzHxCIaLrr3lg4suX\/798fwBffjXfH8CXX833B\/DlV\/P9AXz51Xx\/AF9+Nd8fwJdfzfcH8OVX8\/0BfPnVfH8AX3413x\/Al1\/N9wfw5Vfz\/QF8+dV8fwBffjXfH8CXX833B\/DlV\/P9AXz51Xx\/AF9+Nd8fwJdfzf8BVLPnVFpWsFcAAAAASUVORK5CYII=",
+            "dhlLabelError": null,
+            "dhlLabelOrder": null,
+            "dhlLabelOrderId": null,
+            "dhlLabelOrderVersionId": null,
+            "upsLabel": null,
+            "upsLabelError": null,
+            "upsLabelOrder": null,
+            "upsLabelOrderId": null,
+            "upsLabelOrderVersionId": null,
+            "shipmentNumber": "406690224991,406690225004",
+            "lineItems": [
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "dvsn_return_shipment_line_item_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019c709789e17193ada070528835ceea",
+                    "versionId": null,
+                    "translated": [],
+                    "createdAt": "2026-02-18T11:51:45.381+00:00",
+                    "updatedAt": "2026-02-18T12:10:26.685+00:00",
+                    "quantity": 2,
+                    "reason": "Sonstige Gründe",
+                    "procedure": null,
+                    "customerComment": null,
+                    "privateComment": null,
+                    "publicComment": null,
+                    "restocked": true,
+                    "returnShipment": null,
+                    "returnShipmentId": "019c709789e17193ada070528786d45e",
+                    "orderLineItem": {
+                        "price": {
+                            "extensions": [],
+                            "unitPrice": 24.99,
+                            "quantity": 5,
+                            "totalPrice": 124.95,
+                            "calculatedTaxes": [
+                                {
+                                    "extensions": [],
+                                    "tax": 19.95,
+                                    "taxRate": 19,
+                                    "price": 124.95,
+                                    "apiAlias": "cart_tax_calculated"
+                                }
+                            ],
+                            "taxRules": [
+                                {
+                                    "extensions": [],
+                                    "taxRate": 19,
+                                    "percentage": 100,
+                                    "apiAlias": "cart_tax_rule"
+                                }
+                            ],
+                            "referencePrice": null,
+                            "listPrice": {
+                                "extensions": [],
+                                "price": 69.99,
+                                "discount": -45,
+                                "percentage": 64.29,
+                                "apiAlias": "cart_list_price"
+                            },
+                            "regulationPrice": null,
+                            "apiAlias": "calculated_price"
+                        },
+                        "type": "product",
+                        "product": {
+                            "ean": "0199198183067",
+                            "productNumber": "60793207P29000617",
+                            "apiAlias": "product"
+                        },
+                        "apiAlias": "order_line_item"
+                    },
+                    "orderLineItemId": "019c709680917318b6d16d2981fdcc3a",
+                    "id": "019c709789e17193ada070528835ceea",
+                    "return_shipment": null,
+                    "orderLineItemVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "apiAlias": "dvsn_return_shipment_line_item"
+                }
+            ],
+            "status": null,
+            "statusId": "356c2265fbb37d19a444ea6adb0060db",
+            "customer": null,
+            "customerId": "0196ef4143977182aefcfb3d51400b9f",
+            "order": {
+                "orderNumber": "1039632",
+                "apiAlias": "order"
+            },
+            "orderId": "019c709680917318b6d16d298494cb3b",
+            "salesChannel": null,
+            "salesChannelId": "0192af1d893f7b88bc461169ef6d9f00",
+            "id": "019c709789e17193ada070528786d45e",
+            "orderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+            "apiAlias": "dvsn_return_shipment"
+        },
+        {
+            "extensions": {
+                "foreignKeys": {
+                    "extensions": [],
+                    "apiAlias": "dvsn_return_shipment_foreign_keys_extension"
+                }
+            },
+            "_uniqueIdentifier": "019c75d14afc703aba4e399d46db0986",
+            "versionId": null,
+            "translated": [],
+            "createdAt": "2026-02-19T12:12:56.447+00:00",
+            "updatedAt": null,
+            "number": "RET-1039600-20260219131256",
+            "customerComment": null,
+            "privateComment": null,
+            "publicComment": null,
+            "dhlLabel": null,
+            "dhlQrcode": null,
+            "dhlLabelError": null,
+            "dhlLabelOrder": null,
+            "dhlLabelOrderId": null,
+            "dhlLabelOrderVersionId": null,
+            "upsLabel": null,
+            "upsLabelError": null,
+            "upsLabelOrder": null,
+            "upsLabelOrderId": null,
+            "upsLabelOrderVersionId": null,
+            "shipmentNumber": null,
+            "lineItems": [
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "dvsn_return_shipment_line_item_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019c75d14afd737aa4634c89376d234b",
+                    "versionId": null,
+                    "translated": [],
+                    "createdAt": "2026-02-19T12:12:56.447+00:00",
+                    "updatedAt": null,
+                    "quantity": 1,
+                    "reason": "Retoure via Pixi",
+                    "procedure": null,
+                    "customerComment": null,
+                    "privateComment": "In Menge 1 als Retoure eingetroffen",
+                    "publicComment": null,
+                    "restocked": true,
+                    "returnShipment": null,
+                    "returnShipmentId": "019c75d14afc703aba4e399d46db0986",
+                    "orderLineItem": {
+                        "price": {
+                            "extensions": [],
+                            "unitPrice": 14.99,
+                            "quantity": 1,
+                            "totalPrice": 14.99,
+                            "calculatedTaxes": [
+                                {
+                                    "extensions": [],
+                                    "tax": 2.39,
+                                    "taxRate": 19,
+                                    "price": 14.99,
+                                    "apiAlias": "cart_tax_calculated"
+                                }
+                            ],
+                            "taxRules": [
+                                {
+                                    "extensions": [],
+                                    "taxRate": 19,
+                                    "percentage": 100,
+                                    "apiAlias": "cart_tax_rule"
+                                }
+                            ],
+                            "referencePrice": null,
+                            "listPrice": {
+                                "extensions": [],
+                                "price": 49.99,
+                                "discount": -35,
+                                "percentage": 70.01,
+                                "apiAlias": "cart_list_price"
+                            },
+                            "regulationPrice": null,
+                            "apiAlias": "calculated_price"
+                        },
+                        "type": "product",
+                        "product": {
+                            "ean": "8718339203826",
+                            "productNumber": "JORN10HJ150617",
+                            "apiAlias": "product"
+                        },
+                        "apiAlias": "order_line_item"
+                    },
+                    "orderLineItemId": "019b453a0ec47168b32058e548a406f7",
+                    "id": "019c75d14afd737aa4634c89376d234b",
+                    "return_shipment": null,
+                    "orderLineItemVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "apiAlias": "dvsn_return_shipment_line_item"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "dvsn_return_shipment_line_item_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019c75d14afd737aa4634c8937c6de87",
+                    "versionId": null,
+                    "translated": [],
+                    "createdAt": "2026-02-19T12:12:56.447+00:00",
+                    "updatedAt": null,
+                    "quantity": 1,
+                    "reason": "Retoure via Pixi",
+                    "procedure": null,
+                    "customerComment": null,
+                    "privateComment": "In Menge 1 als Retoure eingetroffen",
+                    "publicComment": null,
+                    "restocked": true,
+                    "returnShipment": null,
+                    "returnShipmentId": "019c75d14afc703aba4e399d46db0986",
+                    "orderLineItem": {
+                        "price": {
+                            "extensions": [],
+                            "unitPrice": 14.99,
+                            "quantity": 1,
+                            "totalPrice": 14.99,
+                            "calculatedTaxes": [
+                                {
+                                    "extensions": [],
+                                    "tax": 2.39,
+                                    "taxRate": 19,
+                                    "price": 14.99,
+                                    "apiAlias": "cart_tax_calculated"
+                                }
+                            ],
+                            "taxRules": [
+                                {
+                                    "extensions": [],
+                                    "taxRate": 19,
+                                    "percentage": 100,
+                                    "apiAlias": "cart_tax_rule"
+                                }
+                            ],
+                            "referencePrice": null,
+                            "listPrice": {
+                                "extensions": [],
+                                "price": 49.99,
+                                "discount": -35,
+                                "percentage": 70.01,
+                                "apiAlias": "cart_list_price"
+                            },
+                            "regulationPrice": null,
+                            "apiAlias": "calculated_price"
+                        },
+                        "type": "product",
+                        "product": {
+                            "ean": "8718339203741",
+                            "productNumber": "JORN10HJ140617",
+                            "apiAlias": "product"
+                        },
+                        "apiAlias": "order_line_item"
+                    },
+                    "orderLineItemId": "019b453a0ec47168b32058e54951a7df",
+                    "id": "019c75d14afd737aa4634c8937c6de87",
+                    "return_shipment": null,
+                    "orderLineItemVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "apiAlias": "dvsn_return_shipment_line_item"
+                }
+            ],
+            "status": null,
+            "statusId": "356c2265fbb37d19a444ea6adb0060db",
+            "customer": null,
+            "customerId": "0196f424203e72e7a2007347977f6b38",
+            "order": {
+                "orderNumber": "1039600",
+                "apiAlias": "order"
+            },
+            "orderId": "019b453a0ec573838337b3b617055780",
+            "salesChannel": null,
+            "salesChannelId": "0192af1d893f7b88bc461169ef6d9f00",
+            "id": "019c75d14afc703aba4e399d46db0986",
+            "orderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+            "apiAlias": "dvsn_return_shipment"
+        },
+        {
+            "extensions": {
+                "foreignKeys": {
+                    "extensions": [],
+                    "apiAlias": "dvsn_return_shipment_foreign_keys_extension"
+                }
+            },
+            "_uniqueIdentifier": "019c75d7fab17233a1f6a118e6e3e5b3",
+            "versionId": null,
+            "translated": [],
+            "createdAt": "2026-02-19T12:20:14.643+00:00",
+            "updatedAt": null,
+            "number": "RET-1039600-20260219132014",
+            "customerComment": null,
+            "privateComment": null,
+            "publicComment": null,
+            "dhlLabel": null,
+            "dhlQrcode": null,
+            "dhlLabelError": null,
+            "dhlLabelOrder": null,
+            "dhlLabelOrderId": null,
+            "dhlLabelOrderVersionId": null,
+            "upsLabel": null,
+            "upsLabelError": null,
+            "upsLabelOrder": null,
+            "upsLabelOrderId": null,
+            "upsLabelOrderVersionId": null,
+            "shipmentNumber": null,
+            "lineItems": [
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "dvsn_return_shipment_line_item_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019c75d7fab272aab650d2f26e2ab2e4",
+                    "versionId": null,
+                    "translated": [],
+                    "createdAt": "2026-02-19T12:20:14.643+00:00",
+                    "updatedAt": null,
+                    "quantity": 1,
+                    "reason": "Retoure via Pixi",
+                    "procedure": null,
+                    "customerComment": null,
+                    "privateComment": "In Menge 1 als Retoure eingetroffen",
+                    "publicComment": null,
+                    "restocked": true,
+                    "returnShipment": null,
+                    "returnShipmentId": "019c75d7fab17233a1f6a118e6e3e5b3",
+                    "orderLineItem": {
+                        "price": {
+                            "extensions": [],
+                            "unitPrice": 14.99,
+                            "quantity": 1,
+                            "totalPrice": 14.99,
+                            "calculatedTaxes": [
+                                {
+                                    "extensions": [],
+                                    "tax": 2.39,
+                                    "taxRate": 19,
+                                    "price": 14.99,
+                                    "apiAlias": "cart_tax_calculated"
+                                }
+                            ],
+                            "taxRules": [
+                                {
+                                    "extensions": [],
+                                    "taxRate": 19,
+                                    "percentage": 100,
+                                    "apiAlias": "cart_tax_rule"
+                                }
+                            ],
+                            "referencePrice": null,
+                            "listPrice": {
+                                "extensions": [],
+                                "price": 49.99,
+                                "discount": -35,
+                                "percentage": 70.01,
+                                "apiAlias": "cart_list_price"
+                            },
+                            "regulationPrice": null,
+                            "apiAlias": "calculated_price"
+                        },
+                        "type": "product",
+                        "product": {
+                            "ean": "8718339203826",
+                            "productNumber": "JORN10HJ150617",
+                            "apiAlias": "product"
+                        },
+                        "apiAlias": "order_line_item"
+                    },
+                    "orderLineItemId": "019b453a0ec47168b32058e548a406f7",
+                    "id": "019c75d7fab272aab650d2f26e2ab2e4",
+                    "return_shipment": null,
+                    "orderLineItemVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "apiAlias": "dvsn_return_shipment_line_item"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "dvsn_return_shipment_line_item_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019c75d7fab272aab650d2f26ecd5fd6",
+                    "versionId": null,
+                    "translated": [],
+                    "createdAt": "2026-02-19T12:20:14.643+00:00",
+                    "updatedAt": null,
+                    "quantity": 1,
+                    "reason": "Retoure via Pixi",
+                    "procedure": null,
+                    "customerComment": null,
+                    "privateComment": "In Menge 1 als Retoure eingetroffen",
+                    "publicComment": null,
+                    "restocked": true,
+                    "returnShipment": null,
+                    "returnShipmentId": "019c75d7fab17233a1f6a118e6e3e5b3",
+                    "orderLineItem": {
+                        "price": {
+                            "extensions": [],
+                            "unitPrice": 14.99,
+                            "quantity": 1,
+                            "totalPrice": 14.99,
+                            "calculatedTaxes": [
+                                {
+                                    "extensions": [],
+                                    "tax": 2.39,
+                                    "taxRate": 19,
+                                    "price": 14.99,
+                                    "apiAlias": "cart_tax_calculated"
+                                }
+                            ],
+                            "taxRules": [
+                                {
+                                    "extensions": [],
+                                    "taxRate": 19,
+                                    "percentage": 100,
+                                    "apiAlias": "cart_tax_rule"
+                                }
+                            ],
+                            "referencePrice": null,
+                            "listPrice": {
+                                "extensions": [],
+                                "price": 49.99,
+                                "discount": -35,
+                                "percentage": 70.01,
+                                "apiAlias": "cart_list_price"
+                            },
+                            "regulationPrice": null,
+                            "apiAlias": "calculated_price"
+                        },
+                        "type": "product",
+                        "product": {
+                            "ean": "8718339203741",
+                            "productNumber": "JORN10HJ140617",
+                            "apiAlias": "product"
+                        },
+                        "apiAlias": "order_line_item"
+                    },
+                    "orderLineItemId": "019b453a0ec47168b32058e54951a7df",
+                    "id": "019c75d7fab272aab650d2f26ecd5fd6",
+                    "return_shipment": null,
+                    "orderLineItemVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "apiAlias": "dvsn_return_shipment_line_item"
+                }
+            ],
+            "status": null,
+            "statusId": "356c2265fbb37d19a444ea6adb0060db",
+            "customer": null,
+            "customerId": "0196f424203e72e7a2007347977f6b38",
+            "order": {
+                "orderNumber": "1039600",
+                "apiAlias": "order"
+            },
+            "orderId": "019b453a0ec573838337b3b617055780",
+            "salesChannel": null,
+            "salesChannelId": "0192af1d893f7b88bc461169ef6d9f00",
+            "id": "019c75d7fab17233a1f6a118e6e3e5b3",
+            "orderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+            "apiAlias": "dvsn_return_shipment"
+        },
+        {
+            "extensions": {
+                "foreignKeys": {
+                    "extensions": [],
+                    "apiAlias": "dvsn_return_shipment_foreign_keys_extension"
+                }
+            },
+            "_uniqueIdentifier": "019c75e3b757738c8a644d0e9b931d88",
+            "versionId": null,
+            "translated": [],
+            "createdAt": "2026-02-19T12:33:03.833+00:00",
+            "updatedAt": null,
+            "number": "RET-1039600-20260219133303",
+            "customerComment": null,
+            "privateComment": null,
+            "publicComment": null,
+            "dhlLabel": null,
+            "dhlQrcode": null,
+            "dhlLabelError": null,
+            "dhlLabelOrder": null,
+            "dhlLabelOrderId": null,
+            "dhlLabelOrderVersionId": null,
+            "upsLabel": null,
+            "upsLabelError": null,
+            "upsLabelOrder": null,
+            "upsLabelOrderId": null,
+            "upsLabelOrderVersionId": null,
+            "shipmentNumber": null,
+            "lineItems": [
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "dvsn_return_shipment_line_item_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019c75e3b757738c8a644d0e9bb7d43a",
+                    "versionId": null,
+                    "translated": [],
+                    "createdAt": "2026-02-19T12:33:03.833+00:00",
+                    "updatedAt": null,
+                    "quantity": 1,
+                    "reason": "Retoure via Pixi",
+                    "procedure": null,
+                    "customerComment": null,
+                    "privateComment": "In Menge 1 als Retoure eingetroffen",
+                    "publicComment": null,
+                    "restocked": true,
+                    "returnShipment": null,
+                    "returnShipmentId": "019c75e3b757738c8a644d0e9b931d88",
+                    "orderLineItem": {
+                        "price": {
+                            "extensions": [],
+                            "unitPrice": 14.99,
+                            "quantity": 1,
+                            "totalPrice": 14.99,
+                            "calculatedTaxes": [
+                                {
+                                    "extensions": [],
+                                    "tax": 2.39,
+                                    "taxRate": 19,
+                                    "price": 14.99,
+                                    "apiAlias": "cart_tax_calculated"
+                                }
+                            ],
+                            "taxRules": [
+                                {
+                                    "extensions": [],
+                                    "taxRate": 19,
+                                    "percentage": 100,
+                                    "apiAlias": "cart_tax_rule"
+                                }
+                            ],
+                            "referencePrice": null,
+                            "listPrice": {
+                                "extensions": [],
+                                "price": 49.99,
+                                "discount": -35,
+                                "percentage": 70.01,
+                                "apiAlias": "cart_list_price"
+                            },
+                            "regulationPrice": null,
+                            "apiAlias": "calculated_price"
+                        },
+                        "type": "product",
+                        "product": {
+                            "ean": "8718339203826",
+                            "productNumber": "JORN10HJ150617",
+                            "apiAlias": "product"
+                        },
+                        "apiAlias": "order_line_item"
+                    },
+                    "orderLineItemId": "019b453a0ec47168b32058e548a406f7",
+                    "id": "019c75e3b757738c8a644d0e9bb7d43a",
+                    "return_shipment": null,
+                    "orderLineItemVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "apiAlias": "dvsn_return_shipment_line_item"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "dvsn_return_shipment_line_item_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019c75e3b757738c8a644d0e9bda816e",
+                    "versionId": null,
+                    "translated": [],
+                    "createdAt": "2026-02-19T12:33:03.833+00:00",
+                    "updatedAt": null,
+                    "quantity": 1,
+                    "reason": "Retoure via Pixi",
+                    "procedure": null,
+                    "customerComment": null,
+                    "privateComment": "In Menge 1 als Retoure eingetroffen",
+                    "publicComment": null,
+                    "restocked": true,
+                    "returnShipment": null,
+                    "returnShipmentId": "019c75e3b757738c8a644d0e9b931d88",
+                    "orderLineItem": {
+                        "price": {
+                            "extensions": [],
+                            "unitPrice": 14.99,
+                            "quantity": 1,
+                            "totalPrice": 14.99,
+                            "calculatedTaxes": [
+                                {
+                                    "extensions": [],
+                                    "tax": 2.39,
+                                    "taxRate": 19,
+                                    "price": 14.99,
+                                    "apiAlias": "cart_tax_calculated"
+                                }
+                            ],
+                            "taxRules": [
+                                {
+                                    "extensions": [],
+                                    "taxRate": 19,
+                                    "percentage": 100,
+                                    "apiAlias": "cart_tax_rule"
+                                }
+                            ],
+                            "referencePrice": null,
+                            "listPrice": {
+                                "extensions": [],
+                                "price": 49.99,
+                                "discount": -35,
+                                "percentage": 70.01,
+                                "apiAlias": "cart_list_price"
+                            },
+                            "regulationPrice": null,
+                            "apiAlias": "calculated_price"
+                        },
+                        "type": "product",
+                        "product": {
+                            "ean": "8718339203741",
+                            "productNumber": "JORN10HJ140617",
+                            "apiAlias": "product"
+                        },
+                        "apiAlias": "order_line_item"
+                    },
+                    "orderLineItemId": "019b453a0ec47168b32058e54951a7df",
+                    "id": "019c75e3b757738c8a644d0e9bda816e",
+                    "return_shipment": null,
+                    "orderLineItemVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "apiAlias": "dvsn_return_shipment_line_item"
+                }
+            ],
+            "status": null,
+            "statusId": "356c2265fbb37d19a444ea6adb0060db",
+            "customer": null,
+            "customerId": "0196f424203e72e7a2007347977f6b38",
+            "order": {
+                "orderNumber": "1039600",
+                "apiAlias": "order"
+            },
+            "orderId": "019b453a0ec573838337b3b617055780",
+            "salesChannel": null,
+            "salesChannelId": "0192af1d893f7b88bc461169ef6d9f00",
+            "id": "019c75e3b757738c8a644d0e9b931d88",
+            "orderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+            "apiAlias": "dvsn_return_shipment"
+        },
+        {
+            "extensions": {
+                "foreignKeys": {
+                    "extensions": [],
+                    "apiAlias": "dvsn_return_shipment_foreign_keys_extension"
+                }
+            },
+            "_uniqueIdentifier": "019c7a8b2290721fb8eb2a7e28736e6a",
+            "versionId": null,
+            "translated": [],
+            "createdAt": "2026-02-20T10:14:24.658+00:00",
+            "updatedAt": null,
+            "number": "RET-1039626-20260220111424",
+            "customerComment": null,
+            "privateComment": null,
+            "publicComment": null,
+            "dhlLabel": null,
+            "dhlQrcode": null,
+            "dhlLabelError": null,
+            "dhlLabelOrder": null,
+            "dhlLabelOrderId": null,
+            "dhlLabelOrderVersionId": null,
+            "upsLabel": null,
+            "upsLabelError": null,
+            "upsLabelOrder": null,
+            "upsLabelOrderId": null,
+            "upsLabelOrderVersionId": null,
+            "shipmentNumber": null,
+            "lineItems": [
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "dvsn_return_shipment_line_item_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019c7a8b2290721fb8eb2a7e2913bf78",
+                    "versionId": null,
+                    "translated": [],
+                    "createdAt": "2026-02-20T10:14:24.658+00:00",
+                    "updatedAt": null,
+                    "quantity": 1,
+                    "reason": "Retoure via Pixi",
+                    "procedure": null,
+                    "customerComment": null,
+                    "privateComment": "In Menge 1 als Retoure eingetroffen",
+                    "publicComment": null,
+                    "restocked": true,
+                    "returnShipment": null,
+                    "returnShipmentId": "019c7a8b2290721fb8eb2a7e28736e6a",
+                    "orderLineItem": {
+                        "price": {
+                            "extensions": [],
+                            "unitPrice": 23.77,
+                            "quantity": 2,
+                            "totalPrice": 47.54,
+                            "calculatedTaxes": [
+                                {
+                                    "extensions": [],
+                                    "tax": 7.59,
+                                    "taxRate": 19,
+                                    "price": 47.54,
+                                    "apiAlias": "cart_tax_calculated"
+                                }
+                            ],
+                            "taxRules": [
+                                {
+                                    "extensions": [],
+                                    "taxRate": 19,
+                                    "percentage": 100,
+                                    "apiAlias": "cart_tax_rule"
+                                }
+                            ],
+                            "referencePrice": null,
+                            "listPrice": {
+                                "extensions": [],
+                                "price": 74.99,
+                                "discount": -51.22,
+                                "percentage": 68.3,
+                                "apiAlias": "cart_list_price"
+                            },
+                            "regulationPrice": null,
+                            "apiAlias": "calculated_price"
+                        },
+                        "type": "product",
+                        "product": {
+                            "ean": "4067902504988",
+                            "productNumber": "JC5806030000598",
+                            "apiAlias": "product"
+                        },
+                        "apiAlias": "order_line_item"
+                    },
+                    "orderLineItemId": "019c47bed0d3717385f33cb092bcee17",
+                    "id": "019c7a8b2290721fb8eb2a7e2913bf78",
+                    "return_shipment": null,
+                    "orderLineItemVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "apiAlias": "dvsn_return_shipment_line_item"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "dvsn_return_shipment_line_item_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019c7a8b2290721fb8eb2a7e295515a0",
+                    "versionId": null,
+                    "translated": [],
+                    "createdAt": "2026-02-20T10:14:24.658+00:00",
+                    "updatedAt": null,
+                    "quantity": 1,
+                    "reason": "Retoure via Pixi",
+                    "procedure": null,
+                    "customerComment": null,
+                    "privateComment": "In Menge 1 als Retoure eingetroffen",
+                    "publicComment": null,
+                    "restocked": true,
+                    "returnShipment": null,
+                    "returnShipmentId": "019c7a8b2290721fb8eb2a7e28736e6a",
+                    "orderLineItem": {
+                        "price": {
+                            "extensions": [],
+                            "unitPrice": 23.77,
+                            "quantity": 1,
+                            "totalPrice": 23.77,
+                            "calculatedTaxes": [
+                                {
+                                    "extensions": [],
+                                    "tax": 3.8,
+                                    "taxRate": 19,
+                                    "price": 23.77,
+                                    "apiAlias": "cart_tax_calculated"
+                                }
+                            ],
+                            "taxRules": [
+                                {
+                                    "extensions": [],
+                                    "taxRate": 19,
+                                    "percentage": 100,
+                                    "apiAlias": "cart_tax_rule"
+                                }
+                            ],
+                            "referencePrice": null,
+                            "listPrice": {
+                                "extensions": [],
+                                "price": 74.99,
+                                "discount": -51.22,
+                                "percentage": 68.3,
+                                "apiAlias": "cart_list_price"
+                            },
+                            "regulationPrice": null,
+                            "apiAlias": "calculated_price"
+                        },
+                        "type": "product",
+                        "product": {
+                            "ean": "4067902508726",
+                            "productNumber": "JC5806030000612",
+                            "apiAlias": "product"
+                        },
+                        "apiAlias": "order_line_item"
+                    },
+                    "orderLineItemId": "019c47bed0d3717385f33cb0938ceb8d",
+                    "id": "019c7a8b2290721fb8eb2a7e295515a0",
+                    "return_shipment": null,
+                    "orderLineItemVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "apiAlias": "dvsn_return_shipment_line_item"
+                }
+            ],
+            "status": null,
+            "statusId": "356c2265fbb37d19a444ea6adb0060db",
+            "customer": null,
+            "customerId": "0196ef4143977182aefcfb3d51400b9f",
+            "order": {
+                "orderNumber": "1039626",
+                "apiAlias": "order"
+            },
+            "orderId": "019c47bed0d47383a790d188dc557d57",
+            "salesChannel": null,
+            "salesChannelId": "0192af1d893f7b88bc461169ef6d9f00",
+            "id": "019c7a8b2290721fb8eb2a7e28736e6a",
+            "orderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+            "apiAlias": "dvsn_return_shipment"
+        },
+        {
+            "extensions": {
+                "foreignKeys": {
+                    "extensions": [],
+                    "apiAlias": "dvsn_return_shipment_foreign_keys_extension"
+                }
+            },
+            "_uniqueIdentifier": "019c7a8b2df9722a8a8acaccb86c6184",
+            "versionId": null,
+            "translated": [],
+            "createdAt": "2026-02-20T10:14:27.579+00:00",
+            "updatedAt": null,
+            "number": "RET-1039626-20260220111427",
+            "customerComment": null,
+            "privateComment": null,
+            "publicComment": null,
+            "dhlLabel": null,
+            "dhlQrcode": null,
+            "dhlLabelError": null,
+            "dhlLabelOrder": null,
+            "dhlLabelOrderId": null,
+            "dhlLabelOrderVersionId": null,
+            "upsLabel": null,
+            "upsLabelError": null,
+            "upsLabelOrder": null,
+            "upsLabelOrderId": null,
+            "upsLabelOrderVersionId": null,
+            "shipmentNumber": null,
+            "lineItems": [
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "dvsn_return_shipment_line_item_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019c7a8b2df9722a8a8acaccb8c02457",
+                    "versionId": null,
+                    "translated": [],
+                    "createdAt": "2026-02-20T10:14:27.579+00:00",
+                    "updatedAt": null,
+                    "quantity": 1,
+                    "reason": "Retoure via Pixi",
+                    "procedure": null,
+                    "customerComment": null,
+                    "privateComment": "In Menge 1 als Retoure eingetroffen",
+                    "publicComment": null,
+                    "restocked": true,
+                    "returnShipment": null,
+                    "returnShipmentId": "019c7a8b2df9722a8a8acaccb86c6184",
+                    "orderLineItem": {
+                        "price": {
+                            "extensions": [],
+                            "unitPrice": 23.77,
+                            "quantity": 2,
+                            "totalPrice": 47.54,
+                            "calculatedTaxes": [
+                                {
+                                    "extensions": [],
+                                    "tax": 7.59,
+                                    "taxRate": 19,
+                                    "price": 47.54,
+                                    "apiAlias": "cart_tax_calculated"
+                                }
+                            ],
+                            "taxRules": [
+                                {
+                                    "extensions": [],
+                                    "taxRate": 19,
+                                    "percentage": 100,
+                                    "apiAlias": "cart_tax_rule"
+                                }
+                            ],
+                            "referencePrice": null,
+                            "listPrice": {
+                                "extensions": [],
+                                "price": 74.99,
+                                "discount": -51.22,
+                                "percentage": 68.3,
+                                "apiAlias": "cart_list_price"
+                            },
+                            "regulationPrice": null,
+                            "apiAlias": "calculated_price"
+                        },
+                        "type": "product",
+                        "product": {
+                            "ean": "4067902504988",
+                            "productNumber": "JC5806030000598",
+                            "apiAlias": "product"
+                        },
+                        "apiAlias": "order_line_item"
+                    },
+                    "orderLineItemId": "019c47bed0d3717385f33cb092bcee17",
+                    "id": "019c7a8b2df9722a8a8acaccb8c02457",
+                    "return_shipment": null,
+                    "orderLineItemVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "apiAlias": "dvsn_return_shipment_line_item"
+                },
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "dvsn_return_shipment_line_item_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019c7a8b2dfa71978971d0d18fbc347e",
+                    "versionId": null,
+                    "translated": [],
+                    "createdAt": "2026-02-20T10:14:27.579+00:00",
+                    "updatedAt": null,
+                    "quantity": 1,
+                    "reason": "Retoure via Pixi",
+                    "procedure": null,
+                    "customerComment": null,
+                    "privateComment": "In Menge 1 als Retoure eingetroffen",
+                    "publicComment": null,
+                    "restocked": true,
+                    "returnShipment": null,
+                    "returnShipmentId": "019c7a8b2df9722a8a8acaccb86c6184",
+                    "orderLineItem": {
+                        "price": {
+                            "extensions": [],
+                            "unitPrice": 23.77,
+                            "quantity": 1,
+                            "totalPrice": 23.77,
+                            "calculatedTaxes": [
+                                {
+                                    "extensions": [],
+                                    "tax": 3.8,
+                                    "taxRate": 19,
+                                    "price": 23.77,
+                                    "apiAlias": "cart_tax_calculated"
+                                }
+                            ],
+                            "taxRules": [
+                                {
+                                    "extensions": [],
+                                    "taxRate": 19,
+                                    "percentage": 100,
+                                    "apiAlias": "cart_tax_rule"
+                                }
+                            ],
+                            "referencePrice": null,
+                            "listPrice": {
+                                "extensions": [],
+                                "price": 74.99,
+                                "discount": -51.22,
+                                "percentage": 68.3,
+                                "apiAlias": "cart_list_price"
+                            },
+                            "regulationPrice": null,
+                            "apiAlias": "calculated_price"
+                        },
+                        "type": "product",
+                        "product": {
+                            "ean": "4067902508726",
+                            "productNumber": "JC5806030000612",
+                            "apiAlias": "product"
+                        },
+                        "apiAlias": "order_line_item"
+                    },
+                    "orderLineItemId": "019c47bed0d3717385f33cb0938ceb8d",
+                    "id": "019c7a8b2dfa71978971d0d18fbc347e",
+                    "return_shipment": null,
+                    "orderLineItemVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "apiAlias": "dvsn_return_shipment_line_item"
+                }
+            ],
+            "status": null,
+            "statusId": "356c2265fbb37d19a444ea6adb0060db",
+            "customer": null,
+            "customerId": "0196ef4143977182aefcfb3d51400b9f",
+            "order": {
+                "orderNumber": "1039626",
+                "apiAlias": "order"
+            },
+            "orderId": "019c47bed0d47383a790d188dc557d57",
+            "salesChannel": null,
+            "salesChannelId": "0192af1d893f7b88bc461169ef6d9f00",
+            "id": "019c7a8b2df9722a8a8acaccb86c6184",
+            "orderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+            "apiAlias": "dvsn_return_shipment"
+        },
+        {
+            "extensions": {
+                "foreignKeys": {
+                    "extensions": [],
+                    "apiAlias": "dvsn_return_shipment_foreign_keys_extension"
+                }
+            },
+            "_uniqueIdentifier": "019c7a9bca367396a39689b24d0964f0",
+            "versionId": null,
+            "translated": [],
+            "createdAt": "2026-02-20T10:32:36.153+00:00",
+            "updatedAt": null,
+            "number": "RET-1039626-20260220113235",
+            "customerComment": null,
+            "privateComment": null,
+            "publicComment": null,
+            "dhlLabel": null,
+            "dhlQrcode": null,
+            "dhlLabelError": null,
+            "dhlLabelOrder": null,
+            "dhlLabelOrderId": null,
+            "dhlLabelOrderVersionId": null,
+            "upsLabel": null,
+            "upsLabelError": null,
+            "upsLabelOrder": null,
+            "upsLabelOrderId": null,
+            "upsLabelOrderVersionId": null,
+            "shipmentNumber": null,
+            "lineItems": [
+                {
+                    "extensions": {
+                        "foreignKeys": {
+                            "extensions": [],
+                            "apiAlias": "dvsn_return_shipment_line_item_foreign_keys_extension"
+                        }
+                    },
+                    "_uniqueIdentifier": "019c7a9bca367396a39689b24dd5f4d3",
+                    "versionId": null,
+                    "translated": [],
+                    "createdAt": "2026-02-20T10:32:36.152+00:00",
+                    "updatedAt": null,
+                    "quantity": 1,
+                    "reason": "Retoure via Pixi",
+                    "procedure": null,
+                    "customerComment": null,
+                    "privateComment": "In Menge 1 als Retoure eingetroffen",
+                    "publicComment": null,
+                    "restocked": true,
+                    "returnShipment": null,
+                    "returnShipmentId": "019c7a9bca367396a39689b24d0964f0",
+                    "orderLineItem": {
+                        "price": {
+                            "extensions": [],
+                            "unitPrice": 23.77,
+                            "quantity": 2,
+                            "totalPrice": 47.54,
+                            "calculatedTaxes": [
+                                {
+                                    "extensions": [],
+                                    "tax": 7.59,
+                                    "taxRate": 19,
+                                    "price": 47.54,
+                                    "apiAlias": "cart_tax_calculated"
+                                }
+                            ],
+                            "taxRules": [
+                                {
+                                    "extensions": [],
+                                    "taxRate": 19,
+                                    "percentage": 100,
+                                    "apiAlias": "cart_tax_rule"
+                                }
+                            ],
+                            "referencePrice": null,
+                            "listPrice": {
+                                "extensions": [],
+                                "price": 74.99,
+                                "discount": -51.22,
+                                "percentage": 68.3,
+                                "apiAlias": "cart_list_price"
+                            },
+                            "regulationPrice": null,
+                            "apiAlias": "calculated_price"
+                        },
+                        "type": "not a product",
+                        "product": {
+                            "ean": "4067902504988",
+                            "productNumber": "JC5806030000598",
+                            "apiAlias": "product"
+                        },
+                        "apiAlias": "order_line_item"
+                    },
+                    "orderLineItemId": "019c47bed0d3717385f33cb092bcee17",
+                    "id": "019c7a9bca367396a39689b24dd5f4d3",
+                    "return_shipment": null,
+                    "orderLineItemVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+                    "apiAlias": "dvsn_return_shipment_line_item"
+                }
+            ],
+            "status": null,
+            "statusId": "356c2265fbb37d19a444ea6adb0060db",
+            "customer": null,
+            "customerId": "0196ef4143977182aefcfb3d51400b9f",
+            "order": {
+                "orderNumber": "1039626",
+                "apiAlias": "order"
+            },
+            "orderId": "019c47bed0d47383a790d188dc557d57",
+            "salesChannel": null,
+            "salesChannelId": "0192af1d893f7b88bc461169ef6d9f00",
+            "id": "not a product order id",
+            "orderVersionId": "0fa91ce3e96a4bc2be4bd9ce752c3425",
+            "apiAlias": "dvsn_return_shipment"
+        }
+    ],
+    "aggregations": []
+}

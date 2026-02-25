@@ -35,18 +35,6 @@ class ProductDTO
             ->firstWhere('ean', $ean);
     }
 
-    #[Deprecated("pickware plugin is gone")]
-    public function getStockByEanAndWarehouseId(string $ean, string $warehouseId): ?int
-    {
-        $child = $this->getChildByEan($ean);
-        if (empty($child)) return null;
-
-        $stocks = Arr::get($child, 'extensions.pickwareErpWarehouseStocks', []);
-        $warehouseStock = Arr::first($stocks, fn ($stock) => $stock['warehouseId'] === $warehouseId);
-
-        return $warehouseStock['quantity'] ?? null;
-    }
-
     public function isPriceProtected(): bool
     {
         return (bool) Arr::get($this->data, 'customFields.sim_protected_price', false);

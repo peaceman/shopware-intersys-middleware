@@ -167,10 +167,11 @@ class OrderXMLExporter
 
     private function flagShopwareReturnAsTransferred(OrderDTO $order): void
     {
-        $this->shopwareAPI->updateReturnOrder($order->getId(), [
+        $this->shopwareAPI->updateDvsnReturnShipment($order->getId(), [
+            'id' => $order->getId(),
             'intersys' => [
                 'exportedAt' => new \DateTimeImmutable(),
-            ],
+            ]
         ]);
     }
 }

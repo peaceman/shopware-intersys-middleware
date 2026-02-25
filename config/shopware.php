@@ -10,7 +10,6 @@ return [
         'clientSecret' => env('SHOPWARE_AUTH_CLIENT_SECRET'),
     ],
     'glnToImport' => env('SHOPWARE_GLN_TO_IMPORT'),
-    'warehouseCode' => env('SHOPWARE_WAREHOUSE_CODE'),
     'order' => [
         'prePaymentId' => env('SHOPWARE_ORDER_PRE_PAYMENT_ID', 5),
         'cancelWaitingTimeInDays' => env('SHOPWARE_ORDER_CANCEL_WAITING_TIME_IN_DAYS', 14),

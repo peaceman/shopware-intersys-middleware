@@ -105,7 +105,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->extend(ModelImporter::class, function (ModelImporter $modelXMLImporter) {
             $modelXMLImporter->setGlnToImport(config('shopware.glnToImport'));
-            $modelXMLImporter->setShopwareWarehouseCode(config('shopware.warehouseCode'));
 
             return $modelXMLImporter;
         });

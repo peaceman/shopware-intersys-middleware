@@ -21,8 +21,8 @@ class OrderReturnProviderTest extends TestCase
         // setup mocks
         $shopwareApi = $this->createMock(Shopware6API::class);
         $shopwareApi->expects(static::once())
-            ->method('listCompletedReturnOrdersRaw')
-            ->willReturn(json_decode(fixture_content('shopware/pickware-erp-return-orders-response.json'), true));
+            ->method('listTransferableDvsnReturnShipmentsRaw')
+            ->willReturn(json_decode(fixture_content('shopware/dvsn-return-shipments-response.json'), true));
 
         // call the implementation
         $orderProvider = new ShopwareOrderReturnProvider($shopwareApi, new NullLogger());
@@ -31,26 +31,31 @@ class OrderReturnProviderTest extends TestCase
         // assertions
         static::assertContainsOnlyInstancesOf(OrderDTO::class, $orders);
 
-        // qty 2 -> 1 disposed, 1 restocked
         /** @var OrderDTO $order */
-        $order = collect($orders)->firstOrFail(fn (OrderDTO $v): bool => $v->getId() === '0193bacd65e677e3ad1b2df73a2b3877');
+        $order = collect($orders)->firstOrFail(fn (OrderDTO $v): bool => $v->getId() === '019c707c816a72e8a9266e8dab9fbd73');
+        static::assertEquals(
+            ['orderNumber' => '1039622'],
+            ['orderNumber' => $order->getOrderNumber()],
+        );
         static::assertCount(1, $order->getLineItems());
 
         [$lineItem] = $order->getLineItems();
-        static::assertEquals(1, $lineItem->getQuantity());
-
-        // qty 3 -> 1 disposed, 2 restocked
-        /** @var OrderDTO $order */
-        $order = collect($orders)->firstOrFail(fn (OrderDTO $v): bool => $v->getId() === '0194b22ab98f7726b1a4dcb0c03fba28');
-        static::assertCount(1, $order->getLineItems());
-
-        [$lineItem] = $order->getLineItems();
-        static::assertEquals(2, $lineItem->getQuantity());
-
-        // qty 4 -> 4 disposed, 0 restocked
-        /** @var OrderDTO $order */
-        $order = collect($orders)->firstOrFail(fn (OrderDTO $v): bool => $v->getId() === '0194b21c8c157316b7d0cec5bde82ea1');
-        static::assertCount(0, $order->getLineItems());
+        static::assertEquals(
+            [
+                'ean' => '4067902508726',
+                'productNumber' => 'JC5806030000612',
+                'quantity' => 3,
+                'price' => 3 * 23.77,
+                'unitPrice' => 23.77,
+            ],
+            [
+                'ean' => $lineItem->getEan(),
+                'productNumber' => $lineItem->getProductNumber(),
+                'quantity' => $lineItem->getQuantity(),
+                'price' => $lineItem->getPrice(),
+                'unitPrice' => $lineItem->getUnitPrice(),
+            ],
+        );
 
         // ensure that the order provider does not crash on non product line items
         $order = collect($orders)->firstOrFail(fn (OrderDTO $v): bool => $v->getId() === 'not a product order id');
