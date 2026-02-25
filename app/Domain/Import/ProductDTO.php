@@ -3,6 +3,7 @@
 namespace App\Domain\Import;
 
 use Illuminate\Support\Arr;
+use JetBrains\PhpStorm\Deprecated;
 
 class ProductDTO
 {
@@ -34,6 +35,7 @@ class ProductDTO
             ->firstWhere('ean', $ean);
     }
 
+    #[Deprecated("pickware plugin is gone")]
     public function getStockByEanAndWarehouseId(string $ean, string $warehouseId): ?int
     {
         $child = $this->getChildByEan($ean);

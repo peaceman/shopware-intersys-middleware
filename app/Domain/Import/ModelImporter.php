@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\Deprecated;
 use Psr\Log\LoggerInterface;
 
 class ModelImporter
@@ -436,6 +437,7 @@ class ModelImporter
         }
     }
 
+    #[Deprecated("pickware plugin is gone")]
     private function updateProductVariantStocks(Collection $variants, ProductDTO $swProduct, array $loggingContext): void
     {
         foreach ($variants as $existingVariant) {

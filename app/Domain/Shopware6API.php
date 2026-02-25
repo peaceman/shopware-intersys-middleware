@@ -13,6 +13,7 @@ use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Utils;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\Deprecated;
 use Psr\Log\LoggerInterface;
 
 class Shopware6API
@@ -77,6 +78,7 @@ class Shopware6API
         }
     }
 
+    #[Deprecated("pickware plugin is gone")]
     public function updateProductWarehouseStock(string $warehouseId, string $productId, int $stockChange): void
     {
         try {
@@ -347,6 +349,7 @@ class Shopware6API
         );
     }
 
+    #[Deprecated("pickware plugin is gone")]
     public function listCompletedReturnOrdersRaw(): array
     {
         $response = $this->httpClient->post('/api/search/pickware-erp-return-order', [
@@ -381,6 +384,7 @@ class Shopware6API
             ]);
     }
 
+    #[Deprecated("pickware plugin is gone")]
     public function updateReturnOrder(string $returnOrderId, array $data): void
     {
         $this->httpClient
@@ -410,6 +414,7 @@ class Shopware6API
         return $deliveryTime['id'] ?? null;
     }
 
+    #[Deprecated("pickware plugin is gone")]
     public function searchWarehouseIdByCode(string $warehouseCode)
     {
         $response = $this->httpClient->post('/api/search/pickware-erp-warehouse', [
