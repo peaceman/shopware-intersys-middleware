@@ -317,40 +317,47 @@ class Shopware6API
 
     public function listTransferableDvsnReturnShipmentsRaw(): array
     {
-        $response = $this->httpClient->post('/api/search/dvsn-return-shipment', [
-            'json' => [
-                'filter' => [
-                    /**
-                     * return shipment status with id 99 is completed. the status entity
-                     * does not have a technical name so we use the position to not rely on
-                     * display strings that are subject to translations
-                     */
-                    ['type' => 'equals', 'field' => 'status.position', 'value' => 99],
-                    ['type' => 'equals', 'field' => 'intersys.exportedAt', 'value' => null],
-                ],
-                'associations' => [
-                    'lineItems' => [
-                        'associations' => [
-                            'orderLineItem' => [
-                                'associations' => [
-                                    'product' => [],
+        try {
+            $response = $this->httpClient->post('/api/search/dvsn-return-shipment', [
+                'json' => [
+                    'filter' => [
+                        /**
+                         * return shipment status with id 99 is completed. the status entity
+                         * does not have a technical name so we use the position to not rely on
+                         * display strings that are subject to translations
+                         */
+                        ['type' => 'equals', 'field' => 'status.position', 'value' => 99],
+                        ['type' => 'equals', 'field' => 'intersys.exportedAt', 'value' => null],
+                    ],
+                    'associations' => [
+                        'lineItems' => [
+                            'associations' => [
+                                'orderLineItem' => [
+                                    'associations' => [
+                                        'product' => [],
+                                    ],
                                 ],
                             ],
                         ],
+                        'order' => [],
                     ],
-                    'order' => [],
+                    'includes' => [
+                        'order_line_item' => ['product', 'price'],
+                        'order' => ['orderNumber'],
+                        'product' => ['ean', 'productNumber'],
+                    ],
                 ],
-                'includes' => [
-                    'order_line_item' => ['product', 'price'],
-                    'order' => ['orderNumber'],
-                    'product' => ['ean', 'productNumber'],
-                ],
-            ],
-        ]);
+            ]);
 
-        $responseBody = Utils::jsonDecode($response->getBody(), true);
+            return Utils::jsonDecode($response->getBody(), true);
+        } catch (BadResponseException $e) {
+            $this->logger->error(__METHOD__ . ' ' . $e->getMessage(), [
+                'request' => (string)$e->getRequest()->getBody(),
+                'response' => (string)$e->getResponse()->getBody(),
+            ]);
 
-        return $responseBody;
+            return ['data' => []];
+        }
     }
 
     public function updateOrder(string $orderId, array $data): void
